@@ -4,8 +4,8 @@
     "type": "project",
     "minimum-stability": "dev",
     "require": {
-        "slim/slim": "4.x-dev",
-        "slim/psr7": "dev-master",
+        "slim/slim": "4.x-dev@dev",
+        "slim/psr7": "dev-master@dev",
         "php-di/php-di": "^6.0",
         "vlucas/phpdotenv": "^3.3",
         "illuminate/database": "^5.8",
