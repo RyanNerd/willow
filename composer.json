@@ -1,0 +1,24 @@
+{
+    "name": "ryannerd/willow",
+    "description": "Willow Framework for creating ORM/RESTful APIs",
+    "type": "project",
+    "require": {
+        "slim/slim": "4.x-dev",
+        "slim/psr7": "dev-master",
+        "php-di/php-di": "^6.0",
+        "vlucas/phpdotenv": "^3.3",
+        "illuminate/database": "^5.8",
+        "consolidation/robo": "~1",
+        "league/climate": "^3.5",
+        "php" : "^7.1",
+        "ext-pdo": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Willow\\": "app",
+            "Robo\\": "robo"
+        }
+    },
+    "extra": {"namespace" :  "Willow"}
+}

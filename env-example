@@ -1,0 +1,8 @@
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=schema_name
+DB_USER=db_user
+DB_PASSWORD=secret
+
+# Set this to false in production
+DISPLAY_ERROR_DETAILS=true
