@@ -2,7 +2,6 @@
     "name": "ryannerd/willow",
     "description": "Willow Framework for creating ORM/RESTful APIs",
     "type": "project",
-    "minimum-stability": "dev",
     "require": {
         "slim/slim": "4.x-dev@dev",
         "slim/psr7": "dev-master@dev",
