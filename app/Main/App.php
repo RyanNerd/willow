@@ -58,9 +58,7 @@ class App
         $app = AppFactory::create();
 
         // Add Routing Middleware
-        $routeResolver = $app->getRouteResolver();
-        $routingMiddleware = new RoutingMiddleware($routeResolver);
-        $app->add($routingMiddleware);
+        $app->add(new RoutingMiddleware($app->getRouteResolver()));
 
         // Register non-group routes
         $this->registerRoutes($app);

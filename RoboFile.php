@@ -20,80 +20,40 @@ class RoboFile extends Tasks
     /** @var Capsule */
     protected $capsule;
 
-    /** @var bool | \Throwable */
-    protected $okay = false;
-
     use \Robo\Template\Generator;
 
     public function __construct()
     {
         $this->cli = new CLImate;
-        $cli = $this->cli;
 
-        if (!file_exists(__DIR__ . '/.env')) {
-            $cli->info()->inline('INFO: ');
-            $cli->white('You need to set up a .env file');
-            $cli->white('run robo init');
-            $input = $cli->confirm('Do you want to see an example?');
-            if ($input->confirmed()) {
-                $sampleEnv = file_get_contents(__DIR__ . '/env-example');
-                $cli->white()->border('*', 50);
-                $cli->backgroundBlack()->white($sampleEnv);
-                $cli->white()->border('*', 50);
-            }
-            return;
-        }
-
-        // Load Default configuration from environment
-        try {
-            include_once __DIR__ . '/config/_env.php';
-        } catch (\Throwable $exception) {
-            $this->okay = $exception;
-            return;
-        }
-
-
-        // Set up Dependency Injection
-        try {
-            $builder = new ContainerBuilder();
-            foreach (glob(__DIR__ . '/config/*.php') as $definitions) {
-                if (strpos($definitions, '_env.php') === false) {
-                    $builder->addDefinitions(realpath($definitions));
+        // Set up DI and ORM only if the .env file exists.
+        if (file_exists(__DIR__ . '/.env')) {
+            // Set up Dependency Injection
+            try {
+                $builder = new ContainerBuilder();
+                foreach (glob(__DIR__ . '/config/*.php') as $definitions) {
+                    if (strpos($definitions, '_env.php') === false) {
+                        $builder->addDefinitions(realpath($definitions));
+                    }
                 }
+                $container = $builder->build();
+            } catch (\Throwable $exception) {
+                $this->okay = $exception;
+                return;
             }
-            $container = $builder->build();
-        } catch (\Throwable $exception) {
-            $this->okay = $exception;
-            return;
-        }
 
-        // Establish an instance of the Illuminate database capsule (if not already established)
-        try {
-            if ($this->capsule === null) {
-                $this->capsule = $container->get(Capsule::class);
+            // Establish an instance of the Illuminate database capsule (if not already established)
+            try {
+                if ($this->capsule === null) {
+                    $this->capsule = $container->get(Capsule::class);
+                }
+            } catch (\Throwable $exception) {
+                $this->okay = $exception;
+                return;
             }
-        } catch (\Throwable $exception) {
-            $this->okay = $exception;
-            return;
         }
-        $this->okay = true;
     }
 
-    protected function isOK(): bool
-    {
-        if ($this->okay instanceof \Throwable) {
-            $this->cli->backgroundLightCyan()->white()->border('*');
-            $this->cli->backgroundLightCyan()->error('Error: ');
-            $this->cli->backgroundLightCyan()->magenta($this->okay->getMessage());
-            $this->cli->backgroundLightCyan()->white()->border('*');
-            $this->cli->br();
-            $this->cli->addArt(__DIR__ . '/robo/ascii_art');
-            $this->cli->animation('darlek')->enterFrom('left');
-            return false;
-        }
-
-        return $this->okay;
-    }
 
     public function init()
     {
@@ -164,8 +124,6 @@ env;
 
     public function showTables()
     {
-        if (!$this->isOK()) return;
-
         $capsule = $this->capsule;
         $conn = $capsule->getConnection();
         $db = $conn->getDatabaseName();
