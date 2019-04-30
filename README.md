@@ -1,4 +1,5 @@
 # Willow Framework
+## !! Willow currently is in very early alpha (almost unusable) !!
 Willow is an "opinionated" PHP framework used to quickly create CRUD based RESTful APIs.
 
 Willow is a marriage between [Slim 4](http://slimframework.com) and the [Illuminate Database](https://github.com/illuminate/database).
