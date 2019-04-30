@@ -9,25 +9,28 @@ Opinionated meaning that Willow stresses convention over configuration.
 ### Requirements
 * PHP 7.1+
 * MySQL 5.6+
-* [Composer](https://getcomposer.org) (Must be installed globably)
+* [Composer](https://getcomposer.org) (Must be installed globally)
 
 ### 💾 Installation
-Willow is unlike most PHP frameworks. 
-It's not a phar and you do not install it directly via Composer.
-Nor is it recommended you clone or fork this repo to install.
 
-Instead download the latest tagged package, unpack it, and from the terminal run `composer install` in the base directory.
+Run:
+`composer create-project ryannerd/willow [your-project-name]`
+`cd [your-project-name]`
 
-Once composer finishes it will ask permission to add an alias to your `~/.bashrc` file
-(or `~/.zshrc` file if you have replaced the bash shell with zsh). Windows users will need to manually type out the aliased command.
-The command added to the `.bashrc` file is: `alias willow='./vendor/bin/robo'`
+It is recommended you add this `alias willow='./vendor/bin/robo'` to your ~/.bashrc or ~/.zshrc file.
+Remember to run `source ~/bashrc` / `source ~/.zshrc` to let your bash shell know you've made chages.
+Once you've added the alias then run this command:
 
-Willow uses the [robo task runner](http://robo.li/) and the alias allows you to use the
-command `willow` instead of having to type out `./vendor/bin/robo` every time you issue a robo command.
+`willow init`
 
-Now run the command `willow init`
+If you **did not** create the alias then run this instead:
+`./vendor/bin/robo init`
+
 You You will be prompted with several questions to set up your project. 
 You will need to provide **admin credentials** to a running database (supported databases are MySQL, Postgres, SQL Server, and SQLite).
 Willow assumes you already have existing entities (tables and views) that will be incorporated in your project.
+
+Willow uses the [robo task runner](http://robo.li/) and the alias allows you to use the
+command `willow` instead of having to type out `./vendor/bin/robo` every time you run a task.
 
     
