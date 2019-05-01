@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Hello;
+namespace Willow\Controllers\Hello;
 
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;

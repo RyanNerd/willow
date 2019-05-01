@@ -16,8 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Willow\\": "app",
-            "Robo\\": "robo"
+            "Willow\\": "app"
         }
     },
     "extra": {"namespace" :  "Willow"}

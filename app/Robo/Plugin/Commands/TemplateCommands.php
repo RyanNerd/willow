@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Robo\Template;
+namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\CLImate;
 
 /**
  * Trait Generator
  */
-Trait Generator
+class TemplateCommands extends RoboBase
 {
     public function addTable(string $tableName, string $tableAlias = "", $route = "")
     {

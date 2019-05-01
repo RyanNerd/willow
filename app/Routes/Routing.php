@@ -6,7 +6,7 @@ namespace Willow\Routes;
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
 use Slim\Routing\RouteCollectorProxy;
-use Willow\Hello\HelloController;
+use Willow\Controllers\Hello\HelloController;
 
 Trait Routing
 {

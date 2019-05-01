@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Hello;
+namespace Willow\Controllers\Hello;
 
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
