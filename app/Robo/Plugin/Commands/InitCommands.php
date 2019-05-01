@@ -91,25 +91,4 @@ env;
     {
         $this->cli->output('block');
     }
-
-//    public function showTables()
-//    {
-//        if ($this->capsule === null) {
-//            $this->error('Database not set up. Run init or edit the .env file directly.');
-//            return;
-//        }
-//
-//
-//        $capsule = $this->capsule;
-//        $conn = $capsule->getConnection();
-//        $db = $conn->getDatabaseName();
-//        $select = "SELECT table_name
-//            FROM INFORMATION_SCHEMA.tables
-//            WHERE table_schema = '$db'
-//            ORDER BY table_name;";
-//        $rows = $conn->select($select);
-//        foreach ($rows as $row) {
-//            $this->cli->blue()->bold()->out($row->table_name);
-//        }
-//    }
 }

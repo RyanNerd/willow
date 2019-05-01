@@ -8,6 +8,7 @@
         "php-di/php-di": "^6.0",
         "vlucas/phpdotenv": "^3.3",
         "illuminate/database": "^5.8",
+        "doctrine/dbal": "~2.3",
         "consolidation/robo": "~1",
         "league/climate": "^3.5",
         "php" : "^7.1",
