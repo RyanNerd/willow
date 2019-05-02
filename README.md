@@ -15,10 +15,11 @@ Opinionated meaning that Willow stresses convention over configuration.
 
 Run:
 `composer create-project ryannerd/willow [your-project-name]`
+
 `cd [your-project-name]`
 
 It is recommended you add this `alias willow='./vendor/bin/robo'` to your ~/.bashrc or ~/.zshrc file.
-Remember to run `source ~/bashrc` / `source ~/.zshrc` to let your bash shell know you've made chages.
+Remember to run `source ~/bashrc` / `source ~/.zshrc` to let your shell know you've made chages.
 Once you've added the alias then run this command:
 
 `willow init`

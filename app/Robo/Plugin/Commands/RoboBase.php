@@ -100,7 +100,7 @@ abstract class RoboBase extends Tasks
     protected function isDatabaseEnvironmentReady(): bool
     {
         if ($this->capsule === null) {
-            $this->error('Database not set up. Run init or edit the .env file directly.');
+            $this->error('Database not set up. Run willow:init or create the .env file manually.');
             return false;
         }
 
