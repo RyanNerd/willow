@@ -7,7 +7,10 @@ use League\CLImate\TerminalObject\Dynamic\Input;
 
 class InitCommands extends RoboBase
 {
-    public function init()
+    /**
+     * Initialization of the Willow framework specifically two files: .gitignore & .env
+     */
+    public function willowInit()
     {
         $cli = $this->cli;
 

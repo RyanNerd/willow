@@ -9,8 +9,11 @@ class DbCommands extends RoboBase
      * Show all tables in the database
      *
      * @todo Postgres "SELECT table_schema,table_name, table_catalog FROM information_schema.tables WHERE table_catalog = 'CATALOG/SCHEMA HERE' AND table_type = 'BASE TABLE' AND table_schema = 'public' ORDER BY table_name;"
-     * @todo MSSQL, SQLite, etc.
+     * @todo SQLite "SELECT `name` FROM sqlite_master WHERE `type`='table'  ORDER BY name";
+     * @todo MSSQL "select Table_Name, table_type from information_schema.tables";
+     *
      * @see https://stackoverflow.com/questions/33478988/how-to-fetch-the-tables-list-in-database-in-laravel-5-1
+     * @see https://stackoverflow.com/questions/29817183/php-mssql-pdo-get-table-names
      */
     public function dbShowTables()
     {
@@ -18,7 +21,6 @@ class DbCommands extends RoboBase
 
         $capsule = $this->capsule;
         $conn = $capsule->getConnection();
-        $driver = $conn->getDriverName();
         $db = $conn->getDatabaseName();
         $select = "SELECT table_name
             FROM INFORMATION_SCHEMA.tables
@@ -39,22 +41,9 @@ class DbCommands extends RoboBase
     {
         if (!$this->isDatabaseEnvironmentReady()) return;
 
-        $capsule = $this->capsule;
-        $schema = $capsule::schema();
-        $columns = $schema->getColumnListing($tableName);
-        foreach ($columns as $column) {
-            $columnType = $schema->getColumnType($tableName, $column);
-            $this->cli->blue()->bold()->out($column . ' ' . $columnType);
+        $columns = $this->getTableDetails($tableName);
+        foreach ($columns as $columnName => $columnType) {
+            $this->cli->blue()->bold()->out($columnName . ' => ' . $columnType);
         }
-    }
-
-    private function isDatabaseEnvironmentReady(): bool
-    {
-        if ($this->capsule === null) {
-            $this->error('Database not set up. Run init or edit the .env file directly.');
-            return false;
-        }
-
-        return true;
     }
 }

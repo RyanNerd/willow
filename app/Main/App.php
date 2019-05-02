@@ -12,6 +12,7 @@ use Slim\Middleware\ErrorMiddleware;
 use Slim\Middleware\RoutingMiddleware;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Throwable;
 use Willow\Middleware\ValidateApiKey;
 use Willow\Routes\Routing;
 
@@ -43,7 +44,7 @@ class App
             if ($this->capsule === null) {
                 $this->capsule = $container->get(Capsule::class);
             }
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS');
             if ($displayErrorDetails === false || $displayErrorDetails !== 'true') {
                 echo 'An error occured.';
@@ -61,7 +62,7 @@ class App
         $app->add(new RoutingMiddleware($app->getRouteResolver()));
 
         // Register non-group routes
-        $this->registerRoutes($app);
+        // $this->registerRoutes($app);
 
         // Register Group Routes
         $this->registerGroupRoutes($app, '/v1')
