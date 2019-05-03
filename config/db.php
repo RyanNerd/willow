@@ -1,26 +1,19 @@
 <?php
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Psr\Container\ContainerInterface;
 
 return [
-    'db.driver' => (getenv('DB_DRIVER') === false) ? 'mysql' : getenv('DB_DRIVER'),
-    'db.dsn' => (getenv('DB_DRIVER') === false) ? 'mysql' : getenv('DB_DRIVER') . ':host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_NAME'),
-    'db.host' => getenv('DB_HOST'),
-    'db.user' => getenv('DB_USER'),
-    'db.password' => getenv('DB_PASSWORD'),
-    'db.schema' => getenv('DB_NAME'),
-
     Capsule::class => function (ContainerInterface $c) {
         $eloquent = new Capsule;
 
         $eloquent->addConnection([
-            'driver'    => $c->get('db.driver'),
-            'host'      => $c->get('db.host'),
-            'database'  => $c->get('db.schema'),
-            'username'  => $c->get('db.user'),
-            'password'  => $c->get('db.password'),
+            'driver'    => (env('DB_DRIVER') === false) ? 'mysql' : getenv('DB_DRIVER'),
+            'host'      => getenv('DB_HOST'),
+            'database'  => getenv('DB_NAME'),
+            'username'  => getenv('DB_USER'),
+            'password'  => getenv('DB_PASSWORD'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
