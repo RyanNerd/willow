@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Willow\Controllers\TableAlias;
 
-use Slim\Routing\RouteCollectorProxy;
+use Slim\Interfaces\RouteCollectorProxyInterface;
+use Willow\Controllers\IController;
 
-class TableAliasController
+class TableAliasController implements IController
 {
-    public function register(RouteCollectorProxy $group)
+    public function register(RouteCollectorProxyInterface $group)
     {
         $group->get('/%route%/{id}', TableAliasGetAction::class);
         $group->post('/%route%', TableAliasPostAction::class);

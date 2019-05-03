@@ -26,18 +26,10 @@ class MakeCommands extends RoboBase
             return;
         }
 
-        do {
-            /** @var Input $input */
-            $input = $cli->input('What do you want to use as your table alias?');
-            // todo: Pascalize the tableName as a suggestion.
-            $tableAlias = $input->prompt();
-        } while (strlen($tableAlias) < 1);
-
+        $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
         $modelTemplate = $this->generateModel($tableName, $tableAlias, $columns);
         $modelPath = __DIR__ . '/../../../../app/Models/' . $tableAlias . '.php';
         if (file_put_contents($modelPath, $modelTemplate) !== false) {
-            // Let composer know we added the model class
-            $this->taskComposerDumpAutoload();
             $cli->out($tableAlias . ' model created.');
         } else {
             $this->warning('Unable to create model.');

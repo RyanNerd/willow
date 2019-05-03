@@ -12,10 +12,10 @@ use Slim\Middleware\ErrorMiddleware;
 use Slim\Middleware\RoutingMiddleware;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Slim\Routing\RouteCollectorProxy;
 use Throwable;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\Validate;
-use Willow\Routes\Routing;
 
 class App
 {
@@ -23,8 +23,6 @@ class App
      * @var Capsule
      */
     protected $capsule = null;
-
-    use Routing;
 
     public function __construct()
     {
@@ -62,12 +60,17 @@ class App
         // Add Routing Middleware
         $app->add(new RoutingMiddleware($app->getRouteResolver()));
 
-        // Register non-group routes
-        // $this->registerRoutes($app);
-
         // Register Group Routes
-        $this->registerGroupRoutes($app, '/v1')
-            ->add(Validate::class)
+        $v1 = $app->group('/v1', function (RouteCollectorProxy $collectorProxy) use ($container)
+        {
+            $controllers = array_diff(scandir(__DIR__ . '/../Controllers'), ['.', '..', 'IController.php']);
+            foreach ($controllers as $controller) {
+                $className = 'Willow\Controllers\\' . $controller . '\\' . $controller . 'Controller';
+                $container->get($className)->register($collectorProxy);
+            }
+        });
+
+        $v1->add(Validate::class)
             ->add(ResponseBodyFactory::class);
 
         // Accept all routes for options (part of CORS)
