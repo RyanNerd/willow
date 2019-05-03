@@ -13,6 +13,7 @@ use Slim\Middleware\RoutingMiddleware;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Throwable;
+use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\ValidateApiKey;
 use Willow\Routes\Routing;
 
@@ -66,7 +67,8 @@ class App
 
         // Register Group Routes
         $this->registerGroupRoutes($app, '/v1')
-            ->add(ValidateApiKey::class);
+            ->add(ValidateApiKey::class)
+            ->add(ResponseBodyFactory::class);
 
         // Accept all routes for options (part of CORS)
         $app->options('/{routes:.+}', function (Request $request, Response $response): ResponseInterface {

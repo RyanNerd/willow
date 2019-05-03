@@ -6,25 +6,24 @@ namespace Willow\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Slim\Psr7\Response;
 
 class ValidateApiKey
 {
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
     {
-        $qp = $request->getQueryParams();
-        $key = $qp['key'] ?? '';
+        /** @var ResponseBody $responseBody */
+        $responseBody = $request->getAttribute('response_body');
 
-        // Placeholder logic
-        if ($key === 'stop') {
-            $response = new Response();
-                $response->withHeader('content-type', 'application\json')
-                ->getBody()
-                ->write(json_encode(['message' => 'Invalid API']));
-            return $response;
+        // TODO: Put your logic here to determine if request is authorized and/or is admin
+        if (true) {
+            $responseBody = $responseBody
+                ->setIsAdmin()
+                ->setIsAuthenticated();
+            return $handler->handle($request->withAttribute('response_body', $responseBody));
+        } else {
+            // Short circuit the request by returning a response with status of 401;
+            $responseBody = $responseBody->setStatus(401)->setMessage('Invalid API Key');
+            return $responseBody();
         }
-
-        // Keep processing middleware queue as normal
-        return $handler->handle($request);
     }
 }

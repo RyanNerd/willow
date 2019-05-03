@@ -6,6 +6,7 @@ namespace Willow\Controllers\Hello;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Willow\Middleware\ResponseBody;
 use Willow\Models\Hello;
 
 class HelloGetAction
@@ -22,8 +23,10 @@ class HelloGetAction
 
     public function __invoke(Request $request, Response $response, array $args): ResponseInterface
     {
-        $id = $args['id'];
-        $model = $this->hello->find($id);
+        /** @var ResponseBody $responseBody */
+        $responseBody = $request->getAttribute('response_body');
+
+        $model = $this->hello->find($args['id']);
         if ($model === null) {
             $data = null;
             $status = 404;
@@ -32,19 +35,9 @@ class HelloGetAction
             $status = 200;
         }
 
-        return $this->sendResponse($response, $data, $status);
-    }
-
-    protected function sendResponse(Response $response, ?array $data, int $status): ResponseInterface
-    {
-        $payload = [
-            'success' => ($status === 200),
-            'data' => $data,
-            'status' => $status
-        ];
-        $response
-            ->getBody()
-            ->write(json_encode($payload));
-        return $response->withHeader('content-type', 'application/json');
+        $responseBody = $responseBody
+            ->setData($data)
+            ->setStatus($status);
+        return $responseBody();
     }
 }
