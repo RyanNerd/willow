@@ -92,6 +92,28 @@ class MakeCommands extends RoboBase
         return;
     }
 
+    public function makeActions(string $tableAlias)
+    {
+        $targetDir =  __DIR__ . '/../../../../app/Controllers/' . $tableAlias;
+        if (!is_dir($targetDir)) {
+            $this->warning('Target directory does not exist. make:controller first.');
+            return;
+        }
+
+        $getActionPath = $targetDir . '/' . $tableAlias . 'GetAction.php';
+        if (file_exists($getActionPath)) {
+            $this->warning($tableAlias . 'GetAction already exists.');
+            return;
+        }
+
+        $getActionTemplate = $this->generateGetAction($tableAlias);
+        if (file_put_contents($getActionPath, $getActionTemplate) !== 0) {
+            $this->cli->out($tableAlias . 'GetAction.php created');
+        } else {
+            $this->error('Unabe to create ' . $tableAlias . 'GetAction.php');
+        }
+    }
+
     private function generateModel($tableName, string $tableAlias, array $tableDetails): string
     {
         $modelTemplate = file_get_contents(__DIR__ . '/Templates/ModelTemplate.php');
@@ -122,6 +144,12 @@ class MakeCommands extends RoboBase
         $controllerTemplate = str_replace('%route%', $route, $controllerTemplate);
 
         return $controllerTemplate;
+    }
+
+    private function generateGetAction(string $tableAlias): string
+    {
+        $getActionTemplate = file_get_contents(__DIR__ . '/Templates/GetActionTemplate.php');
+        return str_replace('TableAlias', $tableAlias, $getActionTemplate);
     }
 
     private function generateGroupRegister(): bool

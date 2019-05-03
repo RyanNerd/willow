@@ -14,7 +14,7 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Throwable;
 use Willow\Middleware\ResponseBodyFactory;
-use Willow\Middleware\ValidateApiKey;
+use Willow\Middleware\Validate;
 use Willow\Routes\Routing;
 
 class App
@@ -67,7 +67,7 @@ class App
 
         // Register Group Routes
         $this->registerGroupRoutes($app, '/v1')
-            ->add(ValidateApiKey::class)
+            ->add(Validate::class)
             ->add(ResponseBodyFactory::class);
 
         // Accept all routes for options (part of CORS)

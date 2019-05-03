@@ -7,8 +7,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
-class ValidateApiKey
+class Validate
 {
+    /**
+     * Validation middleware
+     * todo: Include logic that validates all requests (e.g. an API key)
+     *
+     * @param Request $request
+     * @param RequestHandler $handler
+     * @return ResponseInterface
+     */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
     {
         /** @var ResponseBody $responseBody */
