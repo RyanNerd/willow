@@ -23,5 +23,7 @@
         }
     },
     "scripts": {
-        "post-package-install" : ["Willow\\Robo\\Script::postPackageInstall"]}
+        "post-package-install": ["Willow\\Robo\\Script::postPackageInstall"],
+        "post-install-cmd":["Willow\\Robo\\Script::postInstallCmd"]
+    }
 }
