@@ -22,5 +22,6 @@
             "Willow\\": "app/"
         }
     },
-    "extra": {"namespace" :  "Willow"}
+    "scripts": {
+        "post-package-install" : ["Willow\\Robo\\Script::postPackageInstall"]}
 }
