@@ -7,6 +7,6 @@ class Script
 {
     public static function postPackageInstall($event)
     {
-        symlink('./vendor/bin/robo', 'willow');
+        symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
     }
 }
