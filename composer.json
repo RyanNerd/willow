@@ -14,7 +14,8 @@
         "php" : "^7.1",
         "ext-pdo": "*",
         "ext-json": "*",
-        "slim/psr7": "dev-master"
+        "slim/psr7": "dev-master",
+        "respect/validation": "^2.0@dev"
     },
     "autoload": {
         "psr-4": {

@@ -10,6 +10,7 @@ class SampleController implements IController
 {
     public function register(RouteCollectorProxyInterface $group)
     {
-        $group->get('/sample/{id}', SampleGetAction::class);
+        $group->get('/sample/{id}', SampleGetAction::class)
+            ->add(SampleGetValidator::class);
     }
 }

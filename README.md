@@ -1,10 +1,10 @@
 # Willow Framework
-## !! Willow currently is in very early alpha (almost unusable) !!
+## IMPORTANT: Willow currently is in very early alpha
 
 >Willow is a type a girl who is beautiful and amazing and is kinda a special person and loved by everyone around her
 >most willows can be your best of friends she's up for anything and she's loves anything fun you throw at her...
 
--Urban Dictionary
+~ Urban Dictionary
 
 For developers, Willow is an _opinionated_ PHP framework used to quickly create CRUD based RESTful APIs.
 
@@ -26,7 +26,6 @@ Willow works best as a framework in this situation:
 * [Composer](https://getcomposer.org) (For Willow to work best this must be installed globally)
 
 ### 💾 Installation
-
 From a terminal / command window run:
 
 ```
@@ -36,6 +35,7 @@ php -S localhost:8088 -t public
 ```
 
 Then in your favorite web browser go to: `localhost:8088/v1/sample/hello-world`
+
 The result should look something like this:
 
 ```json
@@ -44,7 +44,7 @@ The result should look something like this:
   "success": true,
   "status": 200,
   "data": {
-    "id": "helllo-world"
+    "id": "hello-world"
   },
   "missing": [ ],
   "message": "Sample test",
