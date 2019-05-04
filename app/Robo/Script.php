@@ -10,22 +10,7 @@ use League\CLImate\CLImate;
  */
 class Script
 {
-    // Create the willow symlink to Robo
-    public static function postPackageInstall($event)
-    {
-        $path = __DIR__ . '/../../vendor/bin/robo';
-        // Has Robo been fully installed?
-        if (file_exists($path)) {
-            // Does the willow file NOT exist?
-            if (!file_exists(__DIR__ . '/../../willow')) {
-                // Create the willow symlink file
-                symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
-            }
-        }
-    }
-
-    // Will this fire from a package install?
-    public static function postInstallCmd($event)
+    public static function postCreateProjectCmd($event)
     {
         $cli = new CLImate();
         $cli->forceAnsiOn();
@@ -37,10 +22,21 @@ class Script
         $cli->bold()->white()->inline('Thanks for installing ');
         $cli->bold()->lightGreen()->inline('Willow');
         $cli->bold()->white('!');
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $cli->bold()->white('To get started type: willow help');
-        } else {
-            $cli->bold()->white('To get started type: ./willow help');
+
+        $path = __DIR__ . '/../../vendor/bin/robo';
+        // Has Robo been fully installed?
+        if (file_exists($path)) {
+            // Does the willow file NOT exist?
+            if (!file_exists(__DIR__ . '/../../willow')) {
+                // Create the willow symlink file
+                symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
+            }
+
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $cli->bold()->white('To get started type: willow help');
+            } else {
+                $cli->bold()->white('To get started type: ./willow help');
+            }
         }
     }
 }
