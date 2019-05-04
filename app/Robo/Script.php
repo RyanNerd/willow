@@ -10,16 +10,25 @@ use League\CLImate\CLImate;
  */
 class Script
 {
+    /**
+     * Composer hook that fires when composer create-project has executed.
+     *
+     * @param $event
+     */
     public static function postCreateProjectCmd($event)
     {
-        $arguments = $event->getArguments() ?? [];
-        $argCount = count($arguments);
-        if ($argCount > 0) {
-            $projectName = $arguments[$argCount -1];
-        } else {
-            $projectName = 'your-project-name';
+        // Figure out what directory was created most recently
+        $time = 0;
+        $projectName = 'your-project-name';
+        foreach(glob(__DIR__ . '/*',GLOB_ONLYDIR) as $dir) {
+            $cTime = filectime($dir);
+            if ($cTime !== false && $cTime > $time) {
+                $time = $cTime;
+                $projectName = basename($dir);
+            }
         }
 
+        // Display Willow's fancy message
         $cli = new CLImate();
         $cli->forceAnsiOn();
         $cli->addArt(__DIR__);
@@ -31,10 +40,11 @@ class Script
         $cli->bold()->lightGreen()->inline('Willow');
         $cli->bold()->white('!');
 
+        // Create symlink to Robo
         $path = __DIR__ . '/../../vendor/bin/robo';
         // Has Robo been fully installed?
         if (file_exists($path)) {
-            // Does the willow file NOT exist?
+            // Does the willow file NOT already exist?
             if (!file_exists(__DIR__ . '/../../willow')) {
                 // Create the willow symlink file
                 symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
