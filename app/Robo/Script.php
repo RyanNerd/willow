@@ -12,6 +12,14 @@ class Script
 {
     public static function postCreateProjectCmd($event)
     {
+        $arguments = $event->getArguments() ?? [];
+        $argCount = count($arguments);
+        if ($argCount > 0) {
+            $projectName = $arguments[$argCount -1];
+        } else {
+            $projectName = 'your-project-name';
+        }
+
         $cli = new CLImate();
         $cli->forceAnsiOn();
         $cli->addArt(__DIR__);
@@ -32,10 +40,12 @@ class Script
                 symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
             }
 
+            $cli->bold()->white('To get started type:');
+            $cli->bold()->lightGray('cd ' . $projectName);
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $cli->bold()->white('To get started type: willow help');
+                $cli->bold()->lightGray('willow list');
             } else {
-                $cli->bold()->white('To get started type: ./willow help');
+                $cli->bold()->lightGray('./willow list');
             }
         }
     }
