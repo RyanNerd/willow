@@ -20,7 +20,7 @@ class Script
         // Figure out what directory was created most recently
         $time = 0;
         $projectName = 'your-project-name';
-        foreach(glob(__DIR__ . '/*',GLOB_ONLYDIR) as $dir) {
+        foreach(glob(__DIR__ . '/../../../*',GLOB_ONLYDIR) as $dir) {
             $cTime = filectime($dir);
             if ($cTime !== false && $cTime > $time) {
                 $time = $cTime;
