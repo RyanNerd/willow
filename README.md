@@ -52,19 +52,15 @@ The result should look something like this:
 }
 ```
 
-To initialize your project for Linux/Mac users it is recommended you add this `alias willow='./vendor/bin/robo'` 
-to your ~/.bashrc or ~/.zshrc file.
+To initialize your project run this:
 
-Remember to run `source ~/bashrc` / `source ~/.zshrc` to let your shell know you've made chages.
+Linux/Mac (You can add an alias instead in  your ~./bashrc file so you don't need the `./`)
 
-For Windows users you need to create a `willow.bat` file (similar to Linux) and add this to your PATH environment.
+`./willow willow:init`
 
-Once you've added the alias then run this command:
+Windows (untested)
 
 `willow willow:init`
-
-If you **did not** create the alias then run this instead (Linux/Mac):
-`./vendor/bin/robo willow:init`
 
 When you run this command you will be prompted for the following:
 - **admin credentials** to a running MySQL/MariaDB database.
