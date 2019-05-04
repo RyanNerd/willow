@@ -5,18 +5,14 @@ namespace Willow\Robo;
 
 class Script
 {
+    // You would think that postPackageInstall fires only once (at the end of the install -- you'd be wrong!)
     public static function postPackageInstall($event)
     {
-        $absolutePath = __DIR__ . '../../vendor/consolidation/robo/robo';
         $path = __DIR__ . '/../../vendor/bin/robo';
-        if (!file_exists($path)) {
-            if (file_exists($absolutePath)) {
-                symlink($absolutePath, 'willow');
-            } else {
-                echo PHP_EOL . 'NOW WHAT?!?' . PHP_EOL;
+        if (file_exists($path)) {
+            if (!file_exists(__DIR__ . '/../../willow')) {
+                symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
             }
-        } else {
-            symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
         }
     }
 }
