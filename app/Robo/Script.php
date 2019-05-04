@@ -5,9 +5,8 @@ namespace Willow\Robo;
 
 class Script
 {
-    //ln ./vendor/bin/robo willow
     public static function postPackageInstall($event)
     {
-        file_put_contents(__DIR__ . 'install.test', 'worked!');
+        symlink('./vendor/bin/robo', 'willow');
     }
 }
