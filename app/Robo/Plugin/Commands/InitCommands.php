@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use League\CLImate\TerminalObject\Dynamic\Input;
+use League\CLImate\TerminalObject\Dynamic\Confirm;
+use Respect\Validation\Validator as V;
 
 class InitCommands extends RoboBase
 {
@@ -104,5 +105,42 @@ env;
         }
     }
 
-    // todo: public function eject()
+    /**
+     * Eject the Willow framework from the project
+     */
+    public function willowEject()
+    {
+        $cli = $this->cli;
+        $cli->br();
+        $cli->bold()->white('Running eject will do the following things:');
+        $monolog = <<<MONOLOG
+- Remove app/Controllers/Sample folder (if it exists)
+- Remove app/Robo folder and sub folders
+- Remove RoboFile.php
+- Remove Robo as a dependency from composer.json
+- Prompt you for a project name (with no spaces)
+- Replace ALL namespace instances of Willow with the entered project name
+- Update composer.json with the new namespace/project name
+- Remove the willow symlink to the Robo task runner
+- Remove composer.lock
+- Run `composer install` to sort out the new namespace and dependencies
+
+MONOLOG;
+
+        $cli->bold()->red($monolog);
+        $this->warning('THIS CAN NOT BE UNDONE!');
+        /** @var Confirm $input */
+        $input = $cli->confirm('You sure you want to do this?');
+        if ($input->confirmed()) {
+            // TODO: Do eject stuff
+            $this->warning('Not implemented');
+            $input = $cli->input('Enter the project name (alpha-numeric no whitespace)');
+            $project = $input->prompt();
+
+            if (!v::alnum()->noWhitespace()->validate($project)) {
+                $this->warning('Invalid project name: ' . $project);
+                return;
+            }
+        }
+    }
 }
