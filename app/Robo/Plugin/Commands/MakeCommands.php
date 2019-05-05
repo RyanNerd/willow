@@ -5,6 +5,7 @@ namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\CLImate;
 
+// todo: $this->generateValidations()
 class MakeCommands extends RoboBase
 {
     /**
@@ -18,13 +19,18 @@ class MakeCommands extends RoboBase
         $views = $this->getViews();
         $entities = array_merge($views, $tables);
 
-        // todo: remove from $entities any that alredy have existing models.
         $cli = $this->cli;
 
         // Are we using Windows?
         if ((substr(strtoupper(PHP_OS),0,3) === 'WIN')) {
-            // todo: prompt user for each entity (as Climate->checkboxes do not work in Windows)
+            // CLIMATE does not support checkboxes in Windows so prompt the user entity by entity instead.
             $selectedEntities = [];
+            foreach ($entities as $entity) {
+                $input = $cli->confirm('Generate for: ' . $entity);
+                if ($input->confirmed()) {
+                    $selectedEntities[] = $entity;
+                }
+            }
         } else {
             $input = $cli->checkboxes('Select the entities you want to generate', $entities);
             $selectedEntities = $input->prompt();
@@ -200,12 +206,8 @@ class MakeCommands extends RoboBase
 
         $controllerTemplate = $this->generateController($tableAlias, strtolower($tableName));
 
-
         if (file_put_contents($controllerPath, $controllerTemplate) !== false) {
             return '';
-            // todo: $this->generateActions()
-            // todo: $this->generateValidations()
-            // todo: $this->generateGroupRegister()
         } else {
             return "Unable to create $tableAlias Controller";
         }
@@ -245,7 +247,7 @@ class MakeCommands extends RoboBase
 
         $getActionTemplate = $this->generateGetAction($tableAlias);
         if (file_put_contents($getActionPath, $getActionTemplate) === false) {
-            return 'Unabe to create ' . $tableAlias . 'GetAction.php';
+            return 'Unable to create ' . $tableAlias . 'GetAction.php';
         }
 
         $postActionPath = $targetDir . '/' . $tableAlias . 'PostAction.php';
@@ -268,6 +270,16 @@ class MakeCommands extends RoboBase
             return 'Unable to create ' . $tableAlias . 'PatchAction.php';
         }
 
+        $deleteActionPath = $targetDir . '/' . $tableAlias . 'DeleteAction.php';
+        if (file_exists($deleteActionPath)) {
+            return $tableAlias . 'DeleteAction already exists.';
+        }
+
+        $deleteActionTemplate = $this->generateDeleteAction($tableAlias);
+        if (file_put_contents($deleteActionPath, $deleteActionTemplate) === false) {
+            return 'Unable to create ' . $tableAlias . 'DeleteAction.php';
+        }
+
         return '';
     }
 
@@ -287,5 +299,11 @@ class MakeCommands extends RoboBase
     {
         $patchActionTemplate = file_get_contents(__DIR__ . '/Templates/PatchActionTemplate.php');
         return str_replace('TableAlias', $tableAlias, $patchActionTemplate);
+    }
+
+    private function generateDeleteAction(string $tableAlias): string
+    {
+        $deleteActionTemplate = file_get_contents(__DIR__ . '/Templates/DeleteActionTemplate.php');
+        return str_replace('TableAlias', $tableAlias, $deleteActionTemplate);
     }
 }

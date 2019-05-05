@@ -13,8 +13,8 @@ class TableAliasPostAction extends ActionBase
      */
     protected $model;
 
-    public function __construct(TableAlias $member)
+    public function __construct(TableAlias $model)
     {
-        $this->model = $member;
+        $this->model = $model;
     }
 }
