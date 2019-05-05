@@ -60,11 +60,10 @@ class App
         // Add Routing Middleware
         $app->add(new RoutingMiddleware($app->getRouteResolver()));
 
-        // Register Group Routes
         $v1 = $app->group('/v1', function (RouteCollectorProxy $collectorProxy) use ($container)
         {
-            $controllers = array_diff(scandir(__DIR__ . '/../Controllers'), ['.', '..', 'IController.php']);
-            foreach ($controllers as $controller) {
+            foreach(glob(__DIR__ . '/../Controllers/*',GLOB_ONLYDIR) as $controller) {
+                $controller = basename($controller);
                 $className = 'Willow\Controllers\\' . $controller . '\\' . $controller . 'Controller';
                 $container->get($className)->register($collectorProxy);
             }
