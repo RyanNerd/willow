@@ -102,6 +102,13 @@ abstract class RoboBase extends Tasks
             return false;
         }
 
+        try {
+            $conn = $this->capsule->getConnection();
+            $conn->select('SELECT table_name FROM INFORMATION_SCHEMA.TABLES LIMIT 0');
+        } catch (\Throwable $exception) {
+            $this->error('Cannot connect to database: ' . $exception->getMessage());
+        }
+
         return true;
     }
 

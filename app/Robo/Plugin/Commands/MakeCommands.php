@@ -73,7 +73,7 @@ class MakeCommands extends RoboBase
     }
 
     /**
-     * Create a model class for a given table name
+     * Create a Model for a given table name
      *
      * @param string $tableName
      */

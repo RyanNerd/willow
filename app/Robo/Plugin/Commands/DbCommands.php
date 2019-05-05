@@ -19,16 +19,22 @@ class DbCommands extends RoboBase
     {
         if (!$this->isDatabaseEnvironmentReady()) return;
 
-        $capsule = $this->capsule;
-        $conn = $capsule->getConnection();
-        $db = $conn->getDatabaseName();
-        $select = "SELECT table_name
-            FROM INFORMATION_SCHEMA.tables
-            WHERE table_schema = '$db'
-            ORDER BY table_name;";
-        $rows = $conn->select($select);
-        foreach ($rows as $row) {
-            $this->cli->blue()->bold()->out($row->table_name);
+        $tables = $this->getTables();
+        foreach ($tables as $table) {
+            $this->cli->blue()->bold()->out($table);
+        }
+    }
+
+    /**
+     * Show all views in the database
+     */
+    public function dbShowViews()
+    {
+        if (!$this->isDatabaseEnvironmentReady()) return;
+
+        $views = $this->getViews();
+        foreach ($views as $view) {
+            $this->cli->blue()->bold()->out($view);
         }
     }
 
