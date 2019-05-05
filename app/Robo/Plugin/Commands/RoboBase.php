@@ -33,8 +33,6 @@ abstract class RoboBase extends Tasks
     public function __construct()
     {
         $this->cli = new CLImate;
-        $this->cli->style->addCommand('warning', ['bold', 'white', 'blink']);
-        $this->cli->style->addCommand('err', ['backgroundLightRed', 'bold', 'white', 'blink']);
 
         // Set up DI and ORM only if the .env file exists.
         if (file_exists(__DIR__ . '/../../../../.env')) {
@@ -82,8 +80,8 @@ abstract class RoboBase extends Tasks
      */
     protected function warning(string $warningMessage)
     {
-        $this->cli->warning()->inline('WARNING: ');
-        $this->cli->backgroundLightRed()->white($warningMessage);
+        $this->cli->bold()->yellow()->inline('[WARNING] ');
+        $this->cli->yellow($warningMessage);
     }
 
     /**
@@ -93,8 +91,8 @@ abstract class RoboBase extends Tasks
      */
     protected function error(string $errorMessage)
     {
-        $this->cli->err()->inline('ERROR: ');
-        $this->cli->error($errorMessage);
+        $this->cli->bold()->red()->inline('[ERROR] ');
+        $this->cli->lightRed($errorMessage);
     }
 
     protected function isDatabaseEnvironmentReady(): bool
@@ -105,6 +103,40 @@ abstract class RoboBase extends Tasks
         }
 
         return true;
+    }
+
+    protected function getTables(): array
+    {
+        $capsule = $this->capsule;
+        $conn = $capsule->getConnection();
+        $db = $conn->getDatabaseName();
+        $select = "SELECT table_name
+            FROM INFORMATION_SCHEMA.TABLES
+            WHERE table_schema = '$db'
+            ORDER BY table_name;";
+        $rows = $conn->select($select);
+        $tables = [];
+        foreach($rows as $row) {
+            $tables[] = $row->table_name;
+        }
+        return $tables;
+    }
+
+    protected function getViews(): array
+    {
+        $capsule = $this->capsule;
+        $conn = $capsule->getConnection();
+        $db = $conn->getDatabaseName();
+        $select = "SELECT table_name
+            FROM INFORMATION_SCHEMA.VIEWS
+            WHERE table_schema = '$db'
+            ORDER BY table_name;";
+        $rows = $conn->select($select);
+        $views = [];
+        foreach($rows as $row) {
+            $views[] = $row->table_name;
+        }
+        return $views;
     }
 
     protected function getTableDetails(string $tableName): array

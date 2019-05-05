@@ -103,4 +103,6 @@ env;
             $this->error('Unable to create .env file');
         }
     }
+
+    // todo: public function eject()
 }
