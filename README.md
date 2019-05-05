@@ -52,26 +52,4 @@ The result should look something like this:
 }
 ```
 
-To initialize your project run this:
-
-Linux/Mac (You can add an alias instead in  your ~./bashrc file so you don't need the `./`)
-
-`./willow willow:init`
-
-Windows (untested)
-
-`willow willow:init`
-
-When you run this command you will be prompted for the following:
-- **admin credentials** to a running MySQL/MariaDB database.
-- Which entities (tables/views) should have a Model, Controller, and Actions generated for them.
-
-See the wiki for more detailed instructions once your project is initialized.
-
-### 📦 Deployment
-Once you have your project working in development here are the recommendations for deploying to production.
-* Place your project in a managed repository such as Github.
-* In the production enviroment pull the repo.
-* Make a copy of the `.env` file or use the included `env-example` file filling in the values for your production environment.
-* Follow the guides for [Slim](http://slimframework.com) for your chosen web server.
-* If you configure your web server to handle CORS then you may want to remove CORS handling from `app/Main/app.php`
+[See the wiki for more detailed instructions](https://github.com/RyanNerd/willow/wiki/Willow-Framework-Guide)
