@@ -152,14 +152,13 @@ MONOLOG;
                 unlink($willowPath);
             }
 
-            // Remove composer.lock
-            $composerLockPath = __DIR__ . '/../../../../composer.lock';
-            if (is_file($composerLockPath)) {
-                unlink($composerLockPath);
-            }
+//            // Remove composer.lock
+//            $composerLockPath = __DIR__ . '/../../../../composer.lock';
+//            if (is_file($composerLockPath)) {
+//                unlink($composerLockPath);
+//            }
 
             // This is tricky since we are currently using robo and we are removing it will this work?
-            $this->taskComposerRemove()->arg('consolidation/robo')->run();
             $this->taskComposerRequire()->arg('consolidation/robo')->dev(true)->run();
         }
     }
