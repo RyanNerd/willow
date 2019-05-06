@@ -144,7 +144,7 @@ MONOLOG;
 
             $sampleDir = __DIR__ . '/../../../Controllers/Sample';
             if (is_dir($sampleDir)) {
-                $this->taskDeleteDir($sampleDir);
+                $this->taskDeleteDir($sampleDir)->run();
             }
         }
     }
