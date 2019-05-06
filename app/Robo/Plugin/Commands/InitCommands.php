@@ -114,17 +114,15 @@ env;
         $cli->br();
         $cli->bold()->white('Running eject will do the following things:');
         $monolog = <<<MONOLOG
-- Remove app/Controllers/Sample folder (if it exists)
-- Remove app/Robo folder and sub folders
-- Remove RoboFile.php
-- Remove Robo as a dependency from composer.json
 - Prompt you for a project name (with no spaces)
+- Remove app/Controllers/Sample folder (if it exists)
+- Remove the willow symlink to the Robo task runner
+- Move Robo to be a dev dependency in composer.json
 - Replace ALL namespace instances of Willow with the entered project name
 - Update composer.json with the new namespace/project name
-- Remove env-example
-- Remove the willow symlink to the Robo task runner
 - Remove composer.lock
 - Run `composer install` to sort out the new namespace and dependencies
+- Remove app/Robo folder and sub folders
 
 MONOLOG;
 
@@ -142,10 +140,27 @@ MONOLOG;
                 return;
             }
 
+            // Remove the Sample
             $sampleDir = __DIR__ . '/../../../Controllers/Sample';
             if (is_dir($sampleDir)) {
                 $this->taskDeleteDir($sampleDir)->run();
             }
+
+            // Remove the willow symlink
+            $willowPath = __DIR__ . '/../../../../willow';
+            if (is_file($willowPath)) {
+                unlink($willowPath);
+            }
+
+            // Remove composer.lock
+            $composerLockPath = __DIR__ . '/../../../../composer.lock';
+            if (is_file($composerLockPath)) {
+                unlink($composerLockPath);
+            }
+
+            // This is tricky since we are currently using robo and we are removing it will this work?
+            $this->taskComposerRemove()->arg('consolidation/robo')->run();
+            $this->taskComposerRequire()->arg('consolidation/robo')->dev(true)->run();
         }
     }
 }
