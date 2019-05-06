@@ -122,16 +122,15 @@ env;
 - Remove composer.lock
 - Move Robo to be a dev dependency in composer.json
 - Composer will resolve dependencies
-- Remove app/Robo folder and sub folders
+- Prompt you with manual tasks to complete the ejection 
 
 MONOLOG;
 
         $cli->bold()->red($monolog);
         $this->warning('THIS CAN NOT BE UNDONE!');
         /** @var Confirm $input */
-        $input = $cli->confirm('You sure you want to do this?');
+        $input = $cli->confirm('Are you sure you want to do this?');
         if ($input->confirmed()) {
-            $this->warning('Only partially implemented');
             $input = $cli->input('Enter the project name (alpha-numeric no whitespace)');
             $project = $input->prompt();
 
@@ -166,13 +165,9 @@ MONOLOG;
                 file_put_contents($phpFile, $fileText);
             }
 
-            // Update composer.json to use new project name
+            // Update composer.json to use the new project name
             $composerPath = __DIR__ . '/../../../../composer.json';
             $composerText = file_get_contents($composerPath);
-            $script = <<<script
-"post-create-project-cmd":["Willow\\Robo\\Script::postCreateProjectCmd"]
-script;
-            $composerText = str_replace($script, '', $composerText);
             $composerText = str_replace('ryannerd/willow', $project, $composerText);
             $composerText = str_replace('Willow Framework for creating ORM/RESTful APIs', $project, $composerText);
             $composerText = str_replace('Willow', $project, $composerText);
@@ -187,16 +182,18 @@ script;
             // This is tricky since we are currently using robo but we are making it a dev dependency
             $this->taskComposerRequire()->arg('consolidation/robo')->dev(true)->run();
 
-            // We're pulling the carpet out from under ourselves by deleting all files.
-            $this->taskDeleteDir(__DIR__ . '/../../../Robo')->run();
-        }
-    }
+            $cli->br();
 
-    public function willowFiles()
-    {
-        $cli =  $this->cli;
-        $files = $this->getFiles(__DIR__ . '/../../../../app', 'php');
-        $cli->bold()->yellow(implode($files, "\n"));
+            $cli->bold()->white('Some things must be manually done:');
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $cli->bold()->yellow('Run: `"rmdir app/Robo /s` to destroy the Robo folder.');
+            } else {
+                $cli->bold()->yellow('Run: `rm -rf app/Robo` to destroy the Robo folder.');
+            }
+            $cli->bold()->yellow('Manually edit composer.json and remove the `post-create-project-cmd` script and make any other changes.');
+            $cli->bold()->yellow('If you are not going to use Robo in your project you can run `composer remove "consolidation/robo"`');
+            $cli->bold()->yellow('If you are removing Robo you can safely delete RoboFile.php');
+        }
     }
 
     private function getFiles(string $dir, string $ext = ''): array
