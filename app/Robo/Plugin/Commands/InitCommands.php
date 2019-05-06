@@ -133,14 +133,18 @@ MONOLOG;
         /** @var Confirm $input */
         $input = $cli->confirm('You sure you want to do this?');
         if ($input->confirmed()) {
-            // TODO: Do eject stuff
-            $this->warning('Not implemented');
+            $this->warning('Only partially implemented');
             $input = $cli->input('Enter the project name (alpha-numeric no whitespace)');
             $project = $input->prompt();
 
             if (!v::alnum()->noWhitespace()->validate($project)) {
                 $this->warning('Invalid project name: ' . $project);
                 return;
+            }
+
+            $sampleDir = __DIR__ . '/../../../Controllers/Sample';
+            if (is_dir($sampleDir)) {
+                $this->taskDeleteDir($sampleDir);
             }
         }
     }
