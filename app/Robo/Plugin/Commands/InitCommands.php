@@ -117,11 +117,11 @@ env;
 - Prompt you for a project name (with no spaces)
 - Remove app/Controllers/Sample folder (if it exists)
 - Remove the willow symlink to the Robo task runner
-- Move Robo to be a dev dependency in composer.json
 - Replace ALL namespace instances of Willow with the entered project name
 - Update composer.json with the new namespace/project name
 - Remove composer.lock
-- Run `composer install` to sort out the new namespace and dependencies
+- Move Robo to be a dev dependency in composer.json
+- Composer will resolve dependencies
 - Remove app/Robo folder and sub folders
 
 MONOLOG;
@@ -152,14 +152,72 @@ MONOLOG;
                 unlink($willowPath);
             }
 
-//            // Remove composer.lock
-//            $composerLockPath = __DIR__ . '/../../../../composer.lock';
-//            if (is_file($composerLockPath)) {
-//                unlink($composerLockPath);
-//            }
+            // Update every *.php file to use the new project namespace
+            $phpFiles = $this->getFiles(__DIR__ . '/../../../../app', 'php');
+            foreach ($phpFiles as $phpFile) {
+                // Ignore those files in /app/Robo
+                if (strpos($phpFile, '/app/Robo/') > 0) {
+                    continue;
+                }
 
-            // This is tricky since we are currently using robo and we are removing it will this work?
+                $fileText = file_get_contents($phpFile);
+                $fileText = str_replace('use Willow', 'use '. $project, $fileText);
+                $fileText = str_replace('namespace Willow', 'namespace '. $project, $fileText);
+                file_put_contents($phpFile, $fileText);
+            }
+
+            // Update composer.json to use new project name
+            $composerPath = __DIR__ . '/../../../../composer.json';
+            $composerText = file_get_contents($composerPath);
+            $script = <<<script
+"post-create-project-cmd":["Willow\\Robo\\Script::postCreateProjectCmd"]
+script;
+            $composerText = str_replace($script, '', $composerText);
+            $composerText = str_replace('ryannerd/willow', $project, $composerText);
+            $composerText = str_replace('Willow Framework for creating ORM/RESTful APIs', $project, $composerText);
+            $composerText = str_replace('Willow', $project, $composerText);
+            file_put_contents($composerPath, $composerText);
+
+            // Destroy the composer.lock file to force composer to resolve dependencies
+            $composerLockPath = __DIR__ . '/../../../../composer.lock';
+            if (is_file($composerLockPath)) {
+                unlink($composerLockPath);
+            }
+
+            // This is tricky since we are currently using robo but we are making it a dev dependency
             $this->taskComposerRequire()->arg('consolidation/robo')->dev(true)->run();
+
+            // We're pulling the carpet out from under ourselves by deleting all files.
+            $this->taskDeleteDir(__DIR__ . '/../../../Robo')->run();
         }
+    }
+
+    public function willowFiles()
+    {
+        $cli =  $this->cli;
+        $files = $this->getFiles(__DIR__ . '/../../../../app', 'php');
+        $cli->bold()->yellow(implode($files, "\n"));
+    }
+
+    private function getFiles(string $dir, string $ext = ''): array
+    {
+        $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
+        $files = [];
+        foreach ($rii as $file) {
+            if ($file->isDir()){
+                continue;
+            }
+
+            $filePath = realpath($file->getPathname());
+
+            if ($ext !== '') {
+                if (pathinfo($filePath, PATHINFO_EXTENSION) !== $ext) {
+                    continue;
+                }
+            }
+
+            $files[] = $filePath;
+        }
+        return $files;
     }
 }
