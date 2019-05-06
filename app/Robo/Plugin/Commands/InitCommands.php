@@ -25,7 +25,7 @@ class InitCommands extends RoboBase
         do {
             $cli->bold()->white('Enter values for the .env file');
             do {
-                /** @var Input $input */
+                /** @var Confirm $input */
                 $input = $cli->input('DB_HOST (ex: 127.0.0.1)');
                 $input->defaultTo('127.0.0.1');
                 $dbHost = $input->prompt();
@@ -121,6 +121,7 @@ env;
 - Prompt you for a project name (with no spaces)
 - Replace ALL namespace instances of Willow with the entered project name
 - Update composer.json with the new namespace/project name
+- Remove env-example
 - Remove the willow symlink to the Robo task runner
 - Remove composer.lock
 - Run `composer install` to sort out the new namespace and dependencies
