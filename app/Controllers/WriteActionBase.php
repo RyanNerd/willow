@@ -9,7 +9,7 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\ModelBase;
 
-abstract class ActionBase
+abstract class WriteActionBase
 {
     /**
      * @var ModelBase
@@ -81,7 +81,6 @@ abstract class ActionBase
                 ->setData(null)
                 ->setStatus(500)
                 ->setMessage('Unable to save changes to ' . $model->getTableName());
-
         }
 
         return $responseBody();

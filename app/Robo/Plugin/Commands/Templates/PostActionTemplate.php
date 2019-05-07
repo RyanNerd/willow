@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Willow\Controllers\TableAlias;
 
-use Willow\Controllers\ActionBase;
+use Willow\Controllers\WriteActionBase;
 use Willow\Models\TableAlias;
 
-class TableAliasPostAction extends ActionBase
+class TableAliasPostAction extends WriteActionBase
 {
     /**
      * @var TableAlias
