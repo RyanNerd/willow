@@ -15,25 +15,29 @@ class TableAliasWriteValidator extends ValidatorBase
      *
      * @param ResponseBody $responseBody
      * @param array $parsedRequest
-     * @throws \ReflectionException
      */
     protected function processValidation(ResponseBody &$responseBody, array &$parsedRequest)
     {
-        // Get a associative array of all the fields for the model and their data type
-        $modelFields = $this->getModelFields(TableAlias::class);
-
-        // Go through all the model fields (from the model docblock)
-        foreach($modelFields as $field => $dataType) {
+        // Iterate all the model fields
+        foreach(TableAlias::FIELDS as $field => $dataType) {
             // Is the model field NOT in the request?
             if (!v::key($field)->validate($parsedRequest)) {
+                // Any dataType proceeded with an * are protected fields and can not be changed (e.g. password_hash)
+                if ($dataType{1} === '*') {
+                    continue;
+                }
                 // If the property/field is required in the request then:
-                // $responseBody->registerParam('required', $field, $dataType);
                 $responseBody->registerParam('optional', $field, $dataType);
             } else {
-                // Validations for existing request
+                // If Datatype is proceeded with an * it means the field is protected and can not be changed (e.g. password_hash)
+                if ($dataType{1} === '*') {
+                    $responseBody->registerParam('invalid', $field, null);
+                }
+
+                // Place your other validations for the existing request here
                 // For example:
                 // $parseValue = $parsedRequest[$field];
-                // if ($property === 'last_name') {
+                // if ($field === 'last_name') {
                 //    if (!V::length(1, 50)->validate($parseValue)) {
                 //       $this->registerParam('invalid', $field, $dataType);
                 //    }

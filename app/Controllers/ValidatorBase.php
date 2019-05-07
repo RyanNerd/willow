@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Willow\Middleware\ResponseBody;
-use Willow\Utilities\DocBlockParser;
 
 abstract class ValidatorBase
 {
@@ -15,16 +14,6 @@ abstract class ValidatorBase
      * @var string
      */
     protected $modelClass;
-
-    /**
-     * @var DocBlockParser
-     */
-    protected $docBlockParser;
-
-    public function __construct(DocBlockParser $docBlockParser)
-    {
-        $this->docBlockParser = $docBlockParser;
-    }
 
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
     {
@@ -41,9 +30,8 @@ abstract class ValidatorBase
                 ->setMessage('Missing or invalid request');
             return $responseBody();
         } else {
-
+            return $handler->handle($request);
         }
-        return $handler->handle($request);
     }
 
     /**
@@ -52,16 +40,4 @@ abstract class ValidatorBase
      * @param ResponseBody $responseBody
      */
     protected function processValidation(ResponseBody &$responseBody, array &$parsedRequest) {}
-
-    /**
-     * Given the model::class return an associative array of fields for the model with the data type.
-     *
-     * @param string $modelClass
-     * @return array
-     * @throws \ReflectionException
-     */
-    protected function getModelFields(string $modelClass): array
-    {
-        return $this->docBlockParser->getDocProperties($modelClass);
-    }
 }
