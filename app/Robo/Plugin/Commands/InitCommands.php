@@ -76,7 +76,7 @@ env;
                     continue;
                 }
 
-                if (strpos($line, 'DB_PASSWORD=') > 0) {
+                if (strpos($line, 'DB_PASSWORD') !== false) {
                     $obfuscatedEnv .= 'DB_PASSWORD=********' . PHP_EOL;
                 } else {
                     $obfuscatedEnv .= $line . PHP_EOL;
