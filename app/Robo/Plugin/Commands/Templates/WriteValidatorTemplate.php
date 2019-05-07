@@ -23,10 +23,11 @@ class TableAliasWriteValidator extends ValidatorBase
             // Is the model field NOT in the request?
             if (!v::key($field)->validate($parsedRequest)) {
                 // Any dataType proceeded with an * are protected fields and can not be changed (e.g. password_hash)
-                if ($dataType{1} === '*') {
+                if ($dataType{0} === '*') {
                     continue;
                 }
-                // If the property/field is required in the request then:
+
+                // If the request is missing this field so register it as optional
                 $responseBody->registerParam('optional', $field, $dataType);
             } else {
                 // If Datatype is proceeded with an * it means the field is protected and can not be changed (e.g. password_hash)
