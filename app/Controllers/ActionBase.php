@@ -58,6 +58,9 @@ abstract class ActionBase
             }
         }
 
+        // Call the beforeSave event hook
+        $this->beforeSave($model);
+
         // Update the model on the database.
         if ($model->save()) {
             $responseBody = $responseBody
@@ -71,6 +74,14 @@ abstract class ActionBase
                 ->setMessage('Unable to save changes to ' . $model->getTableName());
 
         }
+
         return $responseBody();
     }
+
+    /**
+     * Override this function if you need to make changes to the model prior to saving.
+     *
+     * @param ModelBase $model
+     */
+    protected function beforeSave(ModelBase &$model) {}
 }
