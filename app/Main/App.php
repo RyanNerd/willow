@@ -14,6 +14,7 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\Routing\RouteCollectorProxy;
 use Throwable;
+use Willow\Middleware\JsonBodyParserMiddleware;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\Validate;
 
@@ -76,6 +77,9 @@ class App
         $app->options('/{routes:.+}', function (Request $request, Response $response): ResponseInterface {
             return $response;
         });
+
+        // Add JSON parser middleware
+        $app->add(JsonBodyParserMiddleware::class);
 
         // CORS (Remove this if your web server handles CORS)
         $app->add(function(Request $request, RequestHandler $handler): ResponseInterface
