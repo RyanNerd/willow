@@ -15,10 +15,10 @@ class SampleGetValidator
     {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
-        $parsedBody = $responseBody->getParsedRequest();
+        $parsedRequest = $responseBody->getParsedRequest();
 
         // Register Roman numerals as an invalid request
-        if (V::roman()->validate($parsedBody['id'])) {
+        if (V::roman()->validate($parsedRequest['id'])) {
             $responseBody->registerParam('invalid', 'id', 'string');
         }
 
