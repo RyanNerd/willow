@@ -38,7 +38,7 @@ abstract class ActionBase
         }
 
         // Replace each key value from the parsed request into the model and save.
-        $columns = array_keys($model->getAttributes());
+        $columns = array_keys($model::FIELDS);
         foreach ($body as $key => $value) {
             // Ignore Primary Key
             if ($key === $model->getPrimaryKey()) {
@@ -52,6 +52,7 @@ abstract class ActionBase
                 }
             }
 
+            // Only update fields listed in the model::FIELDS array
             if (in_array($key, $columns)) {
                 $model->$key = $value;
             }

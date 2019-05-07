@@ -180,8 +180,23 @@ class MakeCommands extends RoboBase
         $modelTemplate = str_replace('TableName', $tableName, $modelTemplate);
         $modelTemplateLines = explode("\n", $modelTemplate);
 
+        $fields = '';
+        foreach ($tableDetails as $columnName => $columnType) {
+            $fields .= "        '$columnName' => '$columnType'," . PHP_EOL;
+        }
+        $fieldList = <<<fields
+    public const FIELDS = [
+$fields
+    ];
+fields;
+
         $template = '';
         foreach ($modelTemplateLines as $line) {
+            if (strpos($line, 'public const FIELDS = [];') !== false) {
+                $template .= $fieldList . PHP_EOL;
+                continue;
+            }
+
             if (strpos($line,'* @mixin Builder') > 0) {
                 foreach ($tableDetails as $columnName => $columnType) {
                     if ($columnType === 'datetime') {

@@ -10,5 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class ModelTemplate extends ModelBase
 {
+    public const FIELDS = [];
+
     protected $table = 'TableName';
 }

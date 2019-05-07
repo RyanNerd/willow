@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 abstract class ModelBase extends Model
 {
+    public const FIELDS = [];
+
     /**
      * Return the name of the primary key column (usually but not always "id")
      *
