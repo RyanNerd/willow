@@ -1,5 +1,4 @@
-# Willow Framework
-## IMPORTANT: Willow currently is in very early alpha
+# 🌳 Willow Framework 🌳
 
 >Willow is a type a girl who is beautiful and amazing and is kinda a special person and loved by everyone around her
 >most willows can be your best of friends she's up for anything and she's loves anything fun you throw at her...
@@ -18,7 +17,7 @@ Willow is _opinionated_ meaning that Willow stresses convention over configurati
 Willow works best as a framework in this situation:
 * You need to quickly spin up a [RESTful](https://restfulapi.net/) [datacentric](https://www.codecademy.com/articles/what-is-crud) API
 * You have defined your database with entities (tables/views) already in place
-* You are just starting your project and need to _hit the ground running_
+* You are just starting your project (for the backend API handler) and need to _hit the ground running_
 
 ### 📃 Requirements
 * PHP 7.1+

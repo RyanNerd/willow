@@ -62,6 +62,14 @@ class MakeCommands extends RoboBase
                 $this->warning($message);
             }
 
+            // Create WriteValidators for selected entities
+            $message = $this->createWriteValidator($entity);
+            if ($message === '') {
+                $cli->out($tableAlias . 'WriteValidator created');
+            } else {
+                $this->warning($message);
+            }
+
             // Create Actions for selected entities
             $message = $this->createActions($entity);
             if ($message === '') {
@@ -104,6 +112,14 @@ class MakeCommands extends RoboBase
         if ($message === '') {
             $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
             $cli->out($tableAlias . 'Controller created');
+        } else {
+            $this->warning($message);
+        }
+
+        // Create Validators for the table
+        $message = $this->createWriteValidator($tableName);
+        if ($message === '') {
+            $cli->out($tableAlias . 'WriteValidator created');
         } else {
             $this->warning($message);
         }
@@ -305,5 +321,42 @@ class MakeCommands extends RoboBase
     {
         $deleteActionTemplate = file_get_contents(__DIR__ . '/Templates/DeleteActionTemplate.php');
         return str_replace('TableAlias', $tableAlias, $deleteActionTemplate);
+    }
+
+
+
+    /**
+     * Proxy to generateWriteValidator
+     *
+     * @param string $tableName
+     * @return string
+     */
+    private function createWriteValidator(string $tableName): string
+    {
+        $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
+        $targetDir =  __DIR__ . '/../../../../app/Controllers/' . $tableAlias;
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir);
+        }
+
+        $validatorPath = $targetDir . '/' . $tableAlias . 'WriteValidator.php';
+        if (file_exists($validatorPath)) {
+            return $tableAlias . 'WriteValidator already exists.';
+        }
+
+        $validatorTemplate = $this->generateWriteValidator($tableAlias);
+
+        if (file_put_contents($validatorPath, $validatorTemplate) !== false) {
+            return '';
+        } else {
+            return 'Unable to create $tableAlias' . 'WriteValidator';
+        }
+    }
+
+    private function generateWriteValidator(string $tableAlias): string
+    {
+        $validatorTemplate = file_get_contents(__DIR__ . '/Templates/WriteValidatorTemplate.php');
+        $validatorTemplate = str_replace('TableAlias', $tableAlias, $validatorTemplate);
+        return $validatorTemplate;
     }
 }
