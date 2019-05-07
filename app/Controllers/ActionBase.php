@@ -63,8 +63,17 @@ abstract class ActionBase
 
         // Update the model on the database.
         if ($model->save()) {
+            // Remove any protected fields from the response
+            $modelArray = $model->toArray();
+            foreach ($modelArray as $field => $value) {
+                $dataType = $model::FIELDS[$field];
+                if ($dataType{0} === '*') {
+                    unset($modelArray[$field]);
+                }
+            }
+
             $responseBody = $responseBody
-                ->setData($model->toArray())
+                ->setData($modelArray)
                 ->setStatus(200);
         } else {
             // Unable to save for some reason so we return error status.
