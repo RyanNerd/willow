@@ -17,8 +17,14 @@ class SampleGetValidator
         $responseBody = $request->getAttribute('response_body');
         $parsedBody = $responseBody->getParsedRequest();
 
-        // Reject Roman numerals as the id
+        // Register Roman numerals as an invalid request
         if (V::roman()->validate($parsedBody['id'])) {
+            $responseBody->registerParam('invalid', 'id', 'string');
+        }
+
+        // Are there any missing or required request data points?
+        if ($responseBody->hasMissingRequiredOrInvalid()) {
+            // Set the response body to invalid request status and short circuit any further processing
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(400)
@@ -26,6 +32,7 @@ class SampleGetValidator
             return $responseBody();
         }
 
+        // All validations passed so we continue to process the request.
         return $handler->handle($request);
     }
 }
