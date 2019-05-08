@@ -192,12 +192,12 @@ fields;
 
         $template = '';
         foreach ($modelTemplateLines as $line) {
-            if (strpos($line, 'public const FIELDS = [];') !== false) {
+            if (strstr($line, 'public const FIELDS = [];')) {
                 $template .= $fieldList . PHP_EOL;
                 continue;
             }
 
-            if (strpos($line,'* @mixin Builder') > 0) {
+            if (strstr($line,'* @mixin Builder')) {
                 foreach ($tableDetails as $columnName => $columnType) {
                     if ($columnType === 'datetime') {
                         $columnType = '\DateTime';

@@ -34,7 +34,7 @@ class App
             // Set up Dependency Injection
             $builder = new ContainerBuilder();
             foreach (glob(__DIR__ . '/../../config/*.php') as $definitions) {
-                if (strpos($definitions, '_env.php') === false) {
+                if (!strstr($definitions, '_env.php')) {
                     $builder->addDefinitions(realpath($definitions));
                 }
             }

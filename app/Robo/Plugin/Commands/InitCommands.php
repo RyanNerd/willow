@@ -76,7 +76,7 @@ env;
                     continue;
                 }
 
-                if (strpos($line, 'DB_PASSWORD') !== false) {
+                if (strstr($line, 'DB_PASSWORD')) {
                     $obfuscatedEnv .= 'DB_PASSWORD=********' . PHP_EOL;
                 } else {
                     $obfuscatedEnv .= $line . PHP_EOL;
@@ -155,7 +155,7 @@ MONOLOG;
             $phpFiles = $this->getFiles(__DIR__ . '/../../../../app', 'php');
             foreach ($phpFiles as $phpFile) {
                 // Ignore those files in /app/Robo
-                if (strpos($phpFile, '/app/Robo/') > 0) {
+                if (strstr($phpFile, '/app/Robo/')) {
                     continue;
                 }
 
