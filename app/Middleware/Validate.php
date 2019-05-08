@@ -22,7 +22,7 @@ class Validate
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 
-        // TODO: Put your logic here to determine if request is authorized and/or is admin
+        // Put your logic here to determine if request is authorized and/or is admin
         if (true) {
             $responseBody = $responseBody
                 ->setIsAdmin()

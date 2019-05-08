@@ -15,7 +15,6 @@ use Slim\Psr7\Response;
 use Slim\Routing\RouteCollectorProxy;
 use Throwable;
 use Willow\Middleware\JsonBodyParser;
-use Willow\Middleware\JsonBodyParserMiddleware;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\Validate;
 
