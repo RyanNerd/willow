@@ -5,7 +5,6 @@ namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\CLImate;
 
-// todo: $this->generateValidations()
 class MakeCommands extends RoboBase
 {
     /**
@@ -337,8 +336,6 @@ fields;
         $deleteActionTemplate = file_get_contents(__DIR__ . '/Templates/DeleteActionTemplate.php');
         return str_replace('TableAlias', $tableAlias, $deleteActionTemplate);
     }
-
-
 
     /**
      * Proxy to generateWriteValidator

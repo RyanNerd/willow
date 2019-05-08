@@ -13,7 +13,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
  *
  * @see https://github.com/slimphp/Slim/issues/2653#issuecomment-490138033
  */
-class JsonBodyParserMiddleware implements MiddlewareInterface
+class JsonBodyParser implements MiddlewareInterface
 {
     public function process(RequestInterface $request, RequestHandler $handler): Response
     {

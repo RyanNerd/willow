@@ -42,11 +42,8 @@ class ResponseBodyFactory
         $parsedBody = $request->getParsedBody() ?? [];
         $queryParameters = $request->getQueryParams();
 
-        $this->responseBody = $this->responseBody
-            ->setParsedRequest(array_merge(['id' => $id], $queryParameters, $parsedBody));
-        $request = $request
-            ->withAttribute('response_body', $this->responseBody);
-        return $handler
-            ->handle($request);
+        $this->responseBody = $this->responseBody->setParsedRequest(array_merge(['id' => $id], $queryParameters, $parsedBody));
+        $request = $request->withAttribute('response_body', $this->responseBody);
+        return $handler->handle($request);
     }
 }
