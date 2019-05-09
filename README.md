@@ -7,8 +7,8 @@
 
 For developers, Willow is an _opinionated_ PHP framework used to quickly create CRUD based RESTful APIs.
 
-Willow is a marriage between [Slim 4](http://slimframework.com) and the [Illuminate Database](https://github.com/illuminate/database);
-with [Dependency Injection](http://php-di.org/) as your [best man](https://en.wikipedia.org/wiki/Groomsman), 
+Willow is a marriage between [Slim 4](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database).
+With [Dependency Injection](http://php-di.org/) as your [best man](https://en.wikipedia.org/wiki/Groomsman), 
 [Respect\Validation](https://respect-validation.readthedocs.io/en/1.1/) as your [bridesmaid](https://en.wikipedia.org/wiki/Bridesmaid),
 and [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/wiki/Wedding_planner). 
 
@@ -51,4 +51,4 @@ The result should look something like this:
 }
 ```
 
-[See the wiki for more detailed instructions](https://github.com/RyanNerd/willow/wiki/Willow-Framework-Guide)
+For more instructions see the [Willow Framework User Guide](https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3)
