@@ -1,6 +1,7 @@
 {
     "name": "ryannerd/willow",
     "description": "Willow Framework for creating ORM/RESTful APIs",
+    "license": ["MIT"],
     "type": "project",
     "minimum-stability": "dev",
     "require": {
