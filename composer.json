@@ -4,6 +4,15 @@
     "license": ["MIT"],
     "type": "project",
     "minimum-stability": "dev",
+    "authors": [{
+        "name": "Ryan Jentzsch",
+        "email": "ryan.jentzsch@gmail.com",
+        "homepage": "https://www.patreon.com/bePatron?u=3985594"
+    }],
+    "support": {
+        "docs": "https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3",
+        "issues": "https://github.com/RyanNerd/willow/issues"
+    },
     "require": {
         "slim/slim": "4.0.0-beta@dev",
         "php-di/php-di": "^6.0",

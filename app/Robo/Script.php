@@ -35,6 +35,7 @@ class Script
         $cli->green()->border('*', 45);
         $cli->bold()->lightGreen()->animation('willow')->speed(200)->enterFrom('left');
         $cli->backgroundGreen()->lightGray(' 🌳 https://github.com/RyanNerd/willow 🌳');
+        $cli->backgroundGreen()->lightGray(' 🤲 https://www.patreon.com/bePatron?u=3985594 🤲');
         $cli->green()->border('*', 45);
         $cli->bold()->white()->inline('Thanks for installing ');
         $cli->bold()->lightGreen()->inline('Willow');
