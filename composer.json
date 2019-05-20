@@ -5,7 +5,7 @@
     "type": "project",
     "minimum-stability": "dev",
     "require": {
-        "slim/slim": "4.0.0-alpha@dev",
+        "slim/slim": "4.0.0-beta@dev",
         "php-di/php-di": "^6.0",
         "vlucas/phpdotenv": "^3.3",
         "illuminate/database": "^5.8",
