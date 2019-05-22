@@ -6,3 +6,6 @@ DB_PASSWORD=secret
 
 # Set this to false in production
 DISPLAY_ERROR_DETAILS=true
+
+# Set this to true to have Willow handle CORS
+CORS=false

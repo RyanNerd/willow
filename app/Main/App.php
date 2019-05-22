@@ -61,11 +61,17 @@ class App
         // Add Routing Middleware
         $app->add(new RoutingMiddleware($app->getRouteResolver()));
 
+        // Register the routes via the controllers
         $v1 = $app->group('/v1', function (RouteCollectorProxy $collectorProxy) use ($container)
         {
+            $nameSpace = self::class;
+            $nameSpace = str_replace('\Main\App', '', $nameSpace);
+
+            // TODO: Speed things up by replacing the foreach logic with direct calls. For example:
+            //       $container->get(SampleController::class)->register($collectorProxy);
             foreach(glob(__DIR__ . '/../Controllers/*',GLOB_ONLYDIR) as $controller) {
                 $controller = basename($controller);
-                $className = 'Willow\Controllers\\' . $controller . '\\' . $controller . 'Controller';
+                $className = $nameSpace . '\Controllers\\' . $controller . '\\' . $controller . 'Controller';
                 $container->get($className)->register($collectorProxy);
             }
         });
@@ -73,25 +79,27 @@ class App
         // Add middleware that validates the overall request, and creates a ResponseBody as a request attribute
         $v1->add(Validate::class)->add(ResponseBodyFactory::class);
 
-        // Accept all routes for options (part of CORS)
-        $app->options('/{routes:.+}', function (Request $request, Response $response): ResponseInterface {
-            return $response;
-        });
-
         // Add JSON parser middleware
         $app->add(JsonBodyParser::class);
 
-        // CORS (Remove this if your web server handles CORS)
-        $app->add(function(Request $request, RequestHandler $handler): ResponseInterface
-        {
-            $response = $handler->handle($request);
-            return $response
-                ->withHeader('Access-Control-Allow-Origin', '*')
-                ->withHeader('Access-Control-Allow-Credentials', 'true')
-                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS')
-                ->withHeader('Content-Type', 'application/json');
-        });
+        // CORS environment variable will be true if Willow is handling CORS
+        if (getenv('CORS') === 'true') {
+            // Accept all routes for options
+            $app->options('/{routes:.+}', function (Request $request, Response $response): ResponseInterface {
+                return $response;
+            });
+
+            // CORS
+            $app->add(function (Request $request, RequestHandler $handler): ResponseInterface {
+                $response = $handler->handle($request);
+                return $response
+                    ->withHeader('Access-Control-Allow-Origin', '*')
+                    ->withHeader('Access-Control-Allow-Credentials', 'true')
+                    ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+                    ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS')
+                    ->withHeader('Content-Type', 'application/json');
+            });
+        }
 
         /**
          * Add Error Handling Middleware
