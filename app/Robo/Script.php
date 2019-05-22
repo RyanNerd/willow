@@ -32,11 +32,11 @@ class Script
         $cli = new CLImate();
         $cli->forceAnsiOn();
         $cli->addArt(__DIR__);
-        $cli->green()->border('*', 45);
+        $cli->green()->border('*', 55);
         $cli->bold()->lightGreen()->animation('willow')->speed(200)->enterFrom('left');
         $cli->backgroundGreen()->lightGray(' 🌳 https://github.com/RyanNerd/willow 🌳');
         $cli->backgroundGreen()->lightGray(' 🤲 https://www.patreon.com/bePatron?u=3985594 🤲');
-        $cli->green()->border('*', 45);
+        $cli->green()->border('*', 55);
         $cli->bold()->white()->inline('Thanks for installing ');
         $cli->bold()->lightGreen()->inline('Willow');
         $cli->bold()->white('!');
@@ -54,9 +54,9 @@ class Script
             $cli->bold()->white('To get started type:');
             $cli->bold()->lightGray('cd ' . $projectName);
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $cli->bold()->lightGray('willow list');
+                $cli->bold()->lightGray('willow willow:docs');
             } else {
-                $cli->bold()->lightGray('./willow list');
+                $cli->bold()->lightGray('./willow willow:docs');
             }
         }
     }

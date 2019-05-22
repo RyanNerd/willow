@@ -6,7 +6,7 @@ namespace Willow\Robo\Plugin\Commands;
 use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Respect\Validation\Validator as V;
 
-class InitCommands extends RoboBase
+class WillowCommands extends RoboBase
 {
     /**
      * Initialization of the Willow framework specifically the .env file
@@ -184,6 +184,10 @@ MONOLOG;
 
             $cli->br();
 
+            $cli->addArt(__DIR__ . '/../');
+
+            $cli->green()->animation('willow')->exitTo('left');
+
             $cli->bold()->white('Some things must be manually done:');
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                 $cli->bold()->yellow('Run: `"rmdir app/Robo /s` to destroy the Robo folder.');
@@ -194,6 +198,14 @@ MONOLOG;
             $cli->bold()->yellow('If you are not going to use Robo in your project you can run `composer remove "consolidation/robo"`');
             $cli->bold()->yellow('If you are removing Robo you can safely delete RoboFile.php');
         }
+    }
+
+    /**
+     * Launch the Willow Framework User's Guide in the default web browser
+     */
+    public function willowDocs()
+    {
+        $this->taskOpenBrowser('https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3/board/0392b5a8-a2db-4e4b-831e-ebb4aa65fb13')->run();
     }
 
     private function getFiles(string $dir, string $ext = ''): array
