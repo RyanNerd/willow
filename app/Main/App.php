@@ -5,13 +5,9 @@ namespace Willow\Main;
 
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Factory\AppFactory;
 use Slim\Middleware\ErrorMiddleware;
 use Slim\Middleware\RoutingMiddleware;
-use Slim\Psr7\Request;
-use Slim\Psr7\Response;
 use Slim\Routing\RouteCollectorProxy;
 use Throwable;
 use Willow\Middleware\JsonBodyParser;
@@ -30,6 +26,28 @@ class App
         try {
             // Load Default configuration from environment
             include_once __DIR__ . '/../../config/_env.php';
+
+            // Is Willow handling CORS pre-flight requests?
+            if (getenv('CORS') === 'true') {
+                // If we are getting a pre-flight CORS request then handle it now and exit
+                if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                    ob_start();
+                    header("Access-Control-Allow-Origin: *");
+                    header('Access-Control-Allow-Credentials: true');
+                    header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+                    header('Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS');
+
+                    header(sprintf(
+                        'HTTP/%s %s %s',
+                        "1.1",
+                        200,
+                        'OK'
+                    ));
+                    ob_end_flush();
+
+                    exit();
+                }
+            }
 
             // Set up Dependency Injection
             $builder = new ContainerBuilder();
@@ -81,27 +99,6 @@ class App
 
         // Add JSON parser middleware
         $app->add(JsonBodyParser::class);
-
-        // CORS environment variable will be true if Willow is handling CORS
-        if (getenv('CORS') === 'true') {
-            // Accept all routes for options
-            $app->options('/{routes:.+}', function (Request $request, Response $response): ResponseInterface {
-                return $response;
-            });
-
-            // CORS
-            if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-                $app->add(function (Request $request, RequestHandler $handler): ResponseInterface {
-                    $response = $handler->handle($request);
-                    return $response
-                        ->withHeader('Access-Control-Allow-Origin', '*')
-                        ->withHeader('Access-Control-Allow-Credentials', 'true')
-                        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-                        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS')
-                        ->withHeader('Content-Type', 'application/json');
-                });
-            }
-        }
 
         /**
          * Add Error Handling Middleware
