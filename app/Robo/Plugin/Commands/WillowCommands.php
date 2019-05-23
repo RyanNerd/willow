@@ -120,7 +120,6 @@ env;
 - Replace ALL namespace instances of Willow with the entered project name
 - Update composer.json with the new namespace/project name
 - Remove composer.lock
-- Move Robo to be a dev dependency in composer.json
 - Composer will resolve dependencies
 - Prompt you with manual tasks to complete the ejection 
 
@@ -153,17 +152,9 @@ MONOLOG;
 
             // Update every *.php file to use the new project namespace
             $phpFiles = $this->getFiles(__DIR__ . '/../../../../app', 'php');
-            foreach ($phpFiles as $phpFile) {
-                // Ignore those files in /app/Robo
-                if (strstr($phpFile, '/app/Robo/')) {
-                    continue;
-                }
-
-                $fileText = file_get_contents($phpFile);
-                $fileText = str_replace('use Willow', 'use '. $project, $fileText);
-                $fileText = str_replace('namespace Willow', 'namespace '. $project, $fileText);
-                file_put_contents($phpFile, $fileText);
-            }
+            $this->updateProjectName($phpFiles, $project);
+            $phpFiles = $this->getFiles(__DIR__ . '/../../../../tests', 'php');
+            $this->updateProjectName($phpFiles, $project);
 
             // Update composer.json to use the new project name
             $composerPath = __DIR__ . '/../../../../composer.json';
@@ -179,17 +170,13 @@ MONOLOG;
                 unlink($composerLockPath);
             }
 
-            // This is tricky since we are currently using robo but we are making it a dev dependency
-            $this->taskComposerRequire()->arg('consolidation/robo')->dev(true)->run();
-
             $cli->br();
 
             $cli->addArt(__DIR__ . '/../');
-
             $cli->green()->animation('willow')->exitTo('left');
 
             $cli->bold()->white('Some things must be manually done:');
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            if (self::isWindows()) {
                 $cli->bold()->yellow('Run: `"rmdir app/Robo /s` to destroy the Robo folder.');
             } else {
                 $cli->bold()->yellow('Run: `rm -rf app/Robo` to destroy the Robo folder.');
@@ -208,6 +195,20 @@ MONOLOG;
         $this->taskOpenBrowser('https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3/board/0392b5a8-a2db-4e4b-831e-ebb4aa65fb13')->run();
     }
 
+    private function updateProjectName(array $phpFiles, string $project)
+    {
+        foreach ($phpFiles as $phpFile) {
+            // Ignore those files in /app/Robo
+            if (strstr($phpFile, '/app/Robo/')) {
+                continue;
+            }
+
+            $fileText = file_get_contents($phpFile);
+            $fileText = str_replace('use Willow', 'use '. $project, $fileText);
+            $fileText = str_replace('namespace Willow', 'namespace '. $project, $fileText);
+            file_put_contents($phpFile, $fileText);
+        }
+    }
     private function getFiles(string $dir, string $ext = ''): array
     {
         $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));

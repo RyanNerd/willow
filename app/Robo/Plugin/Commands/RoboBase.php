@@ -158,4 +158,9 @@ abstract class RoboBase extends Tasks
         }
         return $tableDetails;
     }
+
+    public static function isWindows(): bool
+    {
+        return (substr(strtoupper(PHP_OS),0,3) === 'WIN');
+    }
 }

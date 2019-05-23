@@ -21,7 +21,7 @@ class MakeCommands extends RoboBase
         $cli = $this->cli;
 
         // Are we using Windows?
-        if ((substr(strtoupper(PHP_OS),0,3) === 'WIN')) {
+        if (self::isWindows()) {
             // CLIMATE does not support checkboxes in Windows so prompt the user entity by entity instead.
             $selectedEntities = [];
             foreach ($entities as $entity) {
