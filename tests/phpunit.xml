@@ -13,7 +13,7 @@
         forceCoversAnnotation="false"
         printerClass="PHPUnit\TextUI\ResultPrinter">
     <testsuites>
-        <testsuite name="willow-app Tests">
+        <testsuite name="App Tests">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
