@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace Willow\Main;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Factory\AppFactory;
+use Slim\Interfaces\CallableResolverInterface;
 use Slim\Middleware\ErrorMiddleware;
 use Slim\Middleware\RoutingMiddleware;
 use Slim\Routing\RouteCollectorProxy;
@@ -23,53 +26,58 @@ class App
 
     public function __construct()
     {
-        try {
-            // Load Default configuration from environment
-            include_once __DIR__ . '/../../config/_env.php';
+        // Do we have a .env file?
+        if (file_exists(__DIR__ . '/../../.env')) {
+            try {
+                // Load Default configuration from environment
+                include_once __DIR__ . '/../../config/_env.php';
 
-            // Is Willow handling CORS pre-flight requests?
-            if (getenv('CORS') === 'true') {
-                // If we are getting a pre-flight CORS request then handle it now and exit
-                if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-                    ob_start();
-                    header("Access-Control-Allow-Origin: *");
-                    header('Access-Control-Allow-Credentials: true');
-                    header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-                    header('Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS');
+                // Are we handling CORS pre-flight requests?
+                if (getenv('CORS') === 'true') {
+                    // If we are getting a pre-flight CORS request then handle it now and exit
+                    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                        ob_start();
+                        header("Access-Control-Allow-Origin: *");
+                        header('Access-Control-Allow-Credentials: true');
+                        header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+                        header('Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS');
 
-                    header(sprintf(
-                        'HTTP/%s %s %s',
-                        "1.1",
-                        200,
-                        'OK'
-                    ));
-                    ob_end_flush();
+                        header(sprintf(
+                            'HTTP/%s %s %s',
+                            "1.1",
+                            200,
+                            'OK'
+                        ));
+                        ob_end_flush();
 
-                    exit();
+                        exit();
+                    }
                 }
-            }
 
-            // Set up Dependency Injection
-            $builder = new ContainerBuilder();
-            foreach (glob(__DIR__ . '/../../config/*.php') as $definitions) {
-                if (!strstr($definitions, '_env.php')) {
-                    $builder->addDefinitions(realpath($definitions));
+                // Set up Dependency Injection
+                $builder = new ContainerBuilder();
+                foreach (glob(__DIR__ . '/../../config/*.php') as $definitions) {
+                    if (!strstr($definitions, '_env.php')) {
+                        $builder->addDefinitions(realpath($definitions));
+                    }
                 }
-            }
-            $container = $builder->build();
+                $container = $builder->build();
 
-            // Establish an instance of the Illuminate database capsule (if not already established)
-            if ($this->capsule === null) {
-                $this->capsule = $container->get(Capsule::class);
+                // Establish an instance of the Illuminate database capsule (if not already established)
+                if ($this->capsule === null) {
+                    $this->capsule = $container->get(Capsule::class);
+                }
+            } catch (Throwable $exception) {
+                $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS');
+                if ($displayErrorDetails === false || $displayErrorDetails !== 'true') {
+                    echo 'An error occured.';
+                } else {
+                    var_dump($exception);
+                }
+                return;
             }
-        } catch (Throwable $exception) {
-            $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS');
-            if ($displayErrorDetails === false || $displayErrorDetails !== 'true') {
-                echo 'An error occured.';
-            } else {
-                var_dump($exception);
-            }
-            return;
+        } else {
+            $container = new Container();
         }
 
         // Get an instance of Slim\App
@@ -103,17 +111,15 @@ class App
         /**
          * Add Error Handling Middleware
          * The constructor of `ErrorMiddleware` takes in 5 parameters
-         * @param \Slim\Interfaces\CallableResolverInterface $callableResolver - CallableResolver implementation of your choice
-         * @param \Psr\Http\Message\ResponseFactoryInterface $responseFactory - ResponseFactory implementation of your choice
+         *
+         * @param CallableResolverInterface - CallableResolver implementation of your choice
+         * @param ResponseFactoryInterface - ResponseFactory implementation of your choice
          * @param bool $displayErrorDetails - Should be set to false in production
          * @param bool $logErrors - Parameter is passed to the default ErrorHandler
          * @param bool $logErrorDetails - Display error details in error log
          */
-        $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS');
-        $displayErrorDetails = ($displayErrorDetails === 'true' || $displayErrorDetails === 'TRUE') ? true : false;
-        $callableResolver = $app->getCallableResolver();
-        $responseFactory = $app->getResponseFactory();
-        $errorMiddleware = new ErrorMiddleware($callableResolver, $responseFactory, $displayErrorDetails, true, true);
+        $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS') === 'true' ? true : false;
+        $errorMiddleware = new ErrorMiddleware($app->getCallableResolver(), $app->getResponseFactory(), $displayErrorDetails, true, true);
         $app->add($errorMiddleware);
 
         // Process the request and response

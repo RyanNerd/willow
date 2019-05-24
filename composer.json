@@ -14,8 +14,8 @@
         "issues": "https://github.com/RyanNerd/willow/issues"
     },
     "require": {
-        "slim/slim": "4.0.0-beta@dev",
-        "php-di/php-di": "^6.0",
+        "slim/slim": "4.0.0-beta",
+        "php-di/php-di": "^6.0.8",
         "vlucas/phpdotenv": "^3.3",
         "illuminate/database": "^5.8",
         "doctrine/dbal": "~2.3",
