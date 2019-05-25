@@ -68,11 +68,10 @@ class App
                     $this->capsule = $container->get(Capsule::class);
                 }
             } catch (Throwable $exception) {
-                $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS');
-                if ($displayErrorDetails === false || $displayErrorDetails !== 'true') {
-                    echo 'An error occured.';
-                } else {
+                if (getenv('DISPLAY_ERROR_DETAILS') === 'true') {
                     var_dump($exception);
+                } else {
+                    echo 'An error occurred.' . PHP_EOL;
                 }
                 return;
             }
