@@ -34,7 +34,7 @@ final class GetActionTest extends TestCase
         $body = $bodyStream->getContents();
         $json = json_decode($body, true);
 
-        $this->assertEquals(['id' => 1, 'test' => true], $json['data']);
+        $this->assertEquals(['id' => 1, 'test' => true, 'extra' => 32.3], $json['data']);
         $this->assertEquals(200, $json['status']);
         $this->assertEquals(200, $result->getStatusCode());
     }
@@ -110,7 +110,8 @@ class MockModel extends ModelBase
         return [
             'id' => 1,
             'test' => true,
-            'protected' => 'do not show'
+            'protected' => 'do not show',
+            'extra' => 32.3
         ];
     }
 }

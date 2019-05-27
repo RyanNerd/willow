@@ -40,9 +40,11 @@ class GetActionBase
             // Remove any protected fields from the response
             $data = $model->toArray();
             foreach ($data as $field => $value) {
-                $dataType = $model::FIELDS[$field];
-                if ($dataType{0} === '*') {
-                    unset($data[$field]);
+                if (array_key_exists($field, $model::FIELDS)) {
+                    $dataType = $model::FIELDS[$field];
+                    if ($dataType{0} === '*') {
+                        unset($data[$field]);
+                    }
                 }
             }
 
