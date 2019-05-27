@@ -153,36 +153,6 @@ class ResponseBody
     }
 
     /**
-     * Sets the optional request options.
-     *
-     * @param array $optional
-     * @return ResponseBody
-     */
-    public function setOptional(array $optional): self
-    {
-        assert(count($optional) !== 0);
-
-        $clone = clone $this;
-        $clone->optional = $optional;
-        return $clone;
-    }
-
-    /**
-     * Sets the required request options.
-     *
-     * @param array $required
-     * @return ResponseBody
-     */
-    public function setRequired(array $required): self
-    {
-        assert(count($required) !== 0);
-
-        $clone = clone $this;
-        $clone->required = $required;
-        return $clone;
-    }
-
-    /**
      * Register a parameter as optional, required or invalid.
      *
      * @param string $section
@@ -192,7 +162,7 @@ class ResponseBody
     public function registerParam(string $section, string $name, ?string $type): void
     {
         assert(in_array($section, ['optional', 'required', 'invalid']));
-        assert(strlen($name) !== 0);
+        assert($name !== '');
 
         if ($type === null) {
             $type = 'unknown';
@@ -263,7 +233,7 @@ class ResponseBody
      */
     public function setMessage(string $message): self
     {
-        assert(strlen($message) !==0);
+        assert($message !== '');
 
         $clone = clone $this;
         $clone->message = $message;
