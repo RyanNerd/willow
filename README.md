@@ -21,7 +21,7 @@ Willow works best as a framework in this situation:
 
 ### 📃 Requirements
 * PHP 7.1+
-* MySQL 5.6+ (support is planned for Postgres, SQLite, and MSSQL)
+* MySQL 5.6+ (Postgres, SQLite, and MSSQL should also work but are untested)
 * [Composer](https://getcomposer.org) (For Willow to work best this must be installed globally)
 
 ### 💾 Installation
