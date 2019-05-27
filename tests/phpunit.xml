@@ -20,6 +20,9 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../app</directory>
+            <exclude>
+                <directory suffix=".php">../app/Robo/Plugin/Commands/Templates</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
