@@ -16,12 +16,12 @@ class TableAliasWriteValidator extends ValidatorBase
      * @param ResponseBody $responseBody
      * @param array $parsedRequest
      */
-    protected function processValidation(ResponseBody &$responseBody, array &$parsedRequest)
+    protected function processValidation(ResponseBody $responseBody, array &$parsedRequest): void
     {
         // Iterate all the model fields
         foreach(TableAlias::FIELDS as $field => $dataType) {
             // Is the model field NOT in the request?
-            if (!v::key($field)->validate($parsedRequest)) {
+            if (!V::key($field)->validate($parsedRequest)) {
                 // Any dataType proceeded with an * are protected fields and can not be changed (e.g. password_hash)
                 if ($dataType{0} === '*') {
                     continue;
