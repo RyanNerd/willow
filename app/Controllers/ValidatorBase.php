@@ -29,15 +29,16 @@ abstract class ValidatorBase
                 ->setStatus(400)
                 ->setMessage('Missing or invalid request');
             return $responseBody();
-        } else {
-            return $handler->handle($request);
         }
+
+            return $handler->handle($request);
     }
 
     /**
      * You should override this function to perform the validations
      *
      * @param ResponseBody $responseBody
+     * @param array $parsedRequest
      */
-    protected function processValidation(ResponseBody &$responseBody, array &$parsedRequest) {}
+    protected function processValidation(ResponseBody $responseBody, array &$parsedRequest): void {}
 }
