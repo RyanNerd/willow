@@ -23,10 +23,12 @@ abstract class WriteActionBase
         $body = $responseBody->getParsedRequest();
         $model = $this->model;
 
-        // Does the request body have an Id?
-        if ($body['id'] !== null) {
+        $primaryKeyName = $model->getPrimaryKey();
+
+        // Does the request body have an Id / PrimaryKeyName?
+        if (array_key_exists($primaryKeyName, $body) && $body[$primaryKeyName] !== null) {
             // Look up the model record.
-            $model = $model->find($body['Id']);
+            $model = $model->find($body[$primaryKeyName]);
 
             // If we couldn't find the record then respond with 404 (not found) status.
             if ($model === null) {
@@ -41,7 +43,7 @@ abstract class WriteActionBase
         $columns = array_keys($model::FIELDS);
         foreach ($body as $key => $value) {
             // Ignore Primary Key
-            if ($key === $model->getPrimaryKey()) {
+            if ($key === $primaryKeyName) {
                 continue;
             }
 
@@ -53,7 +55,7 @@ abstract class WriteActionBase
             }
 
             // Only update fields listed in the model::FIELDS array
-            if (in_array($key, $columns)) {
+            if (in_array($key, $columns, true)) {
                 $model->$key = $value;
             }
         }
@@ -91,5 +93,5 @@ abstract class WriteActionBase
      *
      * @param ModelBase $model
      */
-    protected function beforeSave(ModelBase &$model) {}
+    protected function beforeSave(ModelBase $model): void {}
 }
