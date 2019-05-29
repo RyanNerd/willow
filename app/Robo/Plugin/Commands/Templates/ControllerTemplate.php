@@ -8,7 +8,7 @@ use Willow\Controllers\IController;
 
 class TableAliasController implements IController
 {
-    public function register(RouteCollectorProxyInterface $group)
+    public function register(RouteCollectorProxyInterface $group): void
     {
         $group->get('/%route%/{id}', TableAliasGetAction::class);
         $group->post('/%route%', TableAliasPostAction::class)
