@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Respect\Validation\Validator as V;
 use Slim\Psr7\Request;
 use Willow\Controllers\ValidatorBase;
@@ -20,7 +20,7 @@ final class ValidatorTest extends TestCase
             ->method('getAttribute')
             ->with('response_body')
             ->willReturn($responseBody);
-        $requestHandler = $this->createMock(RequestHandlerInterface::class);
+        $requestHandler = $this->createMock(RequestHandler::class);
 
         $result = $validator->__invoke($request, $requestHandler);
     }
@@ -35,7 +35,7 @@ final class ValidatorTest extends TestCase
             ->method('getAttribute')
             ->with('response_body')
             ->willReturn($responseBody);
-        $requestHandler = $this->createMock(RequestHandlerInterface::class);
+        $requestHandler = $this->createMock(RequestHandler::class);
 
         $result = $validator->__invoke($request, $requestHandler);
     }
