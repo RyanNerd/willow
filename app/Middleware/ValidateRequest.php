@@ -28,10 +28,10 @@ class ValidateRequest
                 ->setIsAdmin()
                 ->setIsAuthenticated();
             return $handler->handle($request->withAttribute('response_body', $responseBody));
-        } else {
-            // Short circuit the request by returning a response with status of 401;
-            $responseBody = $responseBody->setStatus(401)->setMessage('Invalid API Key');
-            return $responseBody();
         }
+
+        // Short circuit the request by returning a response with status of 401;
+        $responseBody = $responseBody->setStatus(401)->setMessage('Invalid API Key');
+        return $responseBody();
     }
 }
