@@ -35,5 +35,4 @@ if (file_exists(__DIR__ . '/../.env')) {
 }
 
 // Launch the app
-$app = new App();
-$app();
+new App();

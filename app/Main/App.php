@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Willow\Main;
 
-use DI\Container;
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -12,7 +11,6 @@ use Slim\Interfaces\CallableResolverInterface;
 use Slim\Middleware\ErrorMiddleware;
 use Slim\Middleware\RoutingMiddleware;
 use Slim\Routing\RouteCollectorProxy;
-use Throwable;
 use Willow\Middleware\JsonBodyParser;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\ValidateRequest;
@@ -24,40 +22,21 @@ class App
      */
     protected $capsule = null;
 
-    /**
-     * @var \Slim\App
-     */
-    protected $slim;
-
-    public function __construct()
+    public function __construct(bool $run = true)
     {
-        // Do we have a .env file?
-        if (file_exists(__DIR__ . '/../../.env')) {
-            try {
-                // Set up Dependency Injection
-                $builder = new ContainerBuilder();
-                foreach (glob(__DIR__ . '/../../config/*.php') as $definitions) {
-                    // Skip the _env.php file for the definitions as this was required already in public/index.php
-                    if (strpos($definitions, '_env.php') === false) {
-                        $builder->addDefinitions(realpath($definitions));
-                    }
-                }
-                $container = $builder->build();
-
-                // Establish an instance of the Illuminate database capsule (if not already established)
-                if ($this->capsule === null) {
-                    $this->capsule = $container->get(Capsule::class);
-                }
-            } catch (Throwable $exception) {
-                if (getenv('DISPLAY_ERROR_DETAILS') === 'true') {
-                    var_dump($exception);
-                } else {
-                    echo 'An error occurred.' . PHP_EOL;
-                }
-                return;
+        // Set up Dependency Injection
+        $builder = new ContainerBuilder();
+        foreach (glob(__DIR__ . '/../../config/*.php') as $definitions) {
+            // Skip the _env.php file for the definitions as this was required already in public/index.php
+            if (strpos($definitions, '_env.php') === false) {
+                $builder->addDefinitions(realpath($definitions));
             }
-        } else {
-            $container = new Container();
+        }
+        $container = $builder->build();
+
+        // Establish an instance of the Illuminate database capsule (if not already established)
+        if ($this->capsule === null) {
+            $this->capsule = $container->get(Capsule::class);
         }
 
         // Get an instance of Slim\App
@@ -102,15 +81,13 @@ class App
          * @param bool $logErrors - Parameter is passed to the default ErrorHandler
          * @param bool $logErrorDetails - Display error details in error log
          */
-        $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS') === 'true' ? true : false;
+        $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS') === 'true';
         $errorMiddleware = new ErrorMiddleware($app->getCallableResolver(), $app->getResponseFactory(), $displayErrorDetails, true, true);
         $app->add($errorMiddleware);
 
-        $this->slim = $app;
-    }
-
-    public function __invoke()
-    {
-        $this->slim->run();
+        // Run will be true unless we are doing a unit test.
+        if ($run) {
+            $app->run();
+        }
     }
 }

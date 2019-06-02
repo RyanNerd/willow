@@ -6,12 +6,13 @@
         bootstrap="../vendor/autoload.php"
         cacheResult="false"
         cacheTokens="false"
-        colors="false"
+        colors="true"
+        verbose="false"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
         forceCoversAnnotation="false"
-        printerClass="PHPUnit\TextUI\ResultPrinter">
+>
     <testsuites>
         <testsuite name="App Tests">
             <directory suffix="Test.php">tests</directory>
