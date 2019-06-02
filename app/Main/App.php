@@ -24,40 +24,21 @@ class App
      */
     protected $capsule = null;
 
+    /**
+     * @var \Slim\App
+     */
+    protected $slim;
+
     public function __construct()
     {
         // Do we have a .env file?
         if (file_exists(__DIR__ . '/../../.env')) {
             try {
-                // Load Default configuration from environment
-                include_once __DIR__ . '/../../config/_env.php';
-
-                // Are we handling CORS pre-flight requests?
-                if (getenv('CORS') === 'true') {
-                    // If we are getting a pre-flight CORS request then handle it now and exit
-                    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-                        ob_start();
-                        header('Access-Control-Allow-Origin: *');
-                        header('Access-Control-Allow-Credentials: true');
-                        header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-                        header('Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS');
-
-                        header(sprintf(
-                            'HTTP/%s %s %s',
-                            "1.1",
-                            200,
-                            'OK'
-                        ));
-                        ob_end_flush();
-
-                        exit();
-                    }
-                }
-
                 // Set up Dependency Injection
                 $builder = new ContainerBuilder();
                 foreach (glob(__DIR__ . '/../../config/*.php') as $definitions) {
-                    if (!strstr($definitions, '_env.php')) {
+                    // Skip the _env.php file for the definitions as this was required already in public/index.php
+                    if (strpos($definitions, '_env.php') === false) {
                         $builder->addDefinitions(realpath($definitions));
                     }
                 }
@@ -125,7 +106,11 @@ class App
         $errorMiddleware = new ErrorMiddleware($app->getCallableResolver(), $app->getResponseFactory(), $displayErrorDetails, true, true);
         $app->add($errorMiddleware);
 
-        // Process the request and response
-        $app->run();
+        $this->slim = $app;
+    }
+
+    public function __invoke()
+    {
+        $this->slim->run();
     }
 }
