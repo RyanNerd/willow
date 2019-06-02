@@ -59,7 +59,7 @@ abstract class RoboBase extends Tasks
      *
      * @param Container $container
      */
-    protected function bootDatabase(Container $container)
+    protected function bootDatabase(Container $container): void
     {
 
         // Establish an instance of the Illuminate database capsule (if not already established)
@@ -78,7 +78,7 @@ abstract class RoboBase extends Tasks
      *
      * @param string $warningMessage
      */
-    protected function warning(string $warningMessage)
+    protected function warning(string $warningMessage): void
     {
         $this->cli->bold()->yellow()->inline('[WARNING] ');
         $this->cli->yellow($warningMessage);
@@ -89,7 +89,7 @@ abstract class RoboBase extends Tasks
      *
      * @param string $errorMessage
      */
-    protected function error(string $errorMessage)
+    protected function error(string $errorMessage): void
     {
         $this->cli->bold()->red()->inline('[ERROR] ');
         $this->cli->lightRed($errorMessage);
@@ -161,6 +161,6 @@ abstract class RoboBase extends Tasks
 
     public static function isWindows(): bool
     {
-        return (substr(strtoupper(PHP_OS),0,3) === 'WIN');
+        return stripos(PHP_OS, 'WIN') === 0;
     }
 }

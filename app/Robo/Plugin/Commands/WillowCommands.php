@@ -5,13 +5,19 @@ namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Respect\Validation\Validator as V;
+use Robo\Task\Development\PhpServer;
 
 class WillowCommands extends RoboBase
 {
     /**
+     * @var PhpServer
+     */
+    private $server;
+
+    /**
      * Initialization of the Willow framework specifically the .env file
      */
-    public function willowInit()
+    public function willowInit(): void
     {
         $cli = $this->cli;
 
@@ -108,7 +114,7 @@ env;
     /**
      * Eject the Willow framework from the project
      */
-    public function willowEject()
+    public function willowEject(): void
     {
         $cli = $this->cli;
         $cli->br();
@@ -155,6 +161,8 @@ MONOLOG;
             $this->updateProjectName($phpFiles, $project);
             $phpFiles = $this->getFiles(__DIR__ . '/../../../../tests', 'php');
             $this->updateProjectName($phpFiles, $project);
+            $phpFiles = $this->getFiles(__DIR__ . '/../../../../public');
+            $this->updateProjectName($phpFiles, $project);
 
             // Update composer.json to use the new project name
             $composerPath = __DIR__ . '/../../../../composer.json';
@@ -190,12 +198,27 @@ MONOLOG;
     /**
      * Launch the Willow Framework User's Guide in the default web browser
      */
-    public function willowDocs()
+    public function willowDocs(): void
     {
         $this->taskOpenBrowser('https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3/board/0392b5a8-a2db-4e4b-831e-ebb4aa65fb13')->run();
     }
 
-    private function updateProjectName(array $phpFiles, string $project)
+    /**
+     * Launch the built-in PHP web server and launch the Sample in a web browser
+     */
+    public function willowSample(): void
+    {
+        $server = $this->taskServer(8088);
+        $this->server = $server->host('127.0.0.1')
+            ->dir(__DIR__ . '/../../../../public')
+            ->background()
+            ->run();
+
+        $this->taskOpenBrowser('http://localhost:8088/v1/sample/Hello-World')->run();
+        sleep(20);
+    }
+
+    private function updateProjectName(array $phpFiles, string $project): void
     {
         foreach ($phpFiles as $phpFile) {
             // Ignore those files in /app/Robo
@@ -209,6 +232,7 @@ MONOLOG;
             file_put_contents($phpFile, $fileText);
         }
     }
+
     private function getFiles(string $dir, string $ext = ''): array
     {
         $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));

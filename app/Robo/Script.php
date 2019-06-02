@@ -15,7 +15,7 @@ class Script
      *
      * @param $event
      */
-    public static function postCreateProjectCmd($event)
+    public static function postCreateProjectCmd($event): void
     {
         // Figure out what directory was created most recently
         $time = 0;
@@ -51,11 +51,13 @@ class Script
                 symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
             }
 
-            $cli->bold()->white('To get started type:');
+            $cli->bold()->white('To run the sample and view the docs type:');
             $cli->bold()->lightGray('cd ' . $projectName);
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            if (stripos(PHP_OS, 'WIN') === 0) {
+                $cli->bold()->lightGray('willow willow:sample');
                 $cli->bold()->lightGray('willow willow:docs');
             } else {
+                $cli->bold()->lightGray('./willow willow:sample');
                 $cli->bold()->lightGray('./willow willow:docs');
             }
         }
