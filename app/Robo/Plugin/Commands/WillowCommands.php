@@ -121,7 +121,7 @@ env;
         $cli->bold()->white('Running eject will do the following things:');
         $monolog = <<<MONOLOG
 - Prompt you for a project name (with no spaces)
-- Remove app/Controllers/Sample folder (if it exists)
+- Remove app/Controllers/Sample folder and unit tests (if they exist)
 - Remove the willow symlink to the Robo task runner
 - Replace ALL namespace instances of Willow with the entered project name
 - Update composer.json with the new namespace/project name
@@ -148,6 +148,12 @@ MONOLOG;
             $sampleDir = __DIR__ . '/../../../Controllers/Sample';
             if (is_dir($sampleDir)) {
                 $this->taskDeleteDir($sampleDir)->run();
+            }
+
+            // Remove the Sample unit tests
+            $sampleTestPath = '/../../../../tests/SampleTest.php';
+            if (file_exists($sampleTestPath)) {
+                unlink($sampleTestPath);
             }
 
             // Remove the willow symlink
