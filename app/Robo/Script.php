@@ -29,17 +29,7 @@ class Script
         }
 
         // Display Willow's fancy message
-        $cli = new CLImate();
-        $cli->forceAnsiOn();
-        $cli->addArt(__DIR__);
-        $cli->green()->border('*', 55);
-        $cli->bold()->lightGreen()->animation('willow')->speed(200)->enterFrom('left');
-        $cli->backgroundGreen()->lightGray(' 🌳 https://github.com/RyanNerd/willow 🌳');
-        $cli->backgroundGreen()->lightGray(' 🤲 https://www.patreon.com/bePatron?u=3985594 🤲');
-        $cli->green()->border('*', 55);
-        $cli->bold()->white()->inline('Thanks for installing ');
-        $cli->bold()->lightGreen()->inline('Willow');
-        $cli->bold()->white('!');
+        self::fancyBanner();
 
         // Create symlink to Robo
         $path = __DIR__ . '/../../vendor/bin/robo';
@@ -51,6 +41,7 @@ class Script
                 symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
             }
 
+            $cli = new CLImate();
             $cli->bold()->white('To run the sample and view the docs type:');
             $cli->bold()->lightGray('cd ' . $projectName);
             if (stripos(PHP_OS, 'WIN') === 0) {
@@ -61,5 +52,24 @@ class Script
                 $cli->bold()->lightGray('./willow willow:docs');
             }
         }
+    }
+
+    /**
+     * Show Willow fancy Banner
+     */
+    public static function fancyBanner(): void
+    {
+        // Display Willow's fancy message
+        $cli = new CLImate();
+        $cli->forceAnsiOn();
+        $cli->addArt(__DIR__);
+        $cli->green()->border('*', 55);
+        $cli->bold()->lightGreen()->animation('willow')->speed(200)->enterFrom('left');
+        $cli->backgroundGreen()->lightGray(' 🌳 https://github.com/RyanNerd/willow 🌳');
+        $cli->backgroundGreen()->lightGray(' 🤲 https://www.patreon.com/bePatron?u=3985594 🤲');
+        $cli->green()->border('*', 55);
+        $cli->bold()->white()->inline('Thanks for installing ');
+        $cli->bold()->lightGreen()->inline('Willow');
+        $cli->bold()->white('!');
     }
 }
