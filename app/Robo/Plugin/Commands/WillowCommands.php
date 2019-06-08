@@ -6,6 +6,7 @@ namespace Willow\Robo\Plugin\Commands;
 use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Respect\Validation\Validator as V;
 use Robo\Task\Development\PhpServer;
+use Willow\Robo\Script;
 
 class WillowCommands extends RoboBase
 {
@@ -224,6 +225,20 @@ MONOLOG;
         sleep(20);
     }
 
+    /**
+     * Show Willow's fancy banner
+     */
+    public function willowBanner(): void
+    {
+        Script::fancyBanner();
+    }
+
+    /**
+     * Update the project namespaces
+     *
+     * @param array $phpFiles
+     * @param string $project
+     */
     private function updateProjectName(array $phpFiles, string $project): void
     {
         foreach ($phpFiles as $phpFile) {
@@ -239,6 +254,13 @@ MONOLOG;
         }
     }
 
+    /**
+     * Get all the files given a directory path
+     *
+     * @param string $dir
+     * @param string $ext
+     * @return array
+     */
     private function getFiles(string $dir, string $ext = ''): array
     {
         $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
