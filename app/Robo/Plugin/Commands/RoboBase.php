@@ -104,7 +104,7 @@ abstract class RoboBase extends Tasks
 
         try {
             $conn = $this->capsule->getConnection();
-            $conn->select('SELECT table_name FROM INFORMATION_SCHEMA.TABLES LIMIT 0');
+            $conn->select('SELECT table_name as table_name FROM INFORMATION_SCHEMA.TABLES LIMIT 0');
         } catch (\Throwable $exception) {
             $this->error('Cannot connect to database: ' . $exception->getMessage());
         }
@@ -117,7 +117,7 @@ abstract class RoboBase extends Tasks
         $capsule = $this->capsule;
         $conn = $capsule->getConnection();
         $db = $conn->getDatabaseName();
-        $select = "SELECT table_name
+        $select = "SELECT table_name as table_name
             FROM INFORMATION_SCHEMA.TABLES
             WHERE table_schema = '$db'
             ORDER BY table_name;";
@@ -134,7 +134,7 @@ abstract class RoboBase extends Tasks
         $capsule = $this->capsule;
         $conn = $capsule->getConnection();
         $db = $conn->getDatabaseName();
-        $select = "SELECT table_name
+        $select = "SELECT table_name as table_name
             FROM INFORMATION_SCHEMA.VIEWS
             WHERE table_schema = '$db'
             ORDER BY table_name;";
