@@ -3,7 +3,7 @@
     "description": "Willow Framework for creating ORM/RESTful APIs",
     "license": ["MIT"],
     "type": "project",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "authors": [{
         "name": "Ryan Jentzsch",
         "email": "ryan.jentzsch@gmail.com",
