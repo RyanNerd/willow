@@ -168,7 +168,7 @@ MONOLOG;
             $this->updateProjectName($phpFiles, $project);
             $phpFiles = $this->getFiles(__DIR__ . '/../../../../tests', 'php');
             $this->updateProjectName($phpFiles, $project);
-            $phpFiles = $this->getFiles(__DIR__ . '/../../../../public');
+            $phpFiles = $this->getFiles(__DIR__ . '/../../../../public', 'php');
             $this->updateProjectName($phpFiles, $project);
 
             // Update composer.json to use the new project name
@@ -187,8 +187,11 @@ MONOLOG;
 
             $cli->br();
 
-            $cli->addArt(__DIR__ . '/../');
-            $cli->green()->animation('willow')->exitTo('left');
+            // Animation in Windows chokes on preg_replace for some reason.
+            if (!self::isWindows()) {
+                $cli->addArt(__DIR__ . '/../');
+                $cli->green()->animation('willow')->exitTo('left');
+            }
 
             $cli->bold()->white('Some things must be manually done:');
             if (self::isWindows()) {

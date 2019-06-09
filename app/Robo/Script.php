@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Willow\Robo;
 
 use League\CLImate\CLImate;
+use Willow\Robo\Plugin\Commands\WillowCommands;
 
 /**
  * Composer script
@@ -64,7 +65,14 @@ class Script
         $cli->forceAnsiOn();
         $cli->addArt(__DIR__);
         $cli->green()->border('*', 55);
-        $cli->bold()->lightGreen()->animation('willow')->speed(200)->enterFrom('left');
+
+        // Animation in Windows chokes on preg_replace.
+        if (WillowCommands::isWindows()) {
+            $cli->bold()->lightGreen()->draw('willow');
+        } else {
+            $cli->bold()->lightGreen()->animation('willow')->speed(200)->enterFrom('left');
+        }
+
         $cli->backgroundGreen()->lightGray(' 🌳 https://github.com/RyanNerd/willow 🌳');
         $cli->backgroundGreen()->lightGray(' 🤲 https://www.patreon.com/bePatron?u=3985594 🤲');
         $cli->green()->border('*', 55);
