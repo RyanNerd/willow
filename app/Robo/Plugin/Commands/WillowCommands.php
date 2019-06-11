@@ -29,35 +29,47 @@ class WillowCommands extends RoboBase
             return;
         }
 
-        do {
-            $cli->bold()->white('Enter values for the .env file');
-            do {
-                /** @var Confirm $input */
-                $input = $cli->input('DB_HOST (ex: 127.0.0.1)');
-                $input->defaultTo('127.0.0.1');
-                $dbHost = $input->prompt();
-            } while(strlen($dbHost) === 0);
+        $cli->bold()->white('Enter values for the .env file');
 
-            do {
-                $input = $cli->input('DB_PORT (ex: 3306)');
-                $input->defaultTo('3306');
-                $dbPort = $input->prompt();
-            } while(strlen($dbPort) === 0 || (int)$dbPort <= 0 || (int)$dbPort > 65535);
+        /** @var Confirm $input */
+        $input = $cli->input('DB_DRIVER (default: mysql)');
+        $input->defaultTo('mysql');
+        $driver = $input->prompt();
+
+        do {
+            if ($driver === 'sqlite') {
+                $dbHost = '';
+                $dbPort = '';
+                $dbUser = '';
+                $dbPassword = '';
+            } else {
+                do {
+                    $input = $cli->input('DB_HOST (default: 127.0.0.1)');
+                    $input->defaultTo('127.0.0.1');
+                    $dbHost = $input->prompt();
+                } while(strlen($dbHost) === 0);
+
+                do {
+                    $input = $cli->input('DB_PORT (default: 3306)');
+                    $input->defaultTo('3306');
+                    $dbPort = $input->prompt();
+                } while(strlen($dbPort) === 0 || (int)$dbPort <= 0 || (int)$dbPort > 65535);
+
+                do {
+                    $input = $cli->input('DB_USER');
+                    $dbUser = $input->prompt();
+                } while(strlen($dbUser) === 0);
+
+                do {
+                    $input = $cli->password('DB_PASSWORD');
+                    $dbPassword = $input->prompt();
+                } while(strlen($dbPassword) === 0);
+            }
 
             do {
                 $input = $cli->input('DB_NAME');
                 $dbName = $input->prompt();
             } while(strlen($dbName) === 0);
-
-            do {
-                $input = $cli->input('DB_USER');
-                $dbUser = $input->prompt();
-            } while(strlen($dbUser) === 0);
-
-            do {
-                $input = $cli->password('DB_PASSWORD');
-                $dbPassword = $input->prompt();
-            } while(strlen($dbPassword) === 0);
 
             $input = $cli->input('DISPLAY_ERROR_DETAILS (true/false)');
             $displayErrorDetails = $input
