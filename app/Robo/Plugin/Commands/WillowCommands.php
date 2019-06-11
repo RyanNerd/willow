@@ -31,13 +31,35 @@ class WillowCommands extends RoboBase
 
         $cli->bold()->white('Enter values for the .env file');
 
-        /** @var Confirm $input */
-        $input = $cli->input('DB_DRIVER (default: mysql)');
-        $input->defaultTo('mysql');
-        $driver = $input->prompt();
+        if (WillowCommands::isWindows()) {
+            $drivers = ['mysql', 'pgsql', 'sqlsrv', 'sqlite'];
+
+            do {
+                $cli->out('Driver must be one of: ' . implode(', ', $drivers));
+
+                /** @var Confirm $input */
+                $input = $cli->input('DB_DRIVER (default: mysql)');
+                $input->defaultTo('mysql');
+                $dbDriver = $input->prompt();
+            } while (!in_array($dbDriver, $drivers));
+        } else {
+            do {
+                $drivers = [
+                    'MySQL/MariaDB' => 'mysql',
+                    'Postgres' => 'pgsql',
+                    'MS SQL' => 'sqlsrv',
+                    'SQLite' => 'sqlite'
+                ];
+
+                $driverChoices = array_keys($drivers);
+                $input = $cli->radio('Select database driver', $driverChoices);
+                $driverSelection = $input->prompt();
+                $dbDriver = $drivers[$driverSelection];
+            } while (strlen($dbDriver) === 0);
+        }
 
         do {
-            if ($driver === 'sqlite') {
+            if ($dbDriver === 'sqlite') {
                 $dbHost = '';
                 $dbPort = '';
                 $dbUser = '';
@@ -78,6 +100,7 @@ class WillowCommands extends RoboBase
                 ->prompt();
 
             $envText = <<<env
+DB_DRIVER=$dbDriver            
 DB_HOST=$dbHost
 DB_PORT=$dbPort
 DB_NAME=$dbName

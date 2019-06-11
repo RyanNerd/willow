@@ -55,7 +55,7 @@ abstract class RoboBase extends Tasks
     }
 
     /**
-     * Create an Eloquent ORM capsule from the .env setttings
+     * Create an Eloquent ORM capsule from the .env settings
      *
      * @param Container $container
      */
@@ -95,6 +95,11 @@ abstract class RoboBase extends Tasks
         $this->cli->lightRed($errorMessage);
     }
 
+    /**
+     * Returns true if eloquent has booted and a connection is established to the database.
+     *
+     * @return bool
+     */
     protected function isDatabaseEnvironmentReady(): bool
     {
         if ($this->capsule === null) {
@@ -104,23 +109,52 @@ abstract class RoboBase extends Tasks
 
         try {
             $conn = $this->capsule->getConnection();
-            $conn->select('SELECT table_name as table_name FROM INFORMATION_SCHEMA.TABLES LIMIT 0');
-        } catch (\Throwable $exception) {
+            $driver = $conn->getDriverName();
+
+            switch ($driver) {
+                case 'sqlite':
+                    $sql = 'SELECT name as table_name FROM sqlite_master';
+                    break;
+
+                default:
+                    $sql = 'SELECT table_name as table_name FROM INFORMATION_SCHEMA.TABLES';
+            }
+
+            $conn->select($sql . ' WHERE 1=0');
+        } catch (Throwable $exception) {
             $this->error('Cannot connect to database: ' . $exception->getMessage());
         }
 
         return true;
     }
 
+    /**
+     * Returns an array of all the tables in the database
+     *
+     * @return string[]
+     */
     protected function getTables(): array
     {
         $capsule = $this->capsule;
         $conn = $capsule->getConnection();
+        $driver = $conn->getDriverName();
         $db = $conn->getDatabaseName();
-        $select = "SELECT table_name as table_name
+
+        switch ($driver) {
+            case 'sqlite':
+                $select = 'SELECT name as table_name 
+                    FROM sqlite_master
+                    ORDER BY table_name';
+                break;
+
+            default:
+                $select = "SELECT table_name as table_name
             FROM INFORMATION_SCHEMA.TABLES
             WHERE table_schema = '$db'
             ORDER BY table_name;";
+        }
+
+
         $rows = $conn->select($select);
         $tables = [];
         foreach($rows as $row) {
@@ -129,23 +163,43 @@ abstract class RoboBase extends Tasks
         return $tables;
     }
 
+    /**
+     * Returns an array of all the views in the database
+     *
+     * @return string[]
+     */
     protected function getViews(): array
     {
         $capsule = $this->capsule;
         $conn = $capsule->getConnection();
+        $driver = $conn->getDriverName();
         $db = $conn->getDatabaseName();
-        $select = "SELECT table_name as table_name
+
+        switch ($driver) {
+            case 'sqlite':
+                return [];
+
+            default:
+                $select = "SELECT table_name as table_name
             FROM INFORMATION_SCHEMA.VIEWS
             WHERE table_schema = '$db'
             ORDER BY table_name;";
-        $rows = $conn->select($select);
-        $views = [];
-        foreach($rows as $row) {
-            $views[] = $row->table_name;
+                $rows = $conn->select($select);
+                $views = [];
+                foreach($rows as $row) {
+                    $views[] = $row->table_name;
+                }
+                return $views;
         }
-        return $views;
     }
 
+    /**
+     * Returns an associative array of column names and column types for the given tableName
+     *   ex: 'id' => 'integer', 'first_name' => 'string'
+     *
+     * @param string $tableName
+     * @return array
+     */
     protected function getTableDetails(string $tableName): array
     {
         $tableDetails = [];
@@ -159,6 +213,11 @@ abstract class RoboBase extends Tasks
         return $tableDetails;
     }
 
+    /**
+     * Returns true if the current O/S is any flavor Windows
+     *
+     * @return bool
+     */
     public static function isWindows(): bool
     {
         return stripos(PHP_OS, 'WIN') === 0;
