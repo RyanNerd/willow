@@ -49,7 +49,10 @@ abstract class RoboBase extends Tasks
                 return;
             }
 
+            // Save container for reference.
             $this->willowContainer = $container;
+
+            // Boot Eloquent
             $this->bootDatabase($container);
         }
     }
