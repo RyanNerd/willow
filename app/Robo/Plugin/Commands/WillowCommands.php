@@ -31,7 +31,7 @@ class WillowCommands extends RoboBase
 
         $cli->bold()->white('Enter values for the .env file');
 
-        if (WillowCommands::isWindows()) {
+        if (self::isWindows()) {
             $drivers = ['mysql', 'pgsql', 'sqlsrv', 'sqlite'];
 
             do {
@@ -52,6 +52,7 @@ class WillowCommands extends RoboBase
                 ];
 
                 $driverChoices = array_keys($drivers);
+                /** @var Confirm $input */
                 $input = $cli->radio('Select database driver', $driverChoices);
                 $driverSelection = $input->prompt();
                 $dbDriver = $drivers[$driverSelection];
@@ -230,7 +231,7 @@ MONOLOG;
 
             $cli->bold()->white('Some things must be manually done:');
             if (self::isWindows()) {
-                $cli->bold()->yellow('Run: `"rmdir app/Robo /s` to destroy the Robo folder.');
+                $cli->bold()->yellow('Run: `rmdir app/Robo /s` to destroy the Robo folder.');
             } else {
                 $cli->bold()->yellow('Run: `rm -rf app/Robo` to destroy the Robo folder.');
             }
