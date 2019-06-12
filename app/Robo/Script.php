@@ -45,7 +45,7 @@ class Script
             $cli = new CLImate();
             $cli->bold()->white('To run the sample and view the docs type:');
             $cli->bold()->lightGray('cd ' . $projectName);
-            if (stripos(PHP_OS, 'WIN') === 0) {
+            if (WillowCommands::isWindows()) {
                 $cli->bold()->lightGray('willow willow:sample');
                 $cli->bold()->lightGray('willow willow:docs');
             } else {
