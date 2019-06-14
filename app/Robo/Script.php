@@ -12,7 +12,7 @@ use Willow\Robo\Plugin\Commands\WillowCommands;
 class Script
 {
     /**
-     * Composer hook that fires when composer create-project has executed.
+     * Composer hook that fires when composer create-project has finished.
      *
      * @param $event
      */
@@ -35,45 +35,45 @@ class Script
         // Display Willow's fancy message
         self::fancyBanner($cli);
 
-        // Create symlink to Robo
-        $path = __DIR__ . '/../../vendor/bin/robo';
-        // Has Robo been fully installed?
-        if (file_exists($path)) {
-            $isWindows = WillowCommands::isWindows();
+        $isWindows = WillowCommands::isWindows();
+        $symlinkCreated = false;
 
+        // Are we NOT running in Windows?
+        if (!$isWindows) {
             // Create the willow symlink file
             try {
-                if ($isWindows) {
-                    $symlinkCreated = symlink(__DIR__ . '/../../vendor/bin/robo.bat', 'willow');
-                } else {
-                    $symlinkCreated = symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
-                }
+                $symlinkCreated = symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
             } catch (\Exception $exception) {
                 $symlinkCreated = false;
             }
 
-            // Did the symlink get created?
+            // Did the symlink NOT get created?
             if (!$symlinkCreated) {
                 $cli->bold()->lightRed('Unable to create a symlink for the `willow` command.');
-                if ($isWindows) {
-                    $cli->bold()->white('Make sure you are running PowerShell as an administrator,');
-                    $cli->bold()->white('or have developer mode enabled.');
-                } else {
-                    $cli->bold()->white('You may not have rights to create symlinks.');
-                }
+                $cli->bold()->white('You may not have rights to create symlinks.');
                 $cli->bold()->white('You will need to create the willow symlink manually.');
             }
+        }
 
-            $cli->bold()->white('To run the sample and view the docs type:');
-            $cli->bold()->lightGray('cd ' . $projectName);
+        $cli->bold()->white('To run the sample and view the docs type:');
+        $cli->bold()->lightGray('cd ' . $projectName);
 
-            if (!$symlinkCreated) {
-                $cli->bold()->lightGray('./willow willow:sample');
-                $cli->bold()->lightGray('./willow willow:docs');
+        // Display what commands to run depending on if the symlink was created and the O/S
+        if ($symlinkCreated) {
+            $cli->bold()->lightGray('./willow willow:sample');
+            $cli->bold()->lightGray('./willow willow:docs');
+            $cli->bold()->white('For a list of available commands run: ./willow list');
+        } else {
+            if ($isWindows) {
+                $cli->bold()->lightGray('You must manually add robo to your path:' . __DIR__. '\vendor\bin\robo.bat');
+                $cli->bold()->lightGray('Then run:');
+                $cli->bold()->lightGray('robo willow:sample');
+                $cli->bold()->lightGray('robo willow:docs');
+                $cli->bold()->white('For a list of available commands run: robo list');
             } else {
-                $roboPath = $isWindows ? './vendor/bin/robo.bat' : './vendor/bin/robo';
-                $cli->bold()->lightGray("$roboPath willow:sample");
-                $cli->bold()->lightGray("$roboPath willow:docs");
+                $cli->bold()->lightGray('./vendor/bin/robo willow:sample');
+                $cli->bold()->lightGray('./vendor/bin/robo willow:docs');
+                $cli->bold()->white('For a list of available commands run: ./vendor/bin/robo list');
             }
         }
     }
@@ -101,6 +101,7 @@ class Script
             $cli->bold()->lightGreen()->animation('willow')->speed(200)->enterFrom('left');
         }
 
+        // fixme: emoji do not display correctly in Window's PowerShell or command window.
         $cli->backgroundGreen()->lightGray(' 🌳 https://github.com/RyanNerd/willow 🌳');
         $cli->backgroundGreen()->lightGray(' 🤲 https://www.patreon.com/bePatron?u=3985594 🤲');
         $cli->green()->border('*', 55);
