@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
->Willow is a type a girl who is beautiful and amazing and is kinda a special person and loved by everyone around her
+>[![x](https://image.flaticon.com/icons/png/128/1867/1867404.png)]()Willow is a type a girl who is beautiful and amazing and is kinda a special person and loved by everyone around her
 >most willows can be your best of friends she's up for anything and she's loves anything fun you throw at her...
 
 ~ Urban Dictionary
