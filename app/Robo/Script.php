@@ -63,13 +63,13 @@ class Script
         // Display Willow's fancy message
         $cli = new CLImate();
         $cli->forceAnsiOn();
-        $cli->addArt(__DIR__);
         $cli->green()->border('*', 55);
 
         // Animation in Windows chokes on preg_replace.
         if (WillowCommands::isWindows()) {
-            $cli->bold()->lightGreen()->draw('willow');
+            $cli->bold()->lightGreen('Willow');
         } else {
+            $cli->addArt(__DIR__);
             $cli->bold()->lightGreen()->animation('willow')->speed(200)->enterFrom('left');
         }
 
