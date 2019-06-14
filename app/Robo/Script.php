@@ -29,43 +29,71 @@ class Script
             }
         }
 
+        // Get a CLI object
+        $cli = new CLImate();
+
         // Display Willow's fancy message
-        self::fancyBanner();
+        self::fancyBanner($cli);
 
         // Create symlink to Robo
         $path = __DIR__ . '/../../vendor/bin/robo';
         // Has Robo been fully installed?
         if (file_exists($path)) {
-            // Does the willow file NOT already exist?
-            if (!file_exists(__DIR__ . '/../../willow')) {
-                // Create the willow symlink file
-                symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
+            $isWindows = WillowCommands::isWindows();
+
+            // Create the willow symlink file
+            try {
+                if ($isWindows) {
+                    $symlinkCreated = symlink(__DIR__ . '/../../vendor/bin/robo.bat', 'willow');
+                } else {
+                    $symlinkCreated = symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
+                }
+            } catch (\Exception $exception) {
+                $symlinkCreated = false;
             }
 
-            $cli = new CLImate();
+            // Did the symlink get created?
+            if (!$symlinkCreated) {
+                $cli->bold()->lightRed('Unable to create a symlink for the `willow` command.');
+                if ($isWindows) {
+                    $cli->bold()->white('Make sure you are running PowerShell as an administrator,');
+                    $cli->bold()->white('or have developer mode enabled.');
+                } else {
+                    $cli->bold()->white('You may not have rights to create symlinks.');
+                }
+                $cli->bold()->white('You will need to create the willow symlink manually.');
+            }
+
             $cli->bold()->white('To run the sample and view the docs type:');
             $cli->bold()->lightGray('cd ' . $projectName);
-            if (WillowCommands::isWindows()) {
-                $cli->bold()->lightGray('willow willow:sample');
-                $cli->bold()->lightGray('willow willow:docs');
-            } else {
+
+            if (!$symlinkCreated) {
                 $cli->bold()->lightGray('./willow willow:sample');
                 $cli->bold()->lightGray('./willow willow:docs');
+            } else {
+                $roboPath = $isWindows ? './vendor/bin/robo.bat' : './vendor/bin/robo';
+                $cli->bold()->lightGray("$roboPath willow:sample");
+                $cli->bold()->lightGray("$roboPath willow:docs");
             }
         }
     }
 
     /**
      * Show Willow fancy Banner
+     *
+     * @param CLImate|null $cli
      */
-    public static function fancyBanner(): void
+    public static function fancyBanner(CLImate $cli = null): void
     {
+        if ($cli === null) {
+            $cli = new CLImate();
+        }
+
         // Display Willow's fancy message
-        $cli = new CLImate();
         $cli->forceAnsiOn();
         $cli->green()->border('*', 55);
 
-        // Animation in Windows chokes on preg_replace.
+        // Text art in Windows chokes on preg_replace.
         if (WillowCommands::isWindows()) {
             $cli->bold()->lightGreen('Willow');
         } else {
