@@ -12,6 +12,6 @@ use Willow\Robo\Plugin\Commands\RoboBase;
 class RoboFile extends RoboBase
 {
     // For Robo to work there needs to be a RoboFile.php class
-    // This class is empty to better seperate concerns and keep this class from becoming a god object
+    // This class is empty to better separate concerns and keep this class from becoming a god object
     // all robo commands can be found at app/Robo/Plugin/Commands/
 }
