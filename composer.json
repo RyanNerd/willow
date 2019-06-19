@@ -13,18 +13,25 @@
         "docs": "https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3",
         "issues": "https://github.com/RyanNerd/willow/issues"
     },
+    "config": {
+        "sort-packages": true
+    },
     "require": {
-        "slim/slim": "4.0.0-beta",
-        "php-di/php-di": "^6.0.8",
-        "vlucas/phpdotenv": "^3.3",
-        "illuminate/database": "^5.8",
-        "doctrine/dbal": "~2.3",
+        "doctrine/dbal": "^2.9.2",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "illuminate/database": "^5.8.22",
         "league/climate": "^3.5",
         "php" : "^7.1",
-        "ext-pdo": "*",
-        "ext-json": "*",
+        "php-di/php-di": "^6.0.8",
+        "respect/validation": "^2.0@dev",
         "slim/psr7": "dev-master",
-        "respect/validation": "^2.0@dev"
+        "slim/slim": "4.0.0-beta",
+        "vlucas/phpdotenv": "^3.3.3"
+    },
+    "require-dev": {
+        "consolidation/robo": "1.4.9",
+        "phpunit/phpunit": "^8.2.2"
     },
     "autoload": {
         "psr-4": {
@@ -33,9 +40,5 @@
     },
     "scripts": {
         "post-create-project-cmd":["Willow\\Robo\\Script::postCreateProjectCmd"]
-    },
-    "require-dev": {
-        "consolidation/robo": "1.4.9",
-        "phpunit/phpunit": "^8"
     }
 }
