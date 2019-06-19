@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Robo;
 
+use Composer\Script\Event;
 use League\CLImate\CLImate;
 use Willow\Robo\Plugin\Commands\WillowCommands;
 
@@ -16,8 +17,10 @@ class Script
      *
      * @param $event
      */
-    public static function postCreateProjectCmd($event): void
+    public static function postCreateProjectCmd(Event $event): void
     {
+        $args = $event->getArguments();
+
         // Figure out what directory was created most recently
         $time = 0;
         $projectName = 'your-project-name';
@@ -49,9 +52,11 @@ class Script
 
             // Did the symlink NOT get created?
             if (!$symlinkCreated) {
-                $cli->bold()->lightRed('Unable to create a symlink for the `willow` command.');
+                $cli->br();
+                $cli->bold()->lightYellow('Warning: Unable to create a symlink for the `willow` command.');
                 $cli->bold()->white('You may not have rights to create symlinks.');
                 $cli->bold()->white('You will need to create the willow symlink manually.');
+                $cli->br();
             }
         }
 
@@ -101,9 +106,8 @@ class Script
             $cli->bold()->lightGreen()->animation('willow')->speed(200)->enterFrom('left');
         }
 
-        // fixme: emoji do not display correctly in Window's PowerShell or command window.
-        $cli->backgroundGreen()->lightGray(' 🌳 https://github.com/RyanNerd/willow 🌳');
-        $cli->backgroundGreen()->lightGray(' 🤲 https://www.patreon.com/bePatron?u=3985594 🤲');
+        $cli->backgroundGreen()->lightGray('  https://github.com/RyanNerd/willow');
+        $cli->backgroundGreen()->lightGray('  https://www.patreon.com/bePatron?u=3985594');
         $cli->green()->border('*', 55);
         $cli->bold()->white()->inline('Thanks for installing ');
         $cli->bold()->lightGreen()->inline('Willow');
