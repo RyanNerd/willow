@@ -10,18 +10,23 @@ if (file_exists(__DIR__ . '/../.env')) {
     // Set the environment variables from the .env file
     require_once __DIR__ . '/../config/_env.php';
 
-    // Is this a CORS pre-flight request and should we handle it?
+    // Is Willow handling CORS?
     if (getenv('CORS') === 'true') {
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+
+        // Is this a pre-flight request (the request method is OPTIONS)? Then start output buffering.
+        if ($requestMethod === 'OPTIONS') {
             ob_start();
         }
 
+        // Allow for all origins and credentials. Also allow GET, POST, PATCH, and OPTIONS request verbs
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
         header('Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS');
 
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        // If this is a pre-flight request (the request method is OPTIONS)? Then flush the output buffer and exit.
+        if ($requestMethod === 'OPTIONS') {
             ob_end_flush();
             exit();
         }
