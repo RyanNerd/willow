@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Willow\Controllers\TableAlias;
 
 use Respect\Validation\Validator as V;
-use Willow\Controllers\ValidatorBase;
+use Willow\Controllers\WriteValidatorBase;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\TableAlias;
 
-class TableAliasWriteValidator extends ValidatorBase
+class TableAliasWriteValidator extends WriteValidatorBase
 {
     /**
      * We override the processValidation placing our own validations for the given model
@@ -34,15 +34,6 @@ class TableAliasWriteValidator extends ValidatorBase
                 if ($dataType{1} === '*') {
                     $responseBody->registerParam('invalid', $field, null);
                 }
-
-                // Place your other validations for the existing request here
-                // For example:
-                // $parseValue = $parsedRequest[$field];
-                // if ($field === 'last_name') {
-                //    if (!V::length(1, 50)->validate($parseValue)) {
-                //       $this->registerParam('invalid', $field, $dataType);
-                //    }
-                // }
             }
         }
     }
