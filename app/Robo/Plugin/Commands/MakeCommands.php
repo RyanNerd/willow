@@ -69,6 +69,14 @@ class MakeCommands extends RoboBase
                 $this->warning($message);
             }
 
+            // Create QueryValidators for selected entities
+            $message = $this->createQueryValidator($entity);
+            if ($message === '') {
+                $cli->out($tableAlias . 'QueryValidator created');
+            } else {
+                $this->warning($message);
+            }
+
             // Create Actions for selected entities
             $message = $this->createActions($entity);
             if ($message === '') {
@@ -280,6 +288,16 @@ fields;
             return 'Unable to create ' . $tableAlias . 'GetAction.php';
         }
 
+        $queryActionPath = $targetDir . '/' . $tableAlias . 'QueryAction.php';
+        if (file_exists($queryActionPath)) {
+            return $tableAlias . 'QueryAction already exists.';
+        }
+
+        $queryActionTemplate = $this->generateQueryAction($tableAlias);
+        if (file_put_contents($queryActionPath, $queryActionTemplate) === false) {
+            return 'Unable to create ' . $tableAlias . 'QueryAction.php';
+        }
+
         $postActionPath = $targetDir . '/' . $tableAlias . 'PostAction.php';
         if (file_exists($postActionPath)) {
             return $tableAlias . 'PostAction already exists.';
@@ -317,6 +335,12 @@ fields;
     {
         $getActionTemplate = file_get_contents(__DIR__ . '/Templates/GetActionTemplate.php');
         return str_replace('TableAlias', $tableAlias, $getActionTemplate);
+    }
+
+    private function generateQueryAction(string $tableAlias): string
+    {
+        $queryActionTemplate = file_get_contents(__DIR__ . '/Templates/QueryActionTemplate.php');
+        return str_replace('TableAlias', $tableAlias, $queryActionTemplate);
     }
 
     private function generatePostAction(string $tableAlias): string
@@ -368,6 +392,41 @@ fields;
     private function generateWriteValidator(string $tableAlias): string
     {
         $validatorTemplate = file_get_contents(__DIR__ . '/Templates/WriteValidatorTemplate.php');
+        $validatorTemplate = str_replace('TableAlias', $tableAlias, $validatorTemplate);
+        return $validatorTemplate;
+    }
+
+    /**
+     * Proxy to generateQueryValidator
+     *
+     * @param string $tableName
+     * @return string
+     */
+    private function createQueryValidator(string $tableName): string
+    {
+        $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
+        $targetDir =  __DIR__ . '/../../../../app/Controllers/' . $tableAlias;
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir);
+        }
+
+        $validatorPath = $targetDir . '/' . $tableAlias . 'QueryValidator.php';
+        if (file_exists($validatorPath)) {
+            return $tableAlias . 'QueryValidator already exists.';
+        }
+
+        $validatorTemplate = $this->generateQueryValidator($tableAlias);
+
+        if (file_put_contents($validatorPath, $validatorTemplate) !== false) {
+            return '';
+        } else {
+            return 'Unable to create $tableAlias' . 'QueryValidator';
+        }
+    }
+
+    private function generateQueryValidator(string $tableAlias): string
+    {
+        $validatorTemplate = file_get_contents(__DIR__ . '/Templates/QueryValidatorTemplate.php');
         $validatorTemplate = str_replace('TableAlias', $tableAlias, $validatorTemplate);
         return $validatorTemplate;
     }

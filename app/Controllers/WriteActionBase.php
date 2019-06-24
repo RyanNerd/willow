@@ -9,7 +9,7 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\ModelBase;
 
-abstract class WriteActionBase
+abstract class WriteActionBase extends ActionBase
 {
     /**
      * @var ModelBase
@@ -67,12 +67,7 @@ abstract class WriteActionBase
         if ($model->save()) {
             // Remove any protected fields from the response
             $modelArray = $model->toArray();
-            foreach ($modelArray as $field => $value) {
-                $dataType = $model::FIELDS[$field];
-                if ($dataType{0} === '*') {
-                    unset($modelArray[$field]);
-                }
-            }
+            $this->sanitize($modelArray, $model::FIELDS);
 
             $responseBody = $responseBody
                 ->setData($modelArray)
