@@ -26,14 +26,27 @@ abstract class QueryValidatorBase
         $route = $request->getAttribute('route');
         $value = $route->getArgument('value');
 
-        if ($value !== '*') {
-            if (!array_key_exists('column_name', $parsedRequest)) {
-                $responseBody->registerParam('required', 'column_name', 'string');
-            } else {
+        switch ($value)
+        {
+            case '*':
+                break;
+
+            case '_':
+                foreach ($parsedRequest as $item => $value) {
+                    if ($item{2} === '__') {
+                        $columnName = substr($item, 2);
+                        if (!array_key_exists($columnName, $this->modelFields)) {
+                            $responseBody->registerParam('invalid', $columnName, null);
+                        }
+                    }
+                }
+                break;
+
+            default:
                 if (!array_key_exists($parsedRequest['column_name'], $this->modelFields)) {
                     $responseBody->registerParam('invalid', 'column_name', 'string');
                 }
-            }
+                break;
         }
 
         // Are there any missing or required request data points?

@@ -38,12 +38,43 @@ class QueryActionBase extends ActionBase
         $value = $args['value'];
         $models = null;
 
-        if ($value === '*' && $this->allowAll) {
-            $models = $this->model->get()->all();
-        } else {
-            $columnName = $parsedRequest['column_name'];
-            $operator = $parsedRequest['operator'] ?? '=';
-            $models = $this->model->where($columnName, $operator, $value)->get();
+        switch ($value) {
+            // SELECT *
+            case '*':
+                {
+                    if ($this->allowAll) {
+                        $models = $this->model->get()->all();
+                    }
+                    break;
+                }
+
+            // SELECT * WHERE __columnName=value AND __columnName=value [...]
+            case '_':
+                {
+                    foreach ($parsedRequest as $item => $value) {
+                        $model = $this->model;
+                        $columnName = null;
+                        if ($item{2} === '__') {
+                            $columnName = substr($item, 2);
+                            $model = $model->where($columnName, '=', $value);
+                        }
+
+                        // There must be at least one column defined
+                        if ($columnName !== null) {
+                            $models = $model->get();
+                        }
+                    }
+
+                    break;
+                }
+
+            // SELECT * WHERE `column_name` `operator` `value`
+            default:
+                {
+                    $columnName = $parsedRequest['column_name'];
+                    $operator = $parsedRequest['operator'] ?? '=';
+                    $models = $this->model->where($columnName, $operator, $value)->get();
+                }
         }
 
         if ($models !== null) {
@@ -59,35 +90,18 @@ class QueryActionBase extends ActionBase
                 $responseBody = $responseBody
                     ->setData($dataTables)
                     ->setStatus(200);
-                return $responseBody();
             } else {
                 $responseBody = $responseBody
                     ->setData(null)
                     ->setStatus(404);
             }
-        }
-
-        // Load the model with the given id (PK)
-        $model = $this->model->find($args['id']);
-
-        // If the record is not found then 404 error, otherwise status is 200.
-        if ($model === null) {
-            $data = null;
-            $status = 404;
         } else {
-            // Remove any protected fields from the response
-            $data = $model->toArray();
-            $this->sanitize($data, $model::FIELDS);
-
-            $status = 200;
+            $responseBody = $responseBody
+                ->setData(null)
+                ->setStatus(400)
+                ->setMessage('invalid request');
         }
 
-        // Set the status and data of the ResponseBody
-        $responseBody = $responseBody
-            ->setData($data)
-            ->setStatus($status);
-
-        // Return the response as JSON
         return $responseBody();
     }
 }
