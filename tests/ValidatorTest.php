@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Respect\Validation\Validator as V;
 use Slim\Psr7\Request;
-use Willow\Controllers\ValidatorBase;
+use Willow\Controllers\WriteValidatorBase;
 use Willow\Middleware\ResponseBody;
 
 final class ValidatorTest extends TestCase
@@ -41,7 +41,7 @@ final class ValidatorTest extends TestCase
     }
 }
 
-class MockValidator extends ValidatorBase
+class MockValidator extends WriteValidatorBase
 {
     protected $isValid = false;
 

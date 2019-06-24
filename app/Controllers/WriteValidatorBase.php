@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Willow\Middleware\ResponseBody;
 
-abstract class ValidatorBase
+abstract class WriteValidatorBase
 {
     /**
      * @var string
