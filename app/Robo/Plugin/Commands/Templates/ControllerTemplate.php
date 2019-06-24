@@ -10,6 +10,8 @@ class TableAliasController implements IController
 {
     public function register(RouteCollectorProxyInterface $group): void
     {
+        $group->get('/%route%/query/{value}', TableAliasQueryAction::class)
+            ->add(TableAliasQueryValidator::class);
         $group->get('/%route%/{id}', TableAliasGetAction::class);
         $group->post('/%route%', TableAliasPostAction::class)
             ->add(TableAliasWriteValidator::class);
