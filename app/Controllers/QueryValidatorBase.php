@@ -6,8 +6,8 @@ namespace Willow\Controllers;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Willow\Middleware\ResponseBody;
 use Slim\Routing\Route;
+use Willow\Middleware\ResponseBody;
 
 abstract class QueryValidatorBase
 {
@@ -26,14 +26,36 @@ abstract class QueryValidatorBase
         $route = $request->getAttribute('route');
         $value = $route->getArgument('value');
 
-        if ($value !== '*') {
-            if (!array_key_exists('column_name', $parsedRequest)) {
-                $responseBody->registerParam('required', 'column_name', 'string');
-            } else {
+        switch ($value)
+        {
+            case '*':
+                break;
+
+            case '_':
+                $columnCount = 0;
+                foreach ($parsedRequest as $item => $value) {
+                    if ($item{0} === '_') {
+                        $columnName = substr($item, 1);
+                        if (!array_key_exists($columnName, $this->modelFields)) {
+                            $responseBody->registerParam('invalid', $columnName, null);
+                        } else {
+                            $columnCount++;
+                        }
+                    }
+                }
+
+                // This option requires at least one __ColumnName=value
+                if ($columnCount === 0) {
+                    $responseBody->registerParam('required', '__column', 'string');
+                }
+
+                break;
+
+            default:
                 if (!array_key_exists($parsedRequest['column_name'], $this->modelFields)) {
                     $responseBody->registerParam('invalid', 'column_name', 'string');
                 }
-            }
+                break;
         }
 
         // Are there any missing or required request data points?
