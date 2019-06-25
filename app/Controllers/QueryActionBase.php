@@ -51,19 +51,14 @@ class QueryActionBase extends ActionBase
             // SELECT * WHERE __columnName=value AND __columnName=value [...]
             case '_':
                 {
+                    $model = $this->model;
                     foreach ($parsedRequest as $item => $value) {
-                        $model = $this->model;
-                        $columnName = null;
-                        if ($item{2} === '__') {
-                            $columnName = substr($item, 2);
+                        if ($item{0} === '_') {
+                            $columnName = substr($item, 1);
                             $model = $model->where($columnName, '=', $value);
                         }
-
-                        // There must be at least one column defined
-                        if ($columnName !== null) {
-                            $models = $model->get();
-                        }
                     }
+                    $models = $model->get();
 
                     break;
                 }

@@ -6,8 +6,8 @@ namespace Willow\Controllers;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Willow\Middleware\ResponseBody;
 use Slim\Routing\Route;
+use Willow\Middleware\ResponseBody;
 
 abstract class QueryValidatorBase
 {
@@ -32,14 +32,23 @@ abstract class QueryValidatorBase
                 break;
 
             case '_':
+                $columnCount = 0;
                 foreach ($parsedRequest as $item => $value) {
-                    if ($item{2} === '__') {
-                        $columnName = substr($item, 2);
+                    if ($item{0} === '_') {
+                        $columnName = substr($item, 1);
                         if (!array_key_exists($columnName, $this->modelFields)) {
                             $responseBody->registerParam('invalid', $columnName, null);
+                        } else {
+                            $columnCount++;
                         }
                     }
                 }
+
+                // This option requires at least one __ColumnName=value
+                if ($columnCount === 0) {
+                    $responseBody->registerParam('required', '__column', 'string');
+                }
+
                 break;
 
             default:
