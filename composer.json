@@ -20,14 +20,14 @@
         "doctrine/dbal": "^2.9.2",
         "ext-json": "*",
         "ext-pdo": "*",
-        "illuminate/database": "^5.8.22",
-        "league/climate": "^3.5",
+        "illuminate/database": "^5.8.27",
+        "league/climate": "^3.5.0",
         "php" : "^7.1",
-        "php-di/php-di": "^6.0.8",
+        "php-di/php-di": "^6.0.9",
         "respect/validation": "^2.0@dev",
         "slim/psr7": "dev-master",
         "slim/slim": "4.0.0-beta",
-        "vlucas/phpdotenv": "^3.3.3"
+        "vlucas/phpdotenv": "^3.4.0"
     },
     "require-dev": {
         "consolidation/robo": "1.4.9",
