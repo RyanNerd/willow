@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Factory\AppFactory;
 use Slim\Interfaces\CallableResolverInterface;
 use Slim\Middleware\ErrorMiddleware;
-use Slim\Middleware\RoutingMiddleware;
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Middleware\JsonBodyParser;
 use Willow\Middleware\ResponseBodyFactory;
@@ -42,9 +41,6 @@ class App
         // Get an instance of Slim\App
         AppFactory::setContainer($container);
         $app = AppFactory::create();
-
-        // Add Routing Middleware
-        $app->add(new RoutingMiddleware($app->getRouteResolver()));
 
         // Register the routes via the controllers
         $v1 = $app->group('/v1', function (RouteCollectorProxy $collectorProxy) use ($container)

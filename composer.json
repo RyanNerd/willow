@@ -17,16 +17,16 @@
         "sort-packages": true
     },
     "require": {
-        "doctrine/dbal": "^2.9.2",
+        "php": "^7.1",
         "ext-json": "*",
         "ext-pdo": "*",
+        "doctrine/dbal": "^2.9.2",
         "illuminate/database": "^5.8.27",
         "league/climate": "^3.5.0",
-        "php" : "^7.1",
         "php-di/php-di": "^6.0.9",
         "respect/validation": "^2.0@dev",
-        "slim/psr7": "dev-master",
-        "slim/slim": "4.0.0-beta",
+        "slim/psr7": "^0.3.0",
+        "slim/slim": "^4.0.0",
         "vlucas/phpdotenv": "^3.4.0"
     },
     "require-dev": {
