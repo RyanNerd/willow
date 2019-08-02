@@ -22,6 +22,11 @@ class QueryActionBase extends ActionBase
     protected $allowAll = false;
 
     /**
+     * @var array | null
+     */
+    protected $relations = null;
+
+    /**
      * Handle GET query request
      *
      * @param Request $request
@@ -37,13 +42,25 @@ class QueryActionBase extends ActionBase
 
         $value = $args['value'];
         $models = null;
+        $relations = $this->relations;
 
         switch ($value) {
             // SELECT *
             case '*':
                 {
                     if ($this->allowAll) {
-                        $models = $this->model->get()->all();
+                        if ($relations === null) {
+                            $models = $this
+                                ->model
+                                ->get()
+                                ->all();
+                        } else {
+                            $models = $this
+                                ->model
+                                ->with($relations)
+                                ->get()
+                                ->all();
+                        }
                     }
                     break;
                 }
@@ -58,8 +75,14 @@ class QueryActionBase extends ActionBase
                             $model = $model->where($columnName, '=', $value);
                         }
                     }
-                    $models = $model->get();
 
+                    if ($relations === null) {
+                        $models = $model->get();
+                    } else {
+                        $models = $model
+                            ->with($relations)
+                            ->get();
+                    }
                     break;
                 }
 
@@ -68,7 +91,18 @@ class QueryActionBase extends ActionBase
                 {
                     $columnName = $parsedRequest['column_name'];
                     $operator = $parsedRequest['operator'] ?? '=';
-                    $models = $this->model->where($columnName, $operator, $value)->get();
+                    if ($relations === null) {
+                        $models = $this
+                            ->model
+                            ->where($columnName, $operator, $value)
+                            ->get();
+                    } else {
+                        $models = $this
+                            ->model
+                            ->with($relations)
+                            ->where($columnName, $operator, $value)
+                            ->get();
+                    }
                 }
         }
 
