@@ -9,7 +9,7 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\ModelBase;
 
-class QueryActionBase extends ActionBase
+abstract class QueryActionBase extends ActionBase
 {
     /**
      * @var ModelBase
@@ -69,10 +69,10 @@ class QueryActionBase extends ActionBase
             case '_':
                 {
                     $model = $this->model;
-                    foreach ($parsedRequest as $item => $value) {
+                    foreach ($parsedRequest as $item => $fieldValue) {
                         if ($item{0} === '_') {
                             $columnName = substr($item, 1);
-                            $model = $model->where($columnName, '=', $value);
+                            $model = $model->where($columnName, '=', $fieldValue);
                         }
                     }
 
