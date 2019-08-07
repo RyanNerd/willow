@@ -17,14 +17,19 @@ abstract class QueryActionBase extends ActionBase
     protected $model;
 
     /**
+     * @var array
+     */
+    protected $relations = [];
+
+    /**
      * @var bool When set to true it allows queries with the value of * to return all records for the table.
      */
     protected $allowAll = false;
 
     /**
-     * @var array | null
+     * @var array Set to an array of column names and directions ['column_name1' => 'asc', 'column_name2' => 'desc']
      */
-    protected $relations = null;
+    protected $orderBy = [];
 
     /**
      * Handle GET query request
@@ -42,73 +47,92 @@ abstract class QueryActionBase extends ActionBase
 
         $value = $args['value'];
         $models = null;
-        $relations = $this->relations;
 
         switch ($value) {
             // SELECT *
             case '*':
-                {
-                    if ($this->allowAll) {
-                        if ($relations === null) {
-                            $models = $this
-                                ->model
-                                ->get()
-                                ->all();
-                        } else {
-                            $models = $this
-                                ->model
-                                ->with($relations)
-                                ->get()
-                                ->all();
+            {
+                if ($this->allowAll) {
+                    $models = $this->model;
+
+                    // Do we have any relations we need to add to the query?
+                    if (count($this->relations) > 0) {
+                        $models = $models->with($this->relations);
+                    }
+
+                    // Is there a default orderBy?
+                    if (count($this->orderBy) > 0) {
+                        foreach ($this->orderBy as $column => $direction) {
+                            $models = $models->orderBy($column, $direction);
                         }
                     }
-                    break;
-                }
 
-            // SELECT * WHERE __columnName=value AND __columnName=value [...]
+                    $models = $models
+                        ->get()
+                        ->all();
+                }
+                break;
+            }
+
+            // SELECT * WHERE _columnName=value AND _columnName=value [...]
             case '_':
-                {
-                    $model = $this->model;
-                    foreach ($parsedRequest as $item => $fieldValue) {
-                        if ($item{0} === '_') {
-                            $columnName = substr($item, 1);
-                            $model = $model->where($columnName, '=', $fieldValue);
-                        }
+            {
+                $model = $this->model;
+                foreach ($parsedRequest as $item => $fieldValue) {
+                    if ($item{0} === '_') {
+                        $columnName = substr($item, 1);
+                        $model = $model->where($columnName, '=', $fieldValue);
                     }
-
-                    if ($relations === null) {
-                        $models = $model->get();
-                    } else {
-                        $models = $model
-                            ->with($relations)
-                            ->get();
-                    }
-                    break;
                 }
+
+                // Do we have any relations we need to add to the query?
+                if (count($this->relations) > 0) {
+                    $model = $model->with($this->relations);
+                }
+
+                // Is there a default orderBy?
+                if (count($this->orderBy) > 0) {
+                    foreach ($this->orderBy as $column => $direction) {
+                        $model = $model->orderBy($column, $direction);
+                    }
+                }
+
+                $models = $model->get();
+                break;
+            }
 
             // SELECT * WHERE `column_name` `operator` `value`
             default:
-                {
-                    $columnName = $parsedRequest['column_name'];
-                    $operator = $parsedRequest['operator'] ?? '=';
-                    if ($relations === null) {
-                        $models = $this
-                            ->model
-                            ->where($columnName, $operator, $value)
-                            ->get();
-                    } else {
-                        $models = $this
-                            ->model
-                            ->with($relations)
-                            ->where($columnName, $operator, $value)
-                            ->get();
+            {
+                $columnName = $parsedRequest['column_name'];
+                $operator = $parsedRequest['operator'] ?? '=';
+                $model = $this->model;
+
+                // Do we have any relations that need to be added to the query?
+                if (count($this->relations) > 0) {
+                    $model = $model->with($this->relations);
+                }
+
+                // Is there a default orderBy?
+                if (count($this->orderBy) > 0) {
+                    foreach ($this->orderBy as $column => $direction) {
+                        $model = $model->orderBy($column, $direction);
                     }
                 }
+
+                $models = $model
+                    ->where($columnName, $operator, $value)
+                    ->get();
+            }
         }
 
+        // Do we have a collection of models?
         if ($models !== null) {
+            // Is there at least 1 model in the collection?
             if (count($models) > 0) {
                 $dataTables = [];
+
+                // Convert the collection of models into a standard array and strip any protected fields.
                 /** @var ModelBase $model */
                 foreach ($models as $model) {
                     $data = $model->toArray();
@@ -128,7 +152,7 @@ abstract class QueryActionBase extends ActionBase
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(400)
-                ->setMessage('invalid request');
+                ->setMessage('Invalid request');
         }
 
         return $responseBody();
