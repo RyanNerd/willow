@@ -5,10 +5,7 @@ namespace Willow\Main;
 
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Factory\AppFactory;
-use Slim\Interfaces\CallableResolverInterface;
-use Slim\Middleware\ErrorMiddleware;
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Middleware\JsonBodyParser;
 use Willow\Middleware\ResponseBodyFactory;
@@ -67,19 +64,9 @@ class App
         // Add JSON parser middleware
         $app->add(JsonBodyParser::class);
 
-        /**
-         * Add Error Handling Middleware
-         * The constructor of `ErrorMiddleware` takes in 5 parameters
-         *
-         * @param CallableResolverInterface - CallableResolver implementation of your choice
-         * @param ResponseFactoryInterface - ResponseFactory implementation of your choice
-         * @param bool $displayErrorDetails - Should be set to false in production
-         * @param bool $logErrors - Parameter is passed to the default ErrorHandler
-         * @param bool $logErrorDetails - Display error details in error log
-         */
+        // Add Error Middleware
         $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS') === 'true';
-        $errorMiddleware = new ErrorMiddleware($app->getCallableResolver(), $app->getResponseFactory(), $displayErrorDetails, true, true);
-        $app->add($errorMiddleware);
+        $app->addErrorMiddleware($displayErrorDetails, true, true);
 
         // Run will be true unless we are doing a unit test.
         if ($run) {
