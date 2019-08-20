@@ -21,17 +21,17 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "doctrine/dbal": "^2.9.2",
-        "illuminate/database": "^5.8.30",
+        "illuminate/database": "^5.8.33",
         "league/climate": "^3.5.0",
         "php-di/php-di": "^6.0.9",
         "respect/validation": "^2.0@dev",
-        "slim/psr7": "^0.3.0",
-        "slim/slim": "^4.1.0",
+        "slim/psr7": "^0.5.0",
+        "slim/slim": "^4.2.0",
         "vlucas/phpdotenv": "^3.4.0"
     },
     "require-dev": {
-        "consolidation/robo": "1.4.9",
-        "phpunit/phpunit": "^8.2.2"
+        "consolidation/robo": "1.4.10",
+        "phpunit/phpunit": "^8.3.4"
     },
     "autoload": {
         "psr-4": {
