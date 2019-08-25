@@ -32,6 +32,11 @@ abstract class QueryActionBase extends ActionBase
     protected $orderBy = [];
 
     /**
+     * @var array Set to an array of column names to group by
+     */
+    protected $groupBy = [];
+
+    /**
      * Handle GET query request
      *
      * @param Request $request
@@ -67,6 +72,11 @@ abstract class QueryActionBase extends ActionBase
                         }
                     }
 
+                    // Do we have any group by columns?
+                    if (count($this->groupBy) > 0) {
+                        $models = $models->groupBy($this->groupBy);
+                    }
+
                     $models = $models
                         ->get()
                         ->all();
@@ -95,6 +105,11 @@ abstract class QueryActionBase extends ActionBase
                     foreach ($this->orderBy as $column => $direction) {
                         $model = $model->orderBy($column, $direction);
                     }
+                }
+
+                // Do we have any group by columns?
+                if (count($this->groupBy) > 0) {
+                    $model = $model->groupBy($this->groupBy);
                 }
 
                 $models = $model->get();
