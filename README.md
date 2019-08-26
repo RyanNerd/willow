@@ -10,9 +10,7 @@
 For developers, Willow is an _opinionated_ PHP framework used to quickly create CRUD based RESTful APIs.
 
 💒 Willow is a marriage between [Slim 4](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database).
-With [Dependency Injection](http://php-di.org/) as your [best man](https://en.wikipedia.org/wiki/Groomsman), 
-[Respect\Validation](https://respect-validation.readthedocs.io/en/1.1/) as your [bridesmaid](https://en.wikipedia.org/wiki/Bridesmaid),
-and [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/wiki/Wedding_planner). 
+with [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/wiki/Wedding_planner). 
 
 Willow is _opinionated_ meaning that Willow stresses convention over configuration.
 
