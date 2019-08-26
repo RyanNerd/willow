@@ -9,7 +9,7 @@
 
 For developers, Willow is an _opinionated_ PHP framework used to quickly create CRUD based RESTful APIs.
 
-💒 Willow is a marriage between [Slim 4](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database).
+💒 Willow is a marriage between [Slim 4](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database)
 with [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/wiki/Wedding_planner). 
 
 Willow is _opinionated_ meaning that Willow stresses convention over configuration.
@@ -30,10 +30,14 @@ From a terminal / command window run:
 ```
 composer create-project ryannerd/willow [your-project-name]
 cd [your-project-name]
-php -S localhost:8088 -t public
-```
 
-Then in your favorite web browser go to: `localhost:8088/v1/sample/hello-world`
+// Linux / Mac users do this:
+./willow willow:sample
+
+// Windows execute this:
+php -S localhost:8088 -t public
+// Then in your favorite web browser go to: localhost:8088/v1/sample/hello-world
+```
 
 The result should look something like this:
 
