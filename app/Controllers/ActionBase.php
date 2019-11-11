@@ -10,7 +10,7 @@ abstract class ActionBase
         foreach ($data as $field => $value) {
             if (array_key_exists($field, $modelFields)) {
                 $dataType = $modelFields[$field];
-                if ($dataType{0} === '*') {
+                if ($dataType[0] === '*') {
                     unset($data[$field]);
                 }
             }

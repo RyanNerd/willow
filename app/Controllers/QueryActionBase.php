@@ -27,12 +27,12 @@ abstract class QueryActionBase extends ActionBase
     protected $allowAll = false;
 
     /**
-     * @var array Set to an array of column names and directions ['column_name1' => 'asc', 'column_name2' => 'desc']
+     * @var array<string> Set to an array of column names and directions ['column_name1' => 'asc', 'column_name2' => 'desc']
      */
     protected $orderBy = [];
 
     /**
-     * @var array Set to an array of column names to group by
+     * @var array<string> Set to an array of column names to group by
      */
     protected $groupBy = [];
 
@@ -89,7 +89,7 @@ abstract class QueryActionBase extends ActionBase
             {
                 $model = $this->model;
                 foreach ($parsedRequest as $item => $fieldValue) {
-                    if ($item{0} === '_') {
+                    if ($item[0] === '_') {
                         $columnName = substr($item, 1);
                         $model = $model->where($columnName, '=', $fieldValue);
                     }
