@@ -34,7 +34,7 @@ abstract class QueryValidatorBase
             case '_':
                 $columnCount = 0;
                 foreach ($parsedRequest as $item => $value) {
-                    if ($item{0} === '_') {
+                    if ($item[0] === '_') {
                         $columnName = substr($item, 1);
                         if (!array_key_exists($columnName, $this->modelFields)) {
                             $responseBody->registerParam('invalid', $columnName, null);
