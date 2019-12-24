@@ -7,6 +7,20 @@ use League\CLImate\CLImate;
 
 class MakeCommands extends RoboBase
 {
+    public function inventController(string $tableName): void
+    {
+        $twig = $this->twig;
+        try {
+            $controllerCode = $twig->render('Controller.php.twig', ['TableAlias' => $tableName]);
+        } catch (\Throwable $e) {
+            // TODO: error handling
+        }
+        if (file_put_contents(__DIR__ . '../../../Controllers/' . $tableName . 'Controller.php', $controllerCode) === false) {
+            // TODO: error handling
+            $this->cli->blue('Error');
+        }
+    }
+
     /**
      * Create a Model, Controller, and Actions for all selected entities (tables/views)
      */

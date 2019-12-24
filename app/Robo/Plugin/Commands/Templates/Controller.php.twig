@@ -1,0 +1,33 @@
+<?php
+declare(strict_types=1);
+
+namespace Willow\Controllers\{{ class_name }};
+
+use Slim\Interfaces\RouteCollectorProxyInterface;
+use Willow\Controllers\IController;
+
+class {{ class_name }}Controller implements IController
+{
+    public function register(RouteCollectorProxyInterface $group): void
+    {
+        // GET (Read)
+        $group->get('/{{ route }}/{id}', {{ class_name }}GetAction::class);
+
+        // POST (Create)
+        $group->post('/{{ route }}', {{ class_name }}PostAction::class)
+            ->add({{ class_name }}WriteValidator::class);
+
+        // PATCH (Update)
+        $group->patch('/{{ route }}', {{ class_name }}PatchAction::class)
+            ->add({{ class_name }}WriteValidator::class);
+
+        // DELETE (Delete)
+        $group->delete('/{{ route }}/{id}', {{ class_name }}DeleteAction::class);
+
+        // RESTORE (UnDelete)
+            // TODO: Add restore code
+
+        // SEARCH (Query)
+            // TODO: Add Search code
+    }
+}
