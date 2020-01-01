@@ -28,6 +28,7 @@ class {{ class_name }}Controller implements IController
             // TODO: Add restore code
 
         // SEARCH (Query)
-            // TODO: Add Search code
+        $group->post('/{{ route }}/search', {{ class_name }}SearchAction::class)
+            ->add({{ class_name }}SearchValidator::class);
     }
 }

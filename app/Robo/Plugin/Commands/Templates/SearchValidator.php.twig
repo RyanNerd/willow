@@ -1,0 +1,24 @@
+<?php
+declare(strict_types=1);
+
+namespace Willow\Controllers\{{ class_name }};
+
+use Willow\Controllers\SearchValidatorBase;
+use Willow\Models\{{ class_name }};
+
+class {{ class_name }}SearchValidator extends SearchValidatorBase
+{
+    /**
+     * @var {{ class_name }}
+     */
+    protected $model;
+
+    /**
+     * {{ class_name }}SearchValidator constructor.
+     * @param {{ class_name }} $model
+     */
+    public function __construct({{ class_name }} $model)
+    {
+        $this->model = $model;
+    }
+}

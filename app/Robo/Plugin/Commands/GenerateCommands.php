@@ -6,20 +6,28 @@ namespace Willow\Robo\Plugin\Commands;
 class GenerateCommands extends RoboBase
 {
     use ControllerTrait;
+    use DeleteActionTrait;
     use GetActionTrait;
     use ModelTrait;
     use PatchActionTrait;
     use PostActionTrait;
+    use SearchActionTrait;
+    use SearchValidatorTrait;
     use WriteValidatorTrait;
 
     /**
-     * Generate a controller given the name of the table/view and optionally the route.
+     * Generates a controller, actions, validations for a given table and optionally route.
      *
      * @param string $tableName The table/view to generate a controller
      * @param string|null $route The route to use for the controller
      */
-    public function generateController(string $tableName, ?string $route = null): void
+    public function generate(string $tableName, ?string $route = null): void
     {
+        $error = $this->forgeModel($tableName);
+        if ($error) {
+            $this->error($error);
+        }
+
         $error = $this->forgeController($tableName, $route);
         if ($error) {
             $this->error($error);
@@ -44,17 +52,18 @@ class GenerateCommands extends RoboBase
         if ($error) {
             $this->error($error);
         }
-    }
 
-    /**
-     * Generate a model given the name of the table/view.
-     *
-     * @param string $tableName
-     */
-    public function generateModel(string $tableName): void
-    {
-        $error = $this->forgeModel($tableName);
+        $error = $this->forgeSearchAction($tableName);
+        if ($error) {
+            $this->error($error);
+        }
 
+        $error = $this->forgeSearchValidator($tableName);
+        if ($error) {
+            $this->error($error);
+        }
+
+        $error = $this->forgeDeleteAction($tableName);
         if ($error) {
             $this->error($error);
         }

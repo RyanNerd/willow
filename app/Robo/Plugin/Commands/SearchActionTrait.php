@@ -6,7 +6,7 @@ namespace Willow\Robo\Plugin\Commands;
 use Throwable;
 use Twig\Environment;
 
-trait WriteValidatorTrait
+trait SearchActionTrait
 {
     /**
      * @var Environment
@@ -14,20 +14,20 @@ trait WriteValidatorTrait
     protected $twig;
 
     /**
-     * Forge the WriteValidator code given the entity (table/view) name.
+     * Forge the SearchAction code given the entity (table/view) name.
      *
      * @param string $entity
      * @return string|null
      */
-    protected function forgeWriteValidator(string $entity): ?string
+    protected function forgeSearchAction(string $entity): ?string
     {
-        // Format the WriteValidator class name
+        // Format the SearchAction class name
         $className = ucfirst($entity);
 
-        // Render the WriteValidator code.
+        // Render the SearchAction code.
         try {
-            $writeValidatorCode = $this->twig->render('WriteValidator.php.twig', [
-                'class_name' => $className
+            $searchActionCode = $this->twig->render('SearchAction.php.twig', [
+                    'class_name' => $className
                 ]
             );
         } catch (Throwable $e) {
@@ -42,9 +42,9 @@ trait WriteValidatorTrait
             }
         }
 
-        // Save the WriteValidator code file into the Controllers/ directory.
-        if (file_put_contents($controllerPath . '/' . $className . 'WriteValidator.php', $writeValidatorCode) === false) {
-            return 'Unable to create: ' . $controllerPath . '/' . $className . 'WriteValidator.php';
+        // Save the searchAction code file into the Controllers/ directory.
+        if (file_put_contents($controllerPath . '/' . $className . 'SearchAction.php', $searchActionCode) === false) {
+            return 'Unable to create: ' . $controllerPath . '/' . $className . 'SearchAction.php';
         }
 
         return null;
