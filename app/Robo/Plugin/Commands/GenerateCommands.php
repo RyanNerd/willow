@@ -11,6 +11,8 @@ class GenerateCommands extends RoboBase
     use ModelTrait;
     use PatchActionTrait;
     use PostActionTrait;
+    use RestoreActionTrait;
+    use RestoreValidatorTrait;
     use SearchActionTrait;
     use SearchValidatorTrait;
     use WriteValidatorTrait;
@@ -64,6 +66,16 @@ class GenerateCommands extends RoboBase
         }
 
         $error = $this->forgeDeleteAction($tableName);
+        if ($error) {
+            $this->error($error);
+        }
+
+        $error = $this->forgeRestoreAction($tableName);
+        if ($error) {
+            $this->error($error);
+        }
+
+        $error = $this->forgeRestoreValidator($tableName);
         if ($error) {
             $this->error($error);
         }

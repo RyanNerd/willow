@@ -25,7 +25,8 @@ class {{ class_name }}Controller implements IController
         $group->delete('/{{ route }}/{id}', {{ class_name }}DeleteAction::class);
 
         // RESTORE (UnDelete)
-            // TODO: Add restore code
+        $group->post('/{{ route }}/restore', {{ class_name }}RestoreAction::class)
+            ->add({{ class_name }}RestoreValidator::class);
 
         // SEARCH (Query)
         $group->post('/{{ route }}/search', {{ class_name }}SearchAction::class)
