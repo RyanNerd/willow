@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\TerminalObject\Dynamic\Confirm;
-use Respect\Validation\Validator as V;
 use Robo\Task\Development\PhpServer;
 use Willow\Robo\Script;
 
@@ -176,7 +175,7 @@ MONOLOG;
             $input = $cli->input('Enter the project name (alpha-numeric no whitespace)');
             $project = $input->prompt();
 
-            if (!v::alnum()->noWhitespace()->validate($project)) {
+            if (strlen($project) === 0) {
                 $this->warning('Invalid project name: ' . $project);
                 return;
             }
