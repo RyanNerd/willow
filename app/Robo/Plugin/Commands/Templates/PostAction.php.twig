@@ -1,0 +1,20 @@
+<?php
+declare(strict_types=1);
+
+namespace Willow\Controllers\{{ class_name }};
+
+use Willow\Controllers\WriteActionBase;
+use Willow\Models\{{ class_name }};
+
+class {{ class_name }}PostAction extends WriteActionBase
+{
+    /**
+     * @var {{ class_name }}
+     */
+    protected $model;
+
+    public function __construct({{ class_name }} $model)
+    {
+        $this->model = $model;
+    }
+}

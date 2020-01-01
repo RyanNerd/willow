@@ -1,0 +1,25 @@
+<?php
+declare(strict_types=1);
+
+namespace Willow\Controllers\{{ class_name }};
+
+use Willow\Controllers\RestoreActionBase;
+use Willow\Models\{{ class_name }};
+
+class {{ class_name }}RestoreAction extends RestoreActionBase
+{
+    /**
+     * @var {{ class_name }}
+     */
+    protected $model;
+
+    /**
+     * {{ class_name }}RestoreAction constructor.
+     *
+     * @param {{ class_name }} $model
+     */
+    public function __construct({{ class_name }} $model)
+    {
+        $this->model = $model;
+    }
+}

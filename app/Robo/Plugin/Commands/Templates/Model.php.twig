@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * @mixin Builder
  */
-class ModelTemplate extends ModelBase
+class {{ class_name }} extends ModelBase
 {
     public const FIELDS = [];
 
-    protected $table = 'TableName';
+    protected $table = '{{ entity }}';
 }

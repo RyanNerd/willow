@@ -9,6 +9,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use League\CLImate\CLImate;
 use Robo\Tasks;
 use Throwable;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
 
 abstract class RoboBase extends Tasks
 {
@@ -28,11 +30,20 @@ abstract class RoboBase extends Tasks
     protected $willowContainer;
 
     /**
+     * @var Environment
+     */
+    protected $twig;
+
+    /**
      * RoboBase constructor.
      */
     public function __construct()
     {
         $this->cli = new CLImate;
+
+        // Set up Twig
+        $loader = new FilesystemLoader(__DIR__ . '/Templates');
+        $this->twig = new Environment($loader);
 
         // Set up DI and ORM only if the .env file exists.
         if (file_exists(__DIR__ . '/../../../../.env')) {

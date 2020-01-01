@@ -1,14 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Controllers\TableAlias;
+namespace Willow\Controllers\{{ class_name }};
 
-use Respect\Validation\Validator as V;
 use Willow\Controllers\WriteValidatorBase;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\TableAlias;
+use Willow\Models\{{ class_name }};
 
-class TableAliasWriteValidator extends WriteValidatorBase
+class {{ class_name }}WriteValidator extends WriteValidatorBase
 {
     /**
      * We override the processValidation placing our own validations for the given model
@@ -19,16 +18,16 @@ class TableAliasWriteValidator extends WriteValidatorBase
     protected function processValidation(ResponseBody $responseBody, array &$parsedRequest): void
     {
         // Iterate all the model fields
-        foreach(TableAlias::FIELDS as $field => $dataType) {
+        foreach({{ class_name }}::FIELDS as $field => $dataType) {
             // Is the model field NOT in the request?
-            if (!V::key($field)->validate($parsedRequest)) {
+            if (!key_exists($field, $parsedRequest)) {
                 // Any dataType proceeded with an * are protected fields and can not be changed (e.g. password_hash)
-                if ($dataType[0] === '*') {
-                    continue;
-                }
+            if ($dataType[0] === '*') {
+                continue;
+            }
 
-                // If the request is missing this field so register it as optional
-                $responseBody->registerParam('optional', $field, $dataType);
+            // If the request is missing this field so register it as optional
+            $responseBody->registerParam('optional', $field, $dataType);
             } else {
                 // If Datatype is proceeded with an * it means the field is protected and can not be changed (e.g. password_hash)
                 if ($dataType[1] === '*') {
