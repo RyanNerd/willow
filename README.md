@@ -9,10 +9,10 @@
 
 For developers, Willow is an _opinionated_ PHP framework used to quickly create CRUD based RESTful APIs.
 
-💒 Willow is a marriage between [Slim 4](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database)
-with [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/wiki/Wedding_planner). 
+💒Willow is a marriage between [Slim 4](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database)
+with [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/wiki/Wedding_planner).
 
-Willow is _opinionated_ meaning that Willow stresses convention over configuration.
+For instructions and getting started see the [Willow Framework User Guide](https://www.notion.so/Willow-Framework-Users-Guide-bf56317580884ccd95ed8d3889f83c72)
 
 Willow works best as a framework in this situation:
 * You need to quickly spin up a [RESTful](https://restfulapi.net/) [datacentric](https://www.codecademy.com/articles/what-is-crud) API
@@ -54,8 +54,6 @@ The result should look something like this:
   "timestamp": 1556903905
 }
 ```
-
-For more instructions see the [Willow Framework User Guide](https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3)
 
 Willow icon made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> 
 from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
