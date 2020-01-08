@@ -8,8 +8,6 @@ final class ResponseBodyTest extends TestCase
 {
     public function __construct($name = null, array $data = [], $dataName = '')
     {
-        ini_set('zend.assertions', '1');
-        ini_set('assert.exception', '1');
         parent::__construct($name, $data, $dataName);
     }
 
