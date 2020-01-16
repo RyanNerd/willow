@@ -37,6 +37,7 @@ class App
 
         // Get an instance of Slim\App
         $app = AppFactory::createFromContainer($container);
+        $app->addRoutingMiddleware();
 
         // Register the routes via the controllers
         $v1 = $app->group('/v1', function (RouteCollectorProxy $collectorProxy) use ($container)
