@@ -6,7 +6,7 @@ namespace Willow\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Slim\Routing\Route;
+use Slim\Routing\RouteContext;
 
 class ResponseBodyFactory
 {
@@ -34,8 +34,8 @@ class ResponseBodyFactory
      */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
     {
-        /** @var Route $route */
-        $route = $request->getAttribute('route');
+        $routeContext = RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
         $id = $route->getArgument('id');
 
         // Get the body and query parameters as a deserialized array

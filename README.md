@@ -5,7 +5,7 @@
 >[![willow](https://raw.githubusercontent.com/RyanNerd/willow/master/willow.png)](https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3) Willow is a type a girl who is beautiful and amazing and is kinda a special person and loved by everyone around her
 >most willows can be your best of friends she's up for anything and she's loves anything fun you throw at her...
 
-~ Urban Dictionary
+~ [Urban Dictionary](https://www.urbandictionary.com/define.php?term=Willow)
 
 For developers, Willow is an _opinionated_ PHP framework used to quickly create CRUD based RESTful APIs.
 
@@ -34,7 +34,7 @@ cd [your-project-name]
 // Linux / Mac users do this:
 ./willow willow:sample
 
-// Windows execute this:
+// Windows users execute this:
 php -S localhost:8088 -t public
 // Then in your favorite web browser go to: localhost:8088/v1/sample/hello-world
 ```
