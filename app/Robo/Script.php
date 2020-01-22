@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Willow\Robo;
 
-use Composer\Script\Event;
 use League\CLImate\CLImate;
 use Willow\Robo\Plugin\Commands\WillowCommands;
 
@@ -14,13 +13,9 @@ class Script
 {
     /**
      * Composer hook that fires when composer create-project has finished.
-     *
-     * @param $event
      */
-    public static function postCreateProjectCmd(Event $event): void
+    public static function postCreateProjectCmd(): void
     {
-        $args = $event->getArguments();
-
         // Figure out what directory was created most recently
         $time = 0;
         $projectName = 'your-project-name';
@@ -65,19 +60,19 @@ class Script
 
         // Display what commands to run depending on if the symlink was created and the O/S
         if ($symlinkCreated) {
-            $cli->bold()->lightGray('./willow willow:sample');
-            $cli->bold()->lightGray('./willow willow:docs');
+            $cli->bold()->lightGray('./willow sample');
+            $cli->bold()->lightGray('./willow docs');
             $cli->bold()->white('For a list of available commands run: ./willow list');
         } else {
             if ($isWindows) {
                 $cli->bold()->lightGray('You must manually add robo to your path:' . __DIR__. '\vendor\bin\robo.bat');
                 $cli->bold()->lightGray('Then run:');
-                $cli->bold()->lightGray('robo willow:sample');
-                $cli->bold()->lightGray('robo willow:docs');
+                $cli->bold()->lightGray('robo sample');
+                $cli->bold()->lightGray('robo docs');
                 $cli->bold()->white('For a list of available commands run: robo list');
             } else {
-                $cli->bold()->lightGray('./vendor/bin/robo willow:sample');
-                $cli->bold()->lightGray('./vendor/bin/robo willow:docs');
+                $cli->bold()->lightGray('./vendor/bin/robo sample');
+                $cli->bold()->lightGray('./vendor/bin/robo docs');
                 $cli->bold()->white('For a list of available commands run: ./vendor/bin/robo list');
             }
         }
