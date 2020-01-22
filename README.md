@@ -30,9 +30,13 @@ From a terminal / command window run:
 ```
 composer create-project ryannerd/willow [your-project-name]
 cd [your-project-name]
+```
 
+### Sample
+
+```
 // Linux / Mac users do this:
-./willow willow:sample
+./willow sample
 
 // Windows users execute this:
 php -S localhost:8088 -t public
@@ -55,6 +59,23 @@ The result should look something like this:
 }
 ```
 
+###  Willow Commands
+
+```bash
+./willow docs     # bring up the documentation web page
+./willow list     # list all available Willow commands
+./willow sample   # launch the sample API in a web browser
+./willow generate # create controllers and actions for a given table and route
+
+# Database commands
+./willow db:init         # initialize the .env file for database access
+./willow db:show-tables  # list all the tables in the database
+./willow db:show-views   # list all the views in the database
+./willow db:show-columns # list all the columns for a given table
+```
+
+<small>
 Willow icon made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> 
 from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
 is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+</small>
