@@ -66,6 +66,8 @@ The result should look something like this:
 ./willow list     # list all available Willow commands
 ./willow sample   # launch the sample API in a web browser
 ./willow generate # create controllers and actions for a given table and route
+./willow test     # execute the unit tests
+./willow banner   # show the Willow introductory banner
 
 # Database commands
 ./willow db:init         # initialize the .env file for database access

@@ -43,4 +43,21 @@ class WillowCommands extends RoboBase
     {
         Script::fancyBanner();
     }
+
+    /*
+     * Execute the unit tests
+     */
+    public function test(): void
+    {
+/*
+        // This executes ZERO tests?!?
+        $this->taskPhpUnit(__DIR__ . '/../../../../vendor/bin/phpunit')
+           ->dir(__DIR__ .'/../../../../tests')
+           ->filter('tests')
+           ->run();
+*/
+
+        // This works!
+        $this->_exec(__DIR__ . '/../../../../vendor/bin/phpunit ' . __DIR__ . '/../../../../tests');
+    }
 }
