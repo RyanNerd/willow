@@ -19,11 +19,11 @@ if (file_exists(__DIR__ . '/../.env')) {
             ob_start();
         }
 
-        // Allow for all origins and credentials. Also allow GET, POST, PATCH, and OPTIONS request verbs
+        // Allow for all origins and credentials. Also allow GET, POST, PATCH, DELETE, and OPTIONS request verbs
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-        header('Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS');
+        header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS');
 
         // If this is a pre-flight request (the request method is OPTIONS)? Then flush the output buffer and exit.
         if ($requestMethod === 'OPTIONS') {
