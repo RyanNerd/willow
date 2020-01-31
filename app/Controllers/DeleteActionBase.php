@@ -34,23 +34,15 @@ class DeleteActionBase
 
         $model = $model->find($args['id']);
 
-        if ($model === null) {
-            $status = 404;
-            $data = null;
+        if ($model->destroy($args['id']) === 1) {
+            $status = 200;
         } else {
-            $model->Active = false;
-            if ($model->save()) {
-                $status = 200;
-                $data = $model;
-            } else {
-                $status = 400;
-                $data = null;
-            }
+            $status = 404;
         }
 
         // Set the status and data of the ResponseBody
         $responseBody = $responseBody
-            ->setData($data)
+            ->setData(null)
             ->setStatus($status);
 
         // Return the response as JSON

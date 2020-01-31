@@ -74,11 +74,6 @@ class MockGetAction extends GetActionBase
     {
         $this->model = $model;
     }
-
-    public function __invoke(Request $request, Response $response, array $args): ResponseInterface
-    {
-        return parent::__invoke($request, $response, $args);
-    }
 }
 
 class MockModel extends ModelBase
