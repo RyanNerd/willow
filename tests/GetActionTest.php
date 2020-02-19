@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Controllers\GetActionBase;
@@ -14,7 +13,7 @@ final class GetActionTest extends TestCase
     public function testGetAction(): void
     {
         $arg = ['id' => 1];
-        $model = new MockModel(false);
+        $model = new MockModelGet(false);
         $mockGetAction = new MockGetAction($model);
 
         $request = $this->createMock(Request::class);
@@ -42,7 +41,7 @@ final class GetActionTest extends TestCase
     public function testGetAction404(): void
     {
         $arg = ['id' => 1];
-        $model = new MockModel(true);
+        $model = new MockModelGet(true);
         $mockGetAction = new MockGetAction($model);
 
         $request = $this->createMock(Request::class);
@@ -70,13 +69,13 @@ final class GetActionTest extends TestCase
 
 class MockGetAction extends GetActionBase
 {
-    public function __construct(MockModel $model)
+    public function __construct(MockModelGet $model)
     {
         $this->model = $model;
     }
 }
 
-class MockModel extends ModelBase
+class MockModelGet extends ModelBase
 {
     public const FIELDS = [
         'id' => 'integer',
