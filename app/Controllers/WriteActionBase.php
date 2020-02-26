@@ -14,7 +14,7 @@ abstract class WriteActionBase extends ActionBase
     /**
      * @var ModelBase
      */
-    protected $model;
+    protected ModelBase $model;
 
     public function __invoke(Request $request, Response $response): ResponseInterface
     {

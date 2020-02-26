@@ -14,7 +14,7 @@ class DeleteActionBase
     /**
      * @var ModelBase
      */
-    protected $model;
+    protected ModelBase $model;
 
     /**
      * Handle DELETE request

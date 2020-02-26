@@ -98,7 +98,7 @@ final class WriteActionTest extends TestCase
 
 class MockWriteAction extends WriteActionBase
 {
-    protected $model;
+    protected ModelBase $model;
 
     public function __construct(ModelBase $model)
     {
