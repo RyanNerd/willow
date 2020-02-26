@@ -8,13 +8,8 @@ use Willow\Models\{{ class_name }};
 
 class {{ class_name }}PostAction extends WriteActionBase
 {
-    /**
-     * @var {{ class_name }}
-     */
-    protected $model;
-
     public function __construct({{ class_name }} $model)
     {
-        $this->model = $model;
+        $this->setModel($model);
     }
 }

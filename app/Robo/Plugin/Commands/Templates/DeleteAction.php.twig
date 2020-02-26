@@ -9,17 +9,12 @@ use Willow\Models\{{ class_name }};
 class {{ class_name }}DeleteAction extends DeleteActionBase
 {
     /**
-     * @var {{ class_name }}
-     */
-    protected $model;
-
-    /**
      * Get the model via Dependency Injection and save it.
      *
      * @param {{ class_name }} $model
      */
     public function __construct({{ class_name }} $model)
     {
-        $this->model = $model;
+        $this->setModel($model);
     }
 }
