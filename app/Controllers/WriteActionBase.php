@@ -11,18 +11,6 @@ use Willow\Models\ModelBase;
 
 abstract class WriteActionBase extends ActionBase
 {
-    private ModelBase $model;
-
-    /**
-     * Set the model
-     *
-     * @param ModelBase $model
-     */
-    protected function setModel(ModelBase $model)
-    {
-        $this->model = $model;
-    }
-
     public function __invoke(Request $request, Response $response): ResponseInterface
     {
         /** @var ResponseBody $responseBody */

@@ -9,20 +9,8 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\ModelBase;
 
-class DeleteActionBase
+class DeleteActionBase extends ActionBase
 {
-    private ModelBase $model;
-
-    /**
-     * Set the model
-     *
-     * @param ModelBase $model
-     */
-    protected function setModel(ModelBase $model)
-    {
-        $this->model = $model;
-    }
-
     /**
      * Handle DELETE request
      *

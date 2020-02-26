@@ -7,22 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
 class GetActionBase extends ActionBase
 {
-    private ModelBase $model;
-
-    /**
-     * Set the model
-     *
-     * @param ModelBase $model
-     */
-    protected function setModel(ModelBase $model)
-    {
-        $this->model = $model;
-    }
-
     /**
      * Handle GET request
      *

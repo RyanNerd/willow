@@ -15,11 +15,6 @@ use Willow\Models\ModelBase;
 class RestoreActionBase extends ActionBase
 {
     /**
-     * @var ModelBase
-     */
-    protected ModelBase $model;
-
-    /**
      * @param Request $request
      * @param Response $response
      * @return ResponseInterface
