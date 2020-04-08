@@ -20,15 +20,23 @@ Willow works best as a framework in this situation:
 * You are just starting your project (for the backend API handler) and need to _hit the ground running_
 
 ### 📃 Requirements
-* PHP 7.1+
+* PHP 7.4+ (Willow 2.0+)
+* PHP 7.2+ (Willow 1.1+)
 * MySQL 5.6+ or SQLite3 (Postgres and MSSQL should also work but are untested)
 * [Composer](https://getcomposer.org) (For Willow to work best this must be installed globally)
 
 ### 💾 Installation
-From a terminal / command window run:
+To install the latest version of Willow run:
 
 ```
 composer create-project ryannerd/willow [your-project-name]
+cd [your-project-name]
+```
+
+To install Willow verion 1.1 use these commands:
+
+```
+composer create-project ryannerd/willow:^1.1 [your-project-name]
 cd [your-project-name]
 ```
 
