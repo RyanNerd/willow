@@ -26,14 +26,14 @@ Willow works best as a framework in this situation:
 * [Composer](https://getcomposer.org) (For Willow to work best this must be installed globally)
 
 ### 💾 Installation
-To install the latest version of Willow run:
+To install Willow version 2.0 run:
 
 ```
-composer create-project ryannerd/willow [your-project-name]
+composer create-project ryannerd/willow:^2 [your-project-name]
 cd [your-project-name]
 ```
 
-To install Willow verion 1.1 use these commands:
+To install Willow version 1.1 use these commands:
 
 ```
 composer create-project ryannerd/willow:^1.1 [your-project-name]
