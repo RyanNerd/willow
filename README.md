@@ -13,18 +13,19 @@ For developers, Willow is an _opinionated_ PHP framework used to quickly create 
 with [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/wiki/Wedding_planner).
 
 For instructions and getting started see the [Willow Framework User Guide](https://www.notion.so/Willow-Framework-Users-Guide-bf56317580884ccd95ed8d3889f83c72)
+Go [here](https://github.com/RyanNerd/willow/tree/2.x) if you want to use version 2.0 of Willow
 
 Willow works best as a framework in this situation:
 * You need to quickly spin up a [RESTful](https://restfulapi.net/) [datacentric](https://www.codecademy.com/articles/what-is-crud) API
 * You have defined your database with entities (tables/views) already in place
 * You are just starting your project (for the backend API handler) and need to _hit the ground running_
 
-### 📃 Requirements
+### 📃 Requirements (Willow 1.1)
 * PHP 7.1+
 * MySQL 5.6+ or SQLite3 (Postgres and MSSQL should also work but are untested)
 * [Composer](https://getcomposer.org) (For Willow to work best this must be installed globally)
 
-### 💾 Installation
+### 💾 Installation (Willow 1.1)
 From a terminal / command window run:
 
 ```
