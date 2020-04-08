@@ -14,6 +14,8 @@ with [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/
 
 For instructions and getting started see the [Willow Framework User Guide](https://www.notion.so/Willow-Framework-Users-Guide-bf56317580884ccd95ed8d3889f83c72)
 
+Go [here](https://github.com/RyanNerd/willow/tree/1.x) for the previous version of Willow (1.1)
+
 Willow works best as a framework in this situation:
 * You need to quickly spin up a [RESTful](https://restfulapi.net/) [datacentric](https://www.codecademy.com/articles/what-is-crud) API
 * You have defined your database with entities (tables/views) already in place
