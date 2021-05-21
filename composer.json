@@ -27,7 +27,7 @@
         "slim/psr7": "^0.5.0",
         "slim/slim": "^4.8.0",
         "twig/twig": "^3.3.2",
-        "vlucas/phpdotenv": "^3.6.8"
+        "vlucas/phpdotenv": "^5.3"
     },
     "require-dev": {
         "consolidation/robo": "^2.2.2",
