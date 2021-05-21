@@ -26,7 +26,7 @@ class SampleGetAction
         $responseBody = $responseBody
             ->setData(['id' => $args['id']])
             ->setMessage('Sample test')
-            ->setStatus(200);
+            ->setStatus(ResponseBody::HTTP_OK);
         return $responseBody();
     }
 }

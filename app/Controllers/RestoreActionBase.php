@@ -39,14 +39,14 @@ class RestoreActionBase extends ActionBase
             // Was the record successfully restored? Return the record and status of 200, otherwise return status 500;
             if ($record->restore()) {
                 $data = $record->toArray();
-                $status = 200;
+                $status = ResponseBody::HTTP_OK;
             } else {
                 $data = null;
-                $status = 500;
+                $status = ResponseBody::HTTP_INTERNAL_SERVER_ERROR;
                 $message = 'Unable to restore.';
             }
         } else {
-            $status = 404;
+            $status = ResponseBody::HTTP_NOT_FOUND;
             $data = null;
         }
 

@@ -90,10 +90,10 @@ class SearchActionBase extends ActionBase
                 $this->sanitize($datum, $modelColumns);
             }
 
-            $status = 200;
+            $status = ResponseBody::HTTP_OK;
         } else {
             $data = null;
-            $status = 404;
+            $status = ResponseBody::HTTP_NOT_FOUND;
         }
 
         $responseBody = $responseBody
