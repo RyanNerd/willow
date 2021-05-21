@@ -3,16 +3,10 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use Robo\Task\Development\PhpServer;
 use Willow\Robo\Script;
 
 class WillowCommands extends RoboBase
 {
-    /**
-     * @var PhpServer
-     */
-    private $server;
-
     /**
      * Launch the Willow Framework User's Guide in the default web browser
      */
@@ -26,12 +20,11 @@ class WillowCommands extends RoboBase
      */
     public function sample(): void
     {
-        $server = $this->taskServer(8088);
-        $this->server = $server->host('127.0.0.1')
+        $this->taskServer(8088)
+            ->host('127.0.0.1')
             ->dir(__DIR__ . '/../../../../public')
             ->background()
             ->run();
-
         $this->taskOpenBrowser('http://localhost:8088/v1/sample/Hello-World')->run();
         sleep(20);
     }
@@ -49,15 +42,6 @@ class WillowCommands extends RoboBase
      */
     public function test(): void
     {
-/*
-        // This executes ZERO tests?!?
-        $this->taskPhpUnit(__DIR__ . '/../../../../vendor/bin/phpunit')
-           ->dir(__DIR__ .'/../../../../tests')
-           ->filter('tests')
-           ->run();
-*/
-
-        // This works!
         $this->_exec(__DIR__ . '/../../../../vendor/bin/phpunit ' . __DIR__ . '/../../../../tests');
     }
 }
