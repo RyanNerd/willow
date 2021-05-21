@@ -5,6 +5,7 @@ namespace Willow\Main;
 
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Middleware\JsonBodyParser;
@@ -13,10 +14,8 @@ use Willow\Middleware\ValidateRequest;
 
 class App
 {
-    /**
-     * @var Capsule
-     */
-    protected $capsule = null;
+    protected static Capsule $capsule;
+    protected static ContainerInterface $container;
 
     public function __construct(bool $run = true)
     {
@@ -28,15 +27,14 @@ class App
                 $builder->addDefinitions(realpath($definitions));
             }
         }
-        $container = $builder->build();
 
-        // Establish an instance of the Illuminate database capsule (if not already established)
-        if ($this->capsule === null) {
-            $this->capsule = $container->get(Capsule::class);
-        }
+        $container = $builder->build();
+        self::$container = $container;
+        self::$capsule = $container->get(Capsule::class);
 
         // Get an instance of Slim\App
-        $app = AppFactory::createFromContainer($container);
+        AppFactory::setContainer(self::$container);
+        $app = AppFactory::create();
         $app->addRoutingMiddleware();
 
         // Register the routes via the controllers
