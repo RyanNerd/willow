@@ -20,17 +20,17 @@
         "php": "^7.4 | ^8.0",
         "ext-json": "*",
         "ext-pdo": "*",
-        "doctrine/dbal": "^2.13.1",
+        "doctrine/dbal": "^3.1.0",
         "illuminate/database": "^8.42.1",
         "league/climate": "^3.7.0",
         "php-di/php-di": "^6.3.3",
-        "slim/psr7": "^0.5.0",
+        "slim/psr7": "^1.4.0",
         "slim/slim": "^4.8.0",
         "twig/twig": "^3.3.2",
         "vlucas/phpdotenv": "^5.3"
     },
     "require-dev": {
-        "consolidation/robo": "^2.2.2",
+        "consolidation/robo": "^3.0.3",
         "phpunit/phpunit": "^8.5.15"
     },
     "autoload": {

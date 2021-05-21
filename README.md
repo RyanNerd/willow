@@ -23,7 +23,7 @@ Willow works best as a framework in this situation:
 
 ### 📃 Requirements
 * PHP 7.4+ (Willow 2.0+)
-* PHP 7.2+ (Willow 1.1+)
+* PHP 7.2+ (Willow 1.1+) [**No longer supported**]
 * MySQL 5.6+ or SQLite3 (Postgres and MSSQL should also work but are untested)
 * [Composer](https://getcomposer.org) (For Willow to work best this must be installed globally)
 
@@ -31,14 +31,7 @@ Willow works best as a framework in this situation:
 To install Willow version 2.0 run:
 
 ```
-composer create-project ryannerd/willow:^2 [your-project-name]
-cd [your-project-name]
-```
-
-To install Willow version 1.1 use these commands:
-
-```
-composer create-project ryannerd/willow:^1.1 [your-project-name]
+composer create-project --ignore-platform-reqs ryannerd/willow:^2 [your-project-name]
 cd [your-project-name]
 ```
 
@@ -53,7 +46,7 @@ php -S localhost:8088 -t public
 // Then in your favorite web browser go to: localhost:8088/v1/sample/hello-world
 ```
 
-The result should look something like this:
+The result in your browser should look something like this:
 
 ```json
 {
@@ -86,8 +79,27 @@ The result should look something like this:
 ./willow db:show-columns # list all the columns for a given table
 ```
 
+### Contributing
+
+Do this:
+1. Fork this repo 
+2. Make changes on your fork
+3. Push a PR 
+
+Note: the main branch isn't `master` it's `2.x` which is where you want to push your PR.
+   
+
+<div align="center">
+
+Special thanks to:
+
+[The Slim Framework](https://slimframework.com)
+
+[Illuminate / Eloquent ORM](https://github.com/illuminate/database) 
+
 <small>
 Willow icon made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> 
 from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
 is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
 </small>
+</div>
