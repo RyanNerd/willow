@@ -6,7 +6,7 @@ namespace Willow\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Response;
 
-class ResponseBody
+class ResponseBody extends ResponseCodes
 {
     /**
      * Associative array of the request

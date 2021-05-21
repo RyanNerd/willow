@@ -29,7 +29,7 @@ abstract class WriteActionBase extends ActionBase
             if ($model === null) {
                 $responseBody = $responseBody
                     ->setData(null)
-                    ->setStatus(404);
+                    ->setStatus(ResponseBody::HTTP_NOT_FOUND);
                 return $responseBody();
             }
         }
@@ -66,12 +66,12 @@ abstract class WriteActionBase extends ActionBase
 
             $responseBody = $responseBody
                 ->setData($modelArray)
-                ->setStatus(200);
+                ->setStatus(ResponseBody::HTTP_OK);
         } else {
             // Unable to save for some reason so we return error status.
             $responseBody = $responseBody
                 ->setData(null)
-                ->setStatus(500)
+                ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
                 ->setMessage('Unable to save changes to ' . $model->getTableName());
         }
 

@@ -97,7 +97,7 @@ class SearchValidatorBase extends ActionBase
         if ($responseBody->hasMissingRequiredOrInvalid()) {
             $responseBody = $responseBody
                 ->setData(null)
-                ->setStatus(400);
+                ->setStatus(ResponseBody::HTTP_BAD_REQUEST);
             return $responseBody();
         }
 

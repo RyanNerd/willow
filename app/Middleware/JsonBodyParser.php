@@ -30,7 +30,9 @@ class JsonBodyParser implements MiddlewareInterface
             } else {
                 // Short circuit the request by returning a response with status of 400 (invalid request).
                 $responseBody = new ResponseBody();
-                $responseBody = $responseBody->setStatus(400)->setMessage('Invalid JSON');
+                $responseBody = $responseBody->
+                    setStatus(ResponseBody::HTTP_BAD_REQUEST)->
+                    setMessage('Invalid JSON');
                 return $responseBody();
             }
         } else {
@@ -40,7 +42,9 @@ class JsonBodyParser implements MiddlewareInterface
             if ($method === 'POST' || $method === 'PATCH') {
                 // Short circuit the request by returning a response with status of 400 (invalid request).
                 $responseBody = new ResponseBody();
-                $responseBody = $responseBody->setStatus(400)->setMessage("Invalid Content-Type: $contentType");
+                $responseBody = $responseBody->
+                    setStatus(ResponseBody::HTTP_BAD_REQUEST)->
+                    setMessage("Invalid Content-Type: $contentType");
                 return $responseBody();
             }
         }

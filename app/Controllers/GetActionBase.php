@@ -29,13 +29,12 @@ class GetActionBase extends ActionBase
         // If the record is not found then 404 error, otherwise status is 200.
         if ($model === null) {
             $data = null;
-            $status = 404;
+            $status = ResponseBody::HTTP_NOT_FOUND;
         } else {
             // Remove any protected fields from the response
             $data = $model->toArray();
             $this->sanitize($data, $model::FIELDS);
-
-            $status = 200;
+            $status = ResponseBody::HTTP_OK;
         }
 
         // Set the status and data of the ResponseBody

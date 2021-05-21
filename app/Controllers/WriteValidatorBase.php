@@ -26,7 +26,7 @@ abstract class WriteValidatorBase
         // If there are any missing or required data points then we short circuit and return invalid request.
         if ($responseBody->hasMissingRequiredOrInvalid()) {
             $responseBody = $responseBody
-                ->setStatus(400)
+                ->setStatus(ResponseBody::HTTP_BAD_REQUEST)
                 ->setMessage('Missing or invalid request');
             return $responseBody();
         }

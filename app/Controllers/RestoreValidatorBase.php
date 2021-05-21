@@ -29,7 +29,7 @@ class RestoreValidatorBase
         // Is there an invalid or missing parameter in the request? Respond with status 400.
         if ($responseBody->hasMissingRequiredOrInvalid()) {
             $responseBody = $responseBody
-                ->setStatus(400)
+                ->setStatus(ResponseBody::HTTP_BAD_REQUEST)
                 ->setData(null);
             return $responseBody();
         }
