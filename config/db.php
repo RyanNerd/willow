@@ -9,7 +9,7 @@ return [
         $eloquent = new Capsule;
 
         $eloquent->addConnection([
-            'driver'    => env('DB_DRIVER') ?? 'mysql',
+            'driver'    => getenv('DB_DRIVER') ?? 'mysql',
             'host'      => getenv('DB_HOST'),
             'port'      => getenv('DB_PORT') ?? '',
             'database'  => getenv('DB_NAME'),
