@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Dotenv\Dotenv;
 
-$dotEnv = Dotenv::create(__DIR__ . '/../');
+$dotEnv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotEnv->load();
 $dotEnv->required(
     [
