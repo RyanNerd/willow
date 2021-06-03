@@ -2,41 +2,55 @@
 declare(strict_types=1);
 
 use Willow\Main\App;
+use DI\ContainerBuilder;
+use League\CLImate\CLImate;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// Does the .env file exist?
-if (file_exists(__DIR__ . '/../.env')) {
-    // Set the environment variables from the .env file
-    require_once __DIR__ . '/../config/_env.php';
-
-    // Is Willow handling CORS?
-    if (getenv('CORS') === 'true') {
-        $requestMethod = $_SERVER['REQUEST_METHOD'];
-
-        // Is this a pre-flight request (the request method is OPTIONS)? Then start output buffering.
-        if ($requestMethod === 'OPTIONS') {
-            ob_start();
-        }
-
-        // Allow for all origins and credentials. Also allow GET, POST, PATCH, DELETE, and OPTIONS request verbs
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-        header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS');
-
-        // If this is a pre-flight request (the request method is OPTIONS)? Then flush the output buffer and exit.
-        if ($requestMethod === 'OPTIONS') {
-            ob_end_flush();
-            exit();
-        }
+try {
+    // Establish DI
+    $builder = new ContainerBuilder();
+    if (file_exists(__DIR__ . '/../.env')) {
+        $builder
+            ->addDefinitions(['DEMO' => false])
+            ->addDefinitions(__DIR__ . '/../config/_env.php')
+            ->addDefinitions(__DIR__ . '/../config/db.php');
+    } else {
+        $builder->addDefinitions(['DEMO' => true]);
     }
-} else {
-    // Output to STDERR that the .env file is missing.
-    $stdErr = fopen('php://stderr', 'b');
-    fwrite($stdErr, 'WARNING: The .env file is missing' . PHP_EOL);
-    fclose($stdErr);
+
+    $container = $builder->build();
+
+    if (!$container->get('DEMO')) {
+        // Instantiate Eloquent ORM
+        $container->get('Eloquent');
+    }
+} catch (Throwable $throwable) {
+    // See: https://github.com/krakjoe/pthreads/issues/806
+    if (!defined('STDOUT')) {
+        define('STDOUT', fopen('php://stdout', 'wb'));
+    }
+
+    if (!defined('STDERR')) {
+        define('STDERR', fopen('php://stderr', 'wb'));
+    }
+
+    $cli = new CLImate();
+    $cli->to('error')->br(2);
+    $cli->to('error')->red('Message')->white($throwable->getMessage());
+    $cli->to('error')->red('File: ')->white($throwable->getFile());
+    $cli->to('error')->red('Line: ')->white((string)$throwable->getLine());
+    $cli->to('error')->red('Trace: ')->white($throwable->getTraceAsString());
+    $cli->to('error')->br(2);
+
+    $cli->to('out')->br(2);
+    $cli->to('out')->red('Message')->white($throwable->getMessage());
+    $cli->to('out')->red('File: ')->white($throwable->getFile());
+    $cli->to('out')->red('Line: ')->white((string)$throwable->getLine());
+    $cli->to('out')->red('Trace: ')->white($throwable->getTraceAsString());
+    $cli->to('out')->br(2);
+    exit();
 }
 
 // Launch the app
-new App();
+new App($container);

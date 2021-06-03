@@ -15,12 +15,18 @@ class RegisterRouteControllers
         $this->sampleController = $sampleController;
     }
 
+    /**
+     * Register routes and actions for each controller
+     * @param RouteCollectorProxy $collectorProxy
+     * @return $this
+     */
     public function __invoke(RouteCollectorProxy $collectorProxy): self
     {
-        // TODO: Use Twig to build this out
-
-        // Register routes and actions for each controller
-        $this->sampleController->register($collectorProxy);
+        // DEMO only
+        $container = $collectorProxy->getContainer();
+        if ($container->get('DEMO')) {
+            $this->sampleController->register($collectorProxy);
+        }
 
         return $this;
     }

@@ -7,6 +7,9 @@ use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
+use Slim\Psr7\Request;
+use Slim\Psr7\Response;
+use Willow\Middleware\ProcessCors;
 use Willow\Middleware\RegisterRouteControllers;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\ValidateRequest;
@@ -16,40 +19,24 @@ class App
     protected static Capsule $capsule;
     protected static ContainerInterface $container;
 
-    public function __construct(bool $run = true)
+    public function __construct(ContainerInterface $container)
     {
-        // Set up Dependency Injection
-        $builder = new ContainerBuilder();
-        foreach (glob(__DIR__ . '/../../config/*.php') as $definitions) {
-            // Skip the _env.php file for the definitions as this was required already in public/index.php
-            if (strpos($definitions, '_env.php') === false) {
-                $builder->addDefinitions(realpath($definitions));
-            }
-        }
-
-        $container = $builder->build();
-        self::$container = $container;
-        self::$capsule = $container->get(Capsule::class);
+        // Set the container in the app
+        AppFactory::setContainer($container);
 
         // Get an instance of Slim\App
-        AppFactory::setContainer(self::$container);
+        $app = AppFactory::create();
 
         // Add all the needed middleware
-        $app = AppFactory::create();
         $app->addRoutingMiddleware();
         $app->addBodyParsingMiddleware();
-        // TODO: Use DI ENV to display error details
+
+        $displayErrors = $container->get('DEMO') || $container->get('ENV')['DISPLAY_ERROR_DETAILS'] === 'true';
         $app->addErrorMiddleware(
-            true,
+            $displayErrors,
             true,
             true
         );
-
-//        $app->addErrorMiddleware(
-//            $container->get('ENV')['DISPLAY_ERROR_DETAILS'] === 'true',
-//            true,
-//            true
-//        );
 
         // Register the routes via the controllers
         $v1 = $app->group('/v1', registerRouteControllers::class);
@@ -61,9 +48,16 @@ class App
         // Add ResponseBody as a Request attribute
         $v1->add(ResponseBodyFactory::class);
 
-        // Run will be true unless we are doing a unit test.
-        if ($run) {
-            $app->run();
-        }
+        // Preflight OPTION pattern allows for all routes
+        // See: https://www.slimframework.com/docs/v4/cookbook/enable-cors.html
+        $app->options('/{routes:.+}', function (Request $request, Response $response) {
+            return $response;
+        });
+
+        // Add CORS processing middleware
+        $app->add(ProcessCors::class);
+
+        // Execute the app
+        $app->run();
     }
 }
