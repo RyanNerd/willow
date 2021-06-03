@@ -26,7 +26,6 @@ class WillowCommands extends RoboBase
             ->background()
             ->run();
         $this->taskOpenBrowser('http://localhost:8088/v1/sample/Hello-World')->run();
-        sleep(20);
     }
 
     /**

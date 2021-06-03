@@ -10,31 +10,23 @@ use Willow\Controllers\{{ class_name }}\{{ class_name }}Controller;
 
 class RegisterControllers
 {
-    {% for class_name in class_list %}
-    protected {{ class_name }}Controller ${{ class_name|lower }}Controller;
-    {%  endfor %}
+    {% for class_name in class_list %}protected {{ class_name }}Controller ${{ class_name|lower }}Controller;{%  endfor %}
 
-    public function __construct(
-        {% for class_name in class_list %}
-        {{ class_name }}Controller ${{ class_name|lower }}Controller{{ not loop.last ? ',' }}
-        {% endfor %}
-    )
+
+    public function __construct({% for class_name in class_list %}{{ class_name }}Controller ${{ class_name|lower }}Controller{{ not loop.last ? ',' }}{% endfor %})
     {
-        {% for class_name in class_list %}
-        $this->{{ class_name|lower }}Controller = ${{ class_name|lower }}Controller;
-        {% endfor %}
+        {% for class_name in class_list %}$this->{{ class_name|lower }}Controller = ${{ class_name|lower }}Controller;{% endfor %}
+
     }
 
     /**
     * Register routes and actions for each controller
     * @param RouteCollectorProxy $collectorProxy
-    * @return $this
+    * @return self
     */
     public function __invoke(RouteCollectorProxy $collectorProxy): self
     {
-        {% for class_name in class_list %}
-        $this->{{ class_name|lower }}Controller->register($collectorProxy);
-        {% endfor %}
+        {% for class_name in class_list %}$this->{{ class_name|lower }}Controller->register($collectorProxy);{% endfor %}
 
         return $this;
     }

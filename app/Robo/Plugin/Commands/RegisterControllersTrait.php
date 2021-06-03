@@ -17,13 +17,17 @@ trait RegisterControllersTrait
      */
     protected function forgeRegisterControllers(): ?string
     {
-        $controllerPath = __DIR__ . '/../../../Controllers';
-        $dirList = scandir($controllerPath);
+        $controllerPath = __DIR__ . '/../../../Controllers/*';
+        $dirList = glob($controllerPath,GLOB_ONLYDIR);
+
+        // Error getting directory list or no directories.
+        if ($dirList === false || count($dirList) === 0) {
+            return 'No controllers found at ' . $controllerPath . PHP_EOL . 'Nothing to do.';
+        }
+
         $classList = [];
-        foreach ($dirList as $fileName) {
-            if (is_dir($controllerPath . '/' . $fileName)) {
-                $classList[] = $fileName;
-            }
+        foreach ($dirList as $dirName) {
+           $classList[] = basename($dirName);
         }
 
         // Render the RegisterControllers code.
