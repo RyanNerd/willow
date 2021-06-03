@@ -7,8 +7,7 @@ use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
-use Slim\Routing\RouteCollectorProxy;
-use Willow\Middleware\JsonBodyParser;
+use Willow\Middleware\RegisterRouteControllers;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\ValidateRequest;
 
@@ -34,23 +33,26 @@ class App
 
         // Get an instance of Slim\App
         AppFactory::setContainer(self::$container);
+
+        // Add all the needed middleware
         $app = AppFactory::create();
         $app->addRoutingMiddleware();
+        $app->addBodyParsingMiddleware();
+        // TODO: Use DI ENV to display error details
+        $app->addErrorMiddleware(
+            true,
+            true,
+            true
+        );
+
+//        $app->addErrorMiddleware(
+//            $container->get('ENV')['DISPLAY_ERROR_DETAILS'] === 'true',
+//            true,
+//            true
+//        );
 
         // Register the routes via the controllers
-        $v1 = $app->group('/v1', function (RouteCollectorProxy $collectorProxy) use ($container)
-        {
-            $nameSpace = self::class;
-            $nameSpace = str_replace('\Main\App', '', $nameSpace);
-
-            // TODO: Speed things up by replacing the foreach logic with direct calls. For example:
-            //       $container->get(SampleController::class)->register($collectorProxy);
-            foreach(glob(__DIR__ . '/../Controllers/*',GLOB_ONLYDIR) as $controller) {
-                $controller = basename($controller);
-                $className = $nameSpace . '\Controllers\\' . $controller . '\\' . $controller . 'Controller';
-                $container->get($className)->register($collectorProxy);
-            }
-        });
+        $v1 = $app->group('/v1', registerRouteControllers::class);
 
         // Add middleware that validates the overall request.
         // TODO: Edit ValidateRequest to handle ALL request validations (e.g. API key validations)
@@ -58,13 +60,6 @@ class App
 
         // Add ResponseBody as a Request attribute
         $v1->add(ResponseBodyFactory::class);
-
-        // Add JSON parser middleware
-        $app->add(JsonBodyParser::class);
-
-        // Add Error Middleware
-        $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS') === 'true';
-        $app->addErrorMiddleware($displayErrorDetails, true, true);
 
         // Run will be true unless we are doing a unit test.
         if ($run) {
