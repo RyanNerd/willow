@@ -11,7 +11,7 @@ trait GetActionTrait
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * Forge the GetAction code given the entity (table/view) name.

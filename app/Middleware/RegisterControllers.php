@@ -6,7 +6,7 @@ namespace Willow\Middleware;
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Controllers\Sample\SampleController;
 
-class RegisterRouteControllers
+class RegisterControllers
 {
     protected SampleController $sampleController;
 

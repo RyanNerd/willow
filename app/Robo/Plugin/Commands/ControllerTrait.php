@@ -11,7 +11,7 @@ trait ControllerTrait
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * Forge the Controller code given the tableName and optionally the route

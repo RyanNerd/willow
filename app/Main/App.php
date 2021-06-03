@@ -10,7 +10,7 @@ use Slim\Factory\AppFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ProcessCors;
-use Willow\Middleware\RegisterRouteControllers;
+use Willow\Middleware\RegisterControllers;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\ValidateRequest;
 
@@ -39,7 +39,7 @@ class App
         );
 
         // Register the routes via the controllers
-        $v1 = $app->group('/v1', registerRouteControllers::class);
+        $v1 = $app->group('/v1', RegisterControllers::class);
 
         // Add middleware that validates the overall request.
         // TODO: Edit ValidateRequest to handle ALL request validations (e.g. API key validations)

@@ -11,7 +11,7 @@ trait PostActionTrait
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * Forge the PostAction code given the entity (table/view) name.

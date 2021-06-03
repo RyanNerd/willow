@@ -11,7 +11,7 @@ trait RestoreValidatorTrait
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * Forge the RestoreValidator code given the entity (table/view) name.

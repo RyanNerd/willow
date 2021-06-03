@@ -11,7 +11,7 @@ trait SearchActionTrait
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * Forge the SearchAction code given the entity (table/view) name.

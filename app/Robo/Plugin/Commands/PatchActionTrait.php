@@ -11,7 +11,7 @@ trait PatchActionTrait
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * Forge the PatchAction code given the entity (table/view) name.

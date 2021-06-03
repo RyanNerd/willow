@@ -11,6 +11,7 @@ class GenerateCommands extends RoboBase
     use ModelTrait;
     use PatchActionTrait;
     use PostActionTrait;
+    use RegisterControllersTrait;
     use RestoreActionTrait;
     use RestoreValidatorTrait;
     use SearchActionTrait;
@@ -22,6 +23,8 @@ class GenerateCommands extends RoboBase
      *
      * @param string $tableName The table/view to generate a controller
      * @param string|null $route The route to use for the controller
+     * @todo Warn user that this is a destructive command and existing PHP Controller and script files will be overwritten
+     * @todo Use a .willow or a .viridian file to define TableNames and Routes???
      */
     public function generate(string $tableName, ?string $route = null): void
     {
@@ -76,6 +79,11 @@ class GenerateCommands extends RoboBase
         }
 
         $error = $this->forgeRestoreValidator($tableName);
+        if ($error) {
+            $this->error($error);
+        }
+
+        $error = $this->forgeRegisterControllers();
         if ($error) {
             $this->error($error);
         }

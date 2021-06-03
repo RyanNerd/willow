@@ -6,6 +6,7 @@ use Dotenv\Dotenv;
 $dotEnv = Dotenv::createImmutable(__DIR__ . '/../');
 $env = $dotEnv->load();
 $dotEnv->required([
+    'DB_DRIVER',
     'DB_HOST',
     'DB_PORT',
     'DB_NAME',
@@ -14,4 +15,5 @@ $dotEnv->required([
     'DISPLAY_ERROR_DETAILS'
 ])->notEmpty();
 $dotEnv->required('DISPLAY_ERROR_DETAILS')->allowedValues(['true', 'false']);
+$dotEnv->required('DB_DRIVER')->allowedValues(['mysql', 'pgsql', 'sqlsrv', 'sqlite']);
 return  ['ENV' => $env];

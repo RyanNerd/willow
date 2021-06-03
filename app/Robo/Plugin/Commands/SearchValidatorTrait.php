@@ -11,7 +11,7 @@ trait SearchValidatorTrait
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * Forge the SearchValidator code given the entity (table/view) name.

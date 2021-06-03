@@ -32,7 +32,7 @@ abstract class RoboBase extends Tasks
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * RoboBase constructor.

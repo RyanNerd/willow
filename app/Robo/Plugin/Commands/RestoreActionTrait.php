@@ -11,7 +11,7 @@ trait RestoreActionTrait
     /**
      * @var Environment
      */
-    protected $twig;
+    protected Environment $twig;
 
     /**
      * Forge the RestoreAction code given the entity (table/view) name.
