@@ -4,29 +4,33 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\TerminalObject\Dynamic\Confirm;
+use League\CLImate\CLImate;
 use RoboFile;
 
-class DbCommands extends RoboBase
+trait EnvSetupTrait
 {
+    protected CLImate $cli;
+
     /**
-     * Initialization of the Willow framework specifically the .env file
+     * Initialization of the .env file
+     * @param string $envPath
+     * @return bool
      */
-    public function dbInit(): void
+    protected function envInit(string $envPath): bool
     {
         $cli = $this->cli;
-
-        $envPath = __DIR__ . '/../../../../.env';
-        if (file_exists($envPath)) {
-            $this->warning('A .env file already exists.');
-            $cli->out('Delete the .env file and re-run this command or manually edit the .env file');
-            return;
-        }
-
+        $cli->br();
+        $cli->lightGreen()->border('*', 80);
+        $cli->bold()->green('Willow uses a .env file to configure database access.');
+        // TODO: Add url link instead
+        $cli->bold()->lightGreen('Run `./willow docs` for more information.');
+        $cli->lightGreen()->border('*', 80);
+        $cli->br(2);
         $cli->bold()->white('Enter values for the .env file');
 
+        // If we are using Windows we need to prompt the user differently since it doesn't support multiple choice.
         if (RoboFile::isWindows()) {
             $drivers = ['mysql', 'pgsql', 'sqlsrv', 'sqlite'];
-
             do {
                 $cli->out('Driver must be one of: ' . implode(', ', $drivers));
 
@@ -52,6 +56,7 @@ class DbCommands extends RoboBase
             } while (strlen($dbDriver) === 0);
         }
 
+        // TODO: Add support for other drivers Postgres and MS SQL
         do {
             if ($dbDriver === 'sqlite') {
                 $dbHost = '';
@@ -133,59 +138,6 @@ env;
             $spinner->advance();
             usleep(500);
         }
-
-        if (file_put_contents($envPath, $envText) !== false) {
-            $cli->out('.env file created');
-        } else {
-            $this->error('Unable to create .env file');
-        }
-    }
-
-    /**
-     * Show all tables in the database
-     *
-     * @todo Postgres "SELECT table_schema,table_name, table_catalog FROM information_schema.tables WHERE table_catalog = 'CATALOG/SCHEMA HERE' AND table_type = 'BASE TABLE' AND table_schema = 'public' ORDER BY table_name;"
-     * @todo SQLite "SELECT `name` FROM sqlite_master WHERE `type`='table'  ORDER BY name";
-     * @todo MSSQL "select Table_Name, table_type from information_schema.tables";
-     *
-     * @see https://stackoverflow.com/questions/33478988/how-to-fetch-the-tables-list-in-database-in-laravel-5-1
-     * @see https://stackoverflow.com/questions/29817183/php-mssql-pdo-get-table-names
-     */
-    public function dbShowTables()
-    {
-        if (!$this->isDatabaseEnvironmentReady()) return;
-
-        $tables = $this->getTables();
-        foreach ($tables as $table) {
-            $this->cli->blue()->bold()->out($table);
-        }
-    }
-
-    /**
-     * Show all views in the database
-     */
-    public function dbShowViews()
-    {
-        if (!$this->isDatabaseEnvironmentReady()) return;
-
-        $views = $this->getViews();
-        foreach ($views as $view) {
-            $this->cli->blue()->bold()->out($view);
-        }
-    }
-
-    /**
-     * Show column details for a given table
-     *
-     * @param string $tableName
-     */
-    public function dbShowColumns(string $tableName)
-    {
-        if (!$this->isDatabaseEnvironmentReady()) return;
-
-        $columns = $this->getTableDetails($tableName);
-        foreach ($columns as $columnName => $columnType) {
-            $this->cli->blue()->bold()->out($columnName . ' => ' . $columnType);
-        }
+        return (file_put_contents($envPath, $envText) !== false);
     }
 }

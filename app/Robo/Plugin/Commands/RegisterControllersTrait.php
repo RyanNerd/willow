@@ -8,14 +8,12 @@ use Twig\Environment;
 
 trait RegisterControllersTrait
 {
-    protected Environment $twig;
-
     /**
      * Forge the RegisterControllers code
      * @warning Destructive code. Existing RegisterControllers.php file will be overwritten
      * @return string|null Error message string on failure or null on success
      */
-    protected function forgeRegisterControllers(): ?string
+    protected function forgeRegisterControllers(Environment $twig): ?string
     {
         $controllerPath = __DIR__ . '/../../../Controllers/*';
         $dirList = glob($controllerPath,GLOB_ONLYDIR);
@@ -32,7 +30,7 @@ trait RegisterControllersTrait
 
         // Render the RegisterControllers code.
         try {
-            $registerControllersCode = $this->twig->render(
+            $registerControllersCode = $twig->render(
                 'RegisterControllers.php.twig',
                 [
                     'class_list' => $classList
@@ -46,7 +44,7 @@ trait RegisterControllersTrait
 
         // Save the registerControllersCode overwriting Middleware/RegisterControllers.php
         if (file_put_contents($registerControllersPath, $registerControllersCode) === false) {
-            return 'Unable to create: ' . $registerControllersPath;
+            return 'RegisterControllers - Unable to create: ' . $registerControllersPath;
         }
 
         return null;

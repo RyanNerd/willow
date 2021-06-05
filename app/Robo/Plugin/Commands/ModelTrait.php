@@ -26,7 +26,8 @@ trait ModelTrait
 
         // Render the Model code.
         try {
-            $modelCode = $this->twig->render('Model.php.twig', [
+            $modelCode = $this->twig->render('Model.php.twig',
+                [
                     'class_name' => $className,
                     'entity' => $entity
                 ]

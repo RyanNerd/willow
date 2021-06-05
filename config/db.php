@@ -6,6 +6,10 @@ use Psr\Container\ContainerInterface;
 
 return [
     'Eloquent' => function (ContainerInterface $c) {
+        if (!$c->has('ENV')) {
+            die('.env file missing or corrupt.');
+        }
+
         $eloquent = new Manager();
         $env = $c->get('ENV');
         $eloquent->addConnection([

@@ -6,47 +6,38 @@ namespace Willow\Robo\Plugin\Commands;
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager;
 use League\CLImate\CLImate;
-use Psr\Container\ContainerInterface;
+use DI\Container;
 use Robo\Tasks;
 use Throwable;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
 abstract class RoboBase extends Tasks
 {
     protected CLImate $cli;
 
     /**
-     * @var ContainerInterface | null
+     * @var Container | null
      */
     protected  static $_container;
 
-    protected Environment $twig;
-
     public function __construct()
     {
+        $this->cli = new CLImate();
+
         try {
             // Set up DI
-            if (!static::$_container instanceof ContainerInterface) {
+            if (!static::$_container instanceof Container) {
                 $builder = new ContainerBuilder();
                 $builder->addDefinitions(__DIR__ . '/../../../../config/_viridian.php');
-                $builder->addDefinitions(CLImate::class);
                 if (file_exists(__DIR__ . '/../../../../.env')) {
                     $builder->addDefinitions(__DIR__ . '/../../../../config/_env.php');
                     $builder->addDefinitions(__DIR__ . '/../../../../config/db.php');
                 }
                 $container = $builder->build();
-                $container->set(CLImate::class, new CLImate());
-
-                // If Eloquent is defined then instantiate Eloquent ORM
-                if ($container->has('Eloquent')) {
-                    $container->get('Eloquent');
-                }
 
                 self::_setContainer($container);
             }
         } catch (Throwable $throwable) {
-            $cli = new CLImate();
+            $cli = $this->cli;
             $cli->br(2);
             $cli->bold()->yellow('[WARNING] Something went wrong');
             $cli->bold()->white('Check that the .env file is valid');
@@ -54,19 +45,13 @@ abstract class RoboBase extends Tasks
             $cli->br(2);
             exit();
         }
-
-        $this->cli = self::_getContainer()->get(CLImate::class);
-
-        // Set up Twig
-        $loader = new FilesystemLoader(__DIR__ . '/Templates');
-        $this->twig = new Environment($loader);
     }
 
-    public static function _setContainer(ContainerInterface $container) {
+    public static function _setContainer(Container $container) {
         static::$_container = $container;
     }
 
-    public static function _getContainer(): ContainerInterface
+    public static function _getContainer(): Container
     {
         return static::$_container;
     }
@@ -215,14 +200,5 @@ abstract class RoboBase extends Tasks
             $tableDetails[$column] = $columnType;
         }
         return $tableDetails;
-    }
-
-    /**
-     * Returns true if the current O/S is any flavor Windows
-     * @return bool
-     */
-    public static function isWindows(): bool
-    {
-        return stripos(PHP_OS, 'WIN') === 0;
     }
 }

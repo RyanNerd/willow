@@ -22,6 +22,8 @@ try {
     $container = $builder->build();
 
     if (!$container->get('DEMO')) {
+        // Load and validate .env
+        $container->get('ENV');
         // Instantiate Eloquent ORM
         $container->get('Eloquent');
     }
