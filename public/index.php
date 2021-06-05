@@ -12,6 +12,8 @@ try {
     $builder = new ContainerBuilder();
     if (file_exists(__DIR__ . '/../.env')) {
         $builder
+            ->enableCompilation(__DIR__ . '/tmp/cache')
+            ->writeProxiesToFile(true, __DIR__ . '/tmp/cache')
             ->addDefinitions(['DEMO' => false])
             ->addDefinitions(__DIR__ . '/../config/_env.php')
             ->addDefinitions(__DIR__ . '/../config/db.php');
@@ -22,8 +24,6 @@ try {
     $container = $builder->build();
 
     if (!$container->get('DEMO')) {
-        // Load and validate .env
-        $container->get('ENV');
         // Instantiate Eloquent ORM
         $container->get('Eloquent');
     }

@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager;
 use League\CLImate\CLImate;
-use DI\Container;
 use Robo\Tasks;
 use Throwable;
 
@@ -27,13 +27,14 @@ abstract class RoboBase extends Tasks
             // Set up DI
             if (!static::$_container instanceof Container) {
                 $builder = new ContainerBuilder();
-                $builder->addDefinitions(__DIR__ . '/../../../../config/_viridian.php');
+                $builder = $builder->addDefinitions( __DIR__ . '/../../../../config/_viridian.php');
+
                 if (file_exists(__DIR__ . '/../../../../.env')) {
-                    $builder->addDefinitions(__DIR__ . '/../../../../config/_env.php');
-                    $builder->addDefinitions(__DIR__ . '/../../../../config/db.php');
+                    $builder = $builder
+                    ->addDefinitions(__DIR__ . '/../../../../config/_env.php')
+                    ->addDefinitions(__DIR__ . '/../../../../config/db.php');
                 }
                 $container = $builder->build();
-
                 self::_setContainer($container);
             }
         } catch (Throwable $throwable) {

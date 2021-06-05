@@ -5,6 +5,7 @@ namespace Willow\Robo\Plugin\Commands;
 
 use Willow\Robo\Plugin\Commands\Traits\{
     ControllerTrait,
+    DeleteActionTrait,
     GetActionTrait,
     ModelTrait,
     PatchActionTrait,

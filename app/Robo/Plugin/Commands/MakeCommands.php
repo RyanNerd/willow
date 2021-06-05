@@ -7,7 +7,7 @@ use Illuminate\Database\Capsule\Manager;
 use Throwable;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use Willow\Robo\Plugin\Commands\Traits\{ModelTrait, RegisterControllersTrait, EnvSetupTrait};
+use Willow\Robo\Plugin\Commands\Traits\{EnvSetupTrait, ModelTrait, RegisterControllersTrait};
 
 class MakeCommands extends RoboBase
 {
@@ -19,7 +19,7 @@ class MakeCommands extends RoboBase
     private const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
 
     /**
-     * Builds the app (routes, controllers, actions, middleware, etc.
+     * Builds the app using the tables in the DB to create routes, controllers, actions, middleware, etc.
      */
     public function make()
     {
@@ -43,15 +43,22 @@ class MakeCommands extends RoboBase
         try {
             if (!$container->has('ENV')) {
                 if ($this->envInit(__DIR__ . '/../../../../.env')) {
-                    $container->set('ENV', include __DIR__ . '/../../../../config/_env.php');
+                    // Validate the .env file.
+                    $env = include  __DIR__ . '/../../../../config/_env.php';
+                    // Dynamically add ENV to the container
+                    $container->set('ENV', $env['ENV']);
+
+                    // Sanity check
                     if (!$container->has('ENV')) {
                         die(self::ENV_ERROR);
                     } else {
+                        // Has Eloquent been defined?
                         if (!$container->has('Eloquent')) {
-                            $container->set('Eloquent', include __DIR__ . '/../../../../config/db.php');
+                            // Dynamically add Eloquent to the container
+                            $db = include (__DIR__ . '/../../../../config/db.php');
+                            $container->set('Eloquent', $db['Eloquent']);
                         }
                     }
-
                 } else {
                     die(self::ENV_ERROR);
                 }
@@ -85,6 +92,5 @@ class MakeCommands extends RoboBase
         } else {
             $cli->white('Finished RegisterControllers ');
         }
-
     }
 }
