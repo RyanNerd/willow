@@ -16,7 +16,7 @@ class RoboFile extends RoboBase
     // all robo commands can be found at app/Robo/Plugin/Commands/
 
     /**
-     * Returns true if the current O/S is any flavor Windows
+     * Returns true if the current O/S is any flavor of Windows
      *
      * @return bool
      */
