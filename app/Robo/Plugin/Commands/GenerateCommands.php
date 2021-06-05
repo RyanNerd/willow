@@ -3,6 +3,20 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
+use Willow\Robo\Plugin\Commands\Traits\{
+    ControllerTrait,
+    GetActionTrait,
+    ModelTrait,
+    PatchActionTrait,
+    PostActionTrait,
+    RegisterControllersTrait,
+    RestoreActionTrait,
+    RestoreValidatorTrait,
+    SearchActionTrait,
+    SearchValidatorTrait,
+    WriteValidatorTrait
+};
+
 class GenerateCommands extends RoboBase
 {
     use ControllerTrait;

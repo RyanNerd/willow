@@ -4,15 +4,16 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands;
 
 use Illuminate\Database\Capsule\Manager;
+use Throwable;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use Throwable;
+use Willow\Robo\Plugin\Commands\Traits\{ModelTrait, RegisterControllersTrait, EnvSetupTrait};
 
 class MakeCommands extends RoboBase
 {
     use EnvSetupTrait;
-    use RegisterControllersTrait;
     use ModelTrait;
+    use RegisterControllersTrait;
 
     protected Environment $twig;
     private const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
@@ -45,7 +46,12 @@ class MakeCommands extends RoboBase
                     $container->set('ENV', include __DIR__ . '/../../../../config/_env.php');
                     if (!$container->has('ENV')) {
                         die(self::ENV_ERROR);
+                    } else {
+                        if (!$container->has('Eloquent')) {
+                            $container->set('Eloquent', include __DIR__ . '/../../../../config/db.php');
+                        }
                     }
+
                 } else {
                     die(self::ENV_ERROR);
                 }
