@@ -25,10 +25,15 @@ trait DatabaseTrait
                 break;
 
             default:
-                $select = "SELECT table_name as table_name
-            FROM INFORMATION_SCHEMA.TABLES
-            WHERE table_schema = '$db'
-            ORDER BY table_name;";
+                $select = <<<sql
+                    SELECT TABLE_NAME as table_name,
+                           TABLE_ROWS as row_count,
+                           CREATE_TIME as created,
+                           TABLE_COMMENT as comment
+                    FROM INFORMATION_SCHEMA.TABLES
+                    WHERE table_schema = '$db'
+                    ORDER BY table_name;
+sql;
         }
 
         return $conn->select($select);

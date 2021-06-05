@@ -25,7 +25,7 @@ trait EnvSetupTrait
         // TODO: Add url link instead
         $cli->bold()->lightGreen('Run `./willow docs` for more information.');
         $cli->lightGreen()->border('*', 80);
-        $cli->br(2);
+        $cli->br();
         $cli->bold()->white('Enter values for the .env file');
 
         // If we are using Windows we need to prompt the user differently since it doesn't support multiple choice.
@@ -131,6 +131,7 @@ env;
             $cli->br();
             $this->warning('Make sure the information is correct.');
             $input = $cli->confirm('Create .env?');
+            $input->defaultTo('y');
         } while (!$input->confirmed());
 
         $spinner = $this->cli->white()->spinner('Working');
