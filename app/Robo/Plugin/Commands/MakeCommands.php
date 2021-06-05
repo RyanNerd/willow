@@ -7,15 +7,15 @@ use Illuminate\Database\Capsule\Manager;
 use Throwable;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use Willow\Robo\Plugin\Commands\Traits\{EnvSetupTrait, ModelTrait, RegisterControllersTrait};
+use Willow\Robo\Plugin\Commands\Traits\{DatabaseTrait, EnvSetupTrait, ModelTrait, RegisterControllersTrait};
 
 class MakeCommands extends RoboBase
 {
+    use DatabaseTrait;
     use EnvSetupTrait;
     use ModelTrait;
     use RegisterControllersTrait;
 
-    protected Environment $twig;
     private const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
 
     /**
@@ -70,21 +70,23 @@ class MakeCommands extends RoboBase
 
         /** @var Manager $eloquent */
         $eloquent = $container->get('Eloquent');
-
         $conn = $eloquent->getConnection();
-        $cli->shout('Database Name: ' . $conn->getDatabaseName());
+        $rows = $this->getTables($conn);
 
+        $cli->br(2);
+        $cli->lightGreen()->border('*', 80);
+        foreach ($rows as $row) {
+            $cli->bold()->blue($row->table_name);
+        }
+        $cli->lightGreen()->border('*', 80);
+        $cli->br();
+
+        // TODO: Models, Controllers, etc.
         $cli->white('Trying RegisterControllers...');
 
         // Set up Twig
         $loader = new FilesystemLoader(__DIR__ . '/Templates');
         $twig = new Environment($loader);
-
-//      TODO: Create models
-//      $error = $this->forgeModel('blah');
-//      if ($error) {
-//          die($error);
-//      }
 
         $error = $this->forgeRegisterControllers($twig);
         if ($error) {
