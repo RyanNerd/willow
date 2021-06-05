@@ -16,6 +16,9 @@
     "config": {
         "sort-packages": true
     },
+    "bin": [
+        "bin/willow"
+    ],
     "require": {
         "php": "^7.4 | ^8.0",
         "ext-json": "*",
