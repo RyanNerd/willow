@@ -3,93 +3,76 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use DI\Container;
 use DI\ContainerBuilder;
-use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Capsule\Manager;
 use League\CLImate\CLImate;
+use Psr\Container\ContainerInterface;
 use Robo\Tasks;
 use Throwable;
-use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 abstract class RoboBase extends Tasks
 {
-    /**
-     * @var CLImate
-     */
-    protected $cli;
+    protected CLImate $cli;
 
     /**
-     * @var Capsule
+     * @var ContainerInterface | null
      */
-    protected $capsule = null;
+    protected  static $_container;
 
-    /**
-     * @var Container
-     */
-    protected $willowContainer;
-
-    /**
-     * @var Environment
-     */
     protected Environment $twig;
 
-    /**
-     * RoboBase constructor.
-     */
     public function __construct()
     {
-        $this->cli = new CLImate;
+        try {
+            // Set up DI
+            if (!static::$_container instanceof ContainerInterface) {
+                $builder = new ContainerBuilder();
+                $builder->addDefinitions(__DIR__ . '/../../../../config/_viridian.php');
+                $builder->addDefinitions(CLImate::class);
+                if (file_exists(__DIR__ . '/../../../../.env')) {
+                    $builder->addDefinitions(__DIR__ . '/../../../../config/_env.php');
+                    $builder->addDefinitions(__DIR__ . '/../../../../config/db.php');
+                }
+                $container = $builder->build();
+                $container->set(CLImate::class, new CLImate());
+
+                // If Eloquent is defined then instantiate Eloquent ORM
+                if ($container->has('Eloquent')) {
+                    $container->get('Eloquent');
+                }
+
+                self::_setContainer($container);
+            }
+        } catch (Throwable $throwable) {
+            $cli = new CLImate();
+            $cli->br(2);
+            $cli->bold()->yellow('[WARNING] Something went wrong');
+            $cli->bold()->white('Check that the .env file is valid');
+            $cli->bold()->yellow()->inline('Error Message: ')->white($throwable->getMessage());
+            $cli->br(2);
+            exit();
+        }
+
+        $this->cli = self::_getContainer()->get(CLImate::class);
 
         // Set up Twig
         $loader = new FilesystemLoader(__DIR__ . '/Templates');
         $this->twig = new Environment($loader);
-
-        // Set up DI and ORM only if the .env file exists.
-        if (file_exists(__DIR__ . '/../../../../.env')) {
-            // Load Default configuration from environment
-            include_once __DIR__ . '/../../../../config/_env.php';
-
-            // Set up Dependency Injection
-            try {
-                $builder = new ContainerBuilder();
-                $builder->addDefinitions(__DIR__ . '/../../../../config/db.php');
-                $container = $builder->build();
-            } catch (Throwable $exception) {
-                $this->error($exception->getMessage());
-                return;
-            }
-
-            // Save container for reference.
-            $this->willowContainer = $container;
-
-            // Boot Eloquent
-            $this->bootDatabase($container);
-        }
     }
 
-    /**
-     * Create an Eloquent ORM capsule from the .env settings
-     *
-     * @param Container $container
-     */
-    protected function bootDatabase(Container $container): void
-    {
+    public static function _setContainer(ContainerInterface $container) {
+        static::$_container = $container;
+    }
 
-        // Establish an instance of the Illuminate database capsule (if not already established)
-        try {
-            if ($this->capsule === null) {
-                $this->capsule = $container->get(Capsule::class);
-            }
-        } catch (Throwable $exception) {
-            $this->error($exception->getMessage());
-            return;
-        }
+    public static function _getContainer(): ContainerInterface
+    {
+        return static::$_container;
     }
 
     /**
      * Climate helper function
-     *
      * @param string $warningMessage
      */
     protected function warning(string $warningMessage): void
@@ -100,7 +83,6 @@ abstract class RoboBase extends Tasks
 
     /**
      * Climate helper function
-     *
      * @param string $errorMessage
      */
     protected function error(string $errorMessage): void
@@ -111,18 +93,24 @@ abstract class RoboBase extends Tasks
 
     /**
      * Returns true if eloquent has booted and a connection is established to the database.
-     *
+     * @param bool $verbose
      * @return bool
      */
-    protected function isDatabaseEnvironmentReady(): bool
+    protected function isDatabaseEnvironmentReady(bool $verbose = true): bool
     {
-        if ($this->capsule === null) {
-            $this->error('Database not set up. Run db:init or create the .env file manually.');
+        $container = $this->_getContainer();
+
+        if (!$container->has('Eloquent')) {
+            if ($verbose) {
+                $this->error('Database not set up. Run db:init or create the .env file manually.');
+            }
             return false;
         }
 
         try {
-            $conn = $this->capsule->getConnection();
+            /** @var Manager $eloquent */
+            $eloquent = $container->get('Eloquent');
+            $conn = $eloquent->getConnection();
             $driver = $conn->getDriverName();
 
             switch ($driver) {
@@ -136,7 +124,9 @@ abstract class RoboBase extends Tasks
 
             $conn->select($sql . ' WHERE 1=0');
         } catch (Throwable $exception) {
-            $this->error('Cannot connect to database: ' . $exception->getMessage());
+            if ($verbose) {
+                $this->error('Cannot connect to database: ' . $exception->getMessage());
+            }
         }
 
         return true;
@@ -149,14 +139,14 @@ abstract class RoboBase extends Tasks
      */
     protected function getTables(): array
     {
-        $capsule = $this->capsule;
+        $capsule = $this->_getContainer()->get('Eloquent');
         $conn = $capsule->getConnection();
         $driver = $conn->getDriverName();
         $db = $conn->getDatabaseName();
 
         switch ($driver) {
             case 'sqlite':
-                $select = 'SELECT name as table_name 
+                $select = 'SELECT name as table_name
                     FROM sqlite_master
                     ORDER BY table_name';
                 break;
@@ -184,7 +174,7 @@ abstract class RoboBase extends Tasks
      */
     protected function getViews(): array
     {
-        $capsule = $this->capsule;
+        $capsule = $this->_getContainer()->get('Eloquent');
         $conn = $capsule->getConnection();
         $driver = $conn->getDriverName();
         $db = $conn->getDatabaseName();
@@ -217,7 +207,7 @@ abstract class RoboBase extends Tasks
     protected function getTableDetails(string $tableName): array
     {
         $tableDetails = [];
-        $capsule = $this->capsule;
+        $capsule = $this->_getContainer()->get('Eloquent');
         $schema = $capsule::schema();
         $columns = $schema->getColumnListing($tableName);
         foreach ($columns as $column) {
@@ -229,7 +219,6 @@ abstract class RoboBase extends Tasks
 
     /**
      * Returns true if the current O/S is any flavor Windows
-     *
      * @return bool
      */
     public static function isWindows(): bool

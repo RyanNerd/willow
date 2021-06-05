@@ -27,7 +27,7 @@ trait RegisterControllersTrait
 
         $classList = [];
         foreach ($dirList as $dirName) {
-           $classList[] = basename($dirName);
+            $classList[] = basename($dirName);
         }
 
         // Render the RegisterControllers code.

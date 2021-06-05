@@ -16,18 +16,13 @@ class RegisterControllers
     }
 
     /**
-     * Register routes and actions for each controller
-     * @param RouteCollectorProxy $collectorProxy
-     * @return $this
-     */
+    * Register routes and actions for each controller
+    * @param RouteCollectorProxy $collectorProxy
+    * @return self
+    */
     public function __invoke(RouteCollectorProxy $collectorProxy): self
     {
-        // DEMO only
-        $container = $collectorProxy->getContainer();
-        if ($container->get('DEMO')) {
-            $this->sampleController->register($collectorProxy);
-        }
-
+        $this->sampleController->register($collectorProxy);
         return $this;
     }
 }
