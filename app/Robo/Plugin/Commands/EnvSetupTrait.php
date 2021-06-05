@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use League\CLImate\TerminalObject\Dynamic\Confirm;
 use League\CLImate\CLImate;
-use RoboFile;
+use League\CLImate\TerminalObject\Dynamic\Confirm;
+use Willow\Robo\Script;
 
 trait EnvSetupTrait
 {
@@ -29,7 +29,7 @@ trait EnvSetupTrait
         $cli->bold()->white('Enter values for the .env file');
 
         // If we are using Windows we need to prompt the user differently since it doesn't support multiple choice.
-        if (RoboFile::isWindows()) {
+        if (Script::isWindows()) {
             $drivers = ['mysql', 'pgsql', 'sqlsrv', 'sqlite'];
             do {
                 $cli->out('Driver must be one of: ' . implode(', ', $drivers));

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Willow\Robo;
 
 use League\CLImate\CLImate;
-use RoboFile;
 
 /**
  * Composer script
@@ -33,7 +32,7 @@ class Script
         // Display Willow's fancy message
         self::fancyBanner($cli);
 
-        $isWindows = RoboFile::isWindows();
+        $isWindows = self::isWindows();
         $symlinkCreated = false;
 
         // Are we NOT running in Windows?
@@ -94,7 +93,7 @@ class Script
         $cli->green()->border('*', 55);
 
         // Text art in Windows chokes on preg_replace.
-        if (RoboFile::isWindows()) {
+        if (self::isWindows()) {
             $cli->bold()->lightGreen('Willow');
         } else {
             $cli->addArt(__DIR__);
@@ -107,5 +106,15 @@ class Script
         $cli->bold()->white()->inline('Thanks for installing ');
         $cli->bold()->lightGreen()->inline('Willow');
         $cli->bold()->white('!');
+    }
+
+    /**
+     * Returns true if the current O/S is any flavor of Windows
+     *
+     * @return bool
+     */
+    public static function isWindows(): bool
+    {
+        return stripos(PHP_OS, 'WIN') === 0;
     }
 }

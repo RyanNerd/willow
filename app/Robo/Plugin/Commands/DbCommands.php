@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\TerminalObject\Dynamic\Confirm;
-use RoboFile;
+use Willow\Robo\Script;
 
 class DbCommands extends RoboBase
 {
@@ -24,7 +24,7 @@ class DbCommands extends RoboBase
 
         $cli->bold()->white('Enter values for the .env file');
 
-        if (RoboFile::isWindows()) {
+        if (Script::isWindows()) {
             $drivers = ['mysql', 'pgsql', 'sqlsrv', 'sqlite'];
 
             do {
