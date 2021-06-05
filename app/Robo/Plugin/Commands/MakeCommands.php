@@ -71,7 +71,7 @@ class MakeCommands extends RoboBase
         /** @var Manager $eloquent */
         $eloquent = $container->get('Eloquent');
         $conn = $eloquent->getConnection();
-        $rows = $this->getTables($conn);
+        $rows = $this->getTableList($conn);
 
         $cli->br(2);
         $cli->lightGreen()->border('*', 80);

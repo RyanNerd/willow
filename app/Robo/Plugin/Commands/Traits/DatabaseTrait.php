@@ -12,7 +12,7 @@ trait DatabaseTrait
      * @param Connection $conn
      * @return array
      */
-    protected function getTables(Connection $conn): array
+    protected function getTableList(Connection $conn): array
     {
         $driver = $conn->getDriverName();
         $db = $conn->getDatabaseName();
