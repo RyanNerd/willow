@@ -26,6 +26,11 @@ class Script
             }
         }
 
+        $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
+        $binDir = $event->getComposer()->getConfig()->get('bin-dir');
+        $baseDir = preg_replace('/vendor$/', '', $vendorDir);
+        $projectName = basename($baseDir);
+
         // Get a CLI object
         $cli = new CLImate();
 
@@ -39,7 +44,7 @@ class Script
         if (!$isWindows) {
             // Create the willow symlink file
             try {
-                $symlinkCreated = symlink(__DIR__ . '/../../vendor/bin/robo', 'willow');
+                $symlinkCreated = symlink($binDir . '/robo', 'willow');
             } catch (\Exception $exception) {
                 $symlinkCreated = false;
             }
@@ -55,34 +60,37 @@ class Script
         }
 
         $cli->bold()->white('To run the sample and view the docs type:');
-        $cli->bold()->lightGray('cd ' . $projectName);
+        $cli->br();
+        $cli->bold()->lightGreen('cd ' . $projectName);
 
         // Display what commands to run depending on if the symlink was created and the O/S
         if ($symlinkCreated) {
-            $cli->bold()->lightGray('./willow sample');
-            $cli->bold()->lightGray('./willow docs');
-            $cli->bold()->white('For a list of available commands run: ./willow list');
+            $cli->bold()->lightGray('# Run the sample app');
+            $cli->bold()->lightGreen('./willow sample')->br();
+            $cli->bold()->lightGray('# Open the docs on the web');
+            $cli->bold()->lightGreen('./willow docs')->br();
+            $cli->bold()->lightGray('# List available commands');
+            $cli->bold()->lightGreen('./willow list')->br();
         } else {
             if ($isWindows) {
-                $cli->bold()->lightGray('You must manually add robo to your path:' . __DIR__. '\vendor\bin\robo.bat');
-                $cli->bold()->lightGray('Then run:');
-                $cli->bold()->lightGray('robo sample');
-                $cli->bold()->lightGray('robo docs');
-                $cli->bold()->white('For a list of available commands run: robo list');
+                $cli->bold()->white('You must manually add robo to your path: ' . $binDir . '\robo.bat');
+                $cli->bold()->white('Then run:')->br();
+                $cli->bold()->lightGray('# Run the sample app');
+                $cli->bold()->lightGreen('robo sample')->br();
+                $cli->bold()->lightGray('# Open the docs on the web');
+                $cli->bold()->lightGreen('robo docs')->br();
+                $cli->bold()->lightGray('# List available commands');
+                $cli->bold()->lightGreen('robo list')->br();
             } else {
-                $cli->bold()->lightGray('./vendor/bin/robo sample');
+                $cli->error('Unable to create a symlink to robo. You will need to run robo in vendor\bin')->br();
+                $cli->bold()->lightGray('# Run the sample app');
+                $cli->bold()->lightGreen('./vendor/bin/robo sample');
+                $cli->bold()->lightGray('# Open the docs on the web');
                 $cli->bold()->lightGray('./vendor/bin/robo docs');
-                $cli->bold()->white('For a list of available commands run: ./vendor/bin/robo list');
+                $cli->bold()->lightGray('# List available commands');
+                $cli->bold()->lightGray('./vendor/bin/robo list');
             }
         }
-
-        $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
-        $binDir = $event->getComposer()->getConfig()->get('bin-dir');
-        $baseDir = preg_replace('/vendor$/', '', $vendorDir);
-
-        $cli->shout('Base:' . $baseDir);
-        $cli->shout('Vendor: '. $vendorDir);
-        $cli->shout('Bin: ' . $binDir);
     }
 
     /**
