@@ -60,7 +60,7 @@ class MakeCommands extends RoboBase
         }
 
         $cli->br();
-        $cli->bold()->white('Connecting to the database');
+        $cli->bold()->white('Connecting to the database and getting list of tables');
         try {
             // Has Eloquent been defined?
             if (!$container->has('Eloquent')) {
@@ -78,7 +78,7 @@ class MakeCommands extends RoboBase
             // TODO: Table routes setup
             $tableRouteList = [];
             foreach ($selectedTables as $table) {
-                $tableRouteList[] = ['table' => $table, 'route' => strtolower($table)];
+                $tableRouteList[] = ['Table' => $table, 'Route' => strtolower($table)];
             }
 
             $cli->br();

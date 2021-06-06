@@ -19,27 +19,30 @@ trait TableSetupTrait {
         $cli->bold()->blue()->table($rows);
         $cli->br();
 
-        $input = $cli->input('Press enter to continue');
-        $input->prompt();
-
+        // Get just the table names as an array
         $tables = array_column($rows, 'table_name');
 
         // TODO: Handle Window's choices for this. See: https://climate.thephpleague.com/terminal-objects/input/
-        $cli->white('Use the arrow keys to navigate the list of tables, and the spacebar to select');
         $response = '';
         do {
             $input = $cli
                 ->lightGreen()
-                ->checkboxes('Select the tables you want to add to your project', $tables);
+                ->checkboxes('Select all of the tables you want to add to your project', $tables);
             $selectedTables = $input->prompt();
             if (count($selectedTables) !== 0) {
+                $displayTables = [];
+                foreach ($selectedTables as $table) {
+                    $displayTables[] = ['Selected Tables' => $table];
+                }
+
                 $cli->br();
-                $cli->bold()->blue()->table($selectedTables);
+                $cli->bold()->lightBlue()->table($displayTables);
                 $cli->br();
 
-                $input = $cli->lightGray()->input('This look okay?');
+                $input = $cli->lightGray()->input('This look okay? (Y/n)');
                 $input->defaultTo('Y');
-                $response = $input->accept(['Y', 'N']);
+                $input->accept(['Y', 'N']);
+                $response = $input->prompt();
             }
         } while (strtolower($response) !== 'y');
 
