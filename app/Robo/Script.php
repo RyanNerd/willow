@@ -77,7 +77,11 @@ class Script
         }
 
         $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
-        $cli->shout($vendorDir);
+        $baseDir = preg_replace('/vendor$/', '', $vendorDir);
+        $cli->shout($baseDir);
+        if (chdir($baseDir)) {
+            $cli->yellow(getcwd());
+        }
     }
 
     /**
