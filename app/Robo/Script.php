@@ -33,6 +33,7 @@ class Script
 
         // Get a CLI object
         $cli = new CLImate();
+        $cli->br();
 
         // Display Willow's fancy message
         self::fancyBanner($cli);
@@ -59,8 +60,8 @@ class Script
             }
         }
 
-        $cli->bold()->white('To run the sample and view the docs type:');
         $cli->br();
+        $cli->bold()->lightGray('# change directory to ' . $projectName);
         $cli->bold()->lightGreen('cd ' . $projectName);
 
         // Display what commands to run depending on if the symlink was created and the O/S
@@ -117,7 +118,6 @@ class Script
         }
 
         $cli->backgroundGreen()->lightGray('  https://github.com/RyanNerd/willow');
-        $cli->backgroundGreen()->lightGray('  https://www.patreon.com/bePatron?u=3985594');
         $cli->green()->border('*', 55);
         $cli->bold()->white()->inline('Thanks for installing ');
         $cli->bold()->lightGreen()->inline('Willow');
