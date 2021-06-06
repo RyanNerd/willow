@@ -3,26 +3,25 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Capsule\Manager as Eloquent;
 use Throwable;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use Willow\Robo\Plugin\Commands\Traits\{DatabaseTrait, EnvSetupTrait, ModelTrait, RegisterControllersTrait};
+use Willow\Robo\Plugin\Commands\Traits\{EnvSetupTrait, ModelTrait, RegisterControllersTrait, TableSetupTrait};
 
 class MakeCommands extends RoboBase
 {
-    use DatabaseTrait;
     use EnvSetupTrait;
     use ModelTrait;
     use RegisterControllersTrait;
+    use TableSetupTrait;
 
     private const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
 
     /**
      * Builds the app using the tables in the DB to create routes, controllers, actions, middleware, etc.
      */
-    public function make()
-    {
+    public function make() {
         $cli = $this->cli;
         $container = self::_getContainer();
 
@@ -47,7 +46,6 @@ class MakeCommands extends RoboBase
                     $env = include  __DIR__ . '/../../../../config/_env.php';
                     // Dynamically add ENV to the container
                     $container->set('ENV', $env['ENV']);
-
                     // Sanity check
                     if (!$container->has('ENV')) {
                         die(self::ENV_ERROR);
@@ -57,15 +55,12 @@ class MakeCommands extends RoboBase
                 }
             }
         } catch (Throwable $throwable) {
-            $cli->br();
-            $cli->error('Error: ' . $throwable->getMessage());
-            $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);
-            $cli->br();
+            self::outputThrowableMessage($cli, $throwable);
             die(self::ENV_ERROR);
         }
 
         $cli->br();
-        $cli->bold()->white('Attempting to connect to the database');
+        $cli->bold()->white('Connecting to the database');
         try {
             // Has Eloquent been defined?
             if (!$container->has('Eloquent')) {
@@ -74,22 +69,26 @@ class MakeCommands extends RoboBase
                 $container->set('Eloquent', $db['Eloquent']);
             }
 
-            /** @var Manager $eloquent */
+            /** @var Eloquent $eloquent */
             $eloquent = $container->get('Eloquent');
             $conn = $eloquent->getConnection();
-            $rows = $this->getTableList($conn);
+
+            $selectedTables = $this->tableInit($conn);
+
+            // TODO: Table routes setup
+            $tableRouteList = [];
+            foreach ($selectedTables as $table) {
+                $tableRouteList[] = ['table' => $table, 'route' => strtolower($table)];
+            }
 
             $cli->br();
-            $cli->bold()->blue()->table($rows);
+            $cli->bold()->blue()->table($tableRouteList);
             $cli->br();
 
             $input = $cli->input('Press enter to continue');
             $input->prompt();
         } catch (Throwable $throwable) {
-            $cli->br();
-            $cli->error('Error: ' . $throwable->getMessage());
-            $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);
-            $cli->br();
+            self::outputThrowableMessage($cli, $throwable);
             die('Unable to connect to database. Check that the .env configuration is correct');
         }
 

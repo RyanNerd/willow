@@ -204,6 +204,17 @@ abstract class RoboBase extends Tasks
     }
 
     /**
+     * @param CLImate $cli
+     * @param Throwable $throwable
+     */
+    public static function outputThrowableMessage(CLImate $cli, Throwable $throwable) {
+        $cli->br();
+        $cli->error('Error: ' . $throwable->getMessage());
+        $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);
+        $cli->br();
+    }
+
+    /**
      * Given a Throwable object parse the properties and return the result as [['label' => 'value],...]
      * @param Throwable $t
      * @return array[]

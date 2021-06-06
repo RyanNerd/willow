@@ -22,18 +22,25 @@ Willow works best as a framework in this situation:
 * You are just starting your project (for the backend API handler) and need to _hit the ground running_
 
 ### 📃 Requirements
-* PHP 7.4+ (Willow 2.0+)
-* PHP 7.2+ (Willow 1.1+) [**No longer supported**]
-* MySQL 5.6+ or SQLite3 (Postgres and MSSQL should also work but are untested)
+* PHP 7.4+ (Willow 3.0+)
+* ~~PHP 7.4+ (Willow 2.0+)~~ _No longer supported_
+* ~~PHP 7.2+ (Willow 1.1+)~~ _No longer supported_
+* Databases:
+    - MySQL 5.6+
+    - SQLite3
+    - Postgres (untested)
+    - MSSQL (untested)
 * [Composer](https://getcomposer.org) (For Willow to work best this must be installed globally)
 
 ### 💾 Installation
-To install Willow version 2.0 run:
+To install Willow run:
 
-```
-composer create-project --ignore-platform-reqs ryannerd/willow:^2 [your-project-name]
+```bash
+composer create-project --ignore-platform-reqs ryannerd/willow:^3 [your-project-name]
 cd [your-project-name]
 ```
+
+This will create a skeleton Willow project. Willow tries to symlink to [robo](https://robo.li/) You can then use Willow (robo) commands to build your app.
 
 ### Sample
 
@@ -62,32 +69,31 @@ The result in your browser should look something like this:
 }
 ```
 
-###  Willow Commands
+###  Willow (robo) Commands
 
 ```bash
-./willow docs     # bring up the documentation web page
-./willow list     # list all available Willow commands
-./willow sample   # launch the sample API in a web browser
-./willow generate # create controllers and actions for a given table and route
-./willow test     # execute the unit tests
-./willow banner   # show the Willow introductory banner
+./willow docs   # bring up the documentation web page
+./willow list   # list all available Willow commands
+./willow sample # launch the sample API in a web browser
+./willow make   # Connects to your database and builds routes, controllers, models, actions, etc.
+./willow eject  # Removes the sample controller and artifacts from the project
 
-# Database commands
-./willow db:init         # initialize the .env file for database access
-./willow db:show-tables  # list all the tables in the database
-./willow db:show-views   # list all the views in the database
-./willow db:show-columns # list all the columns for a given table
+# Utility commands
+./willow tables  # list all the tables in the database
+./willow columns [table-name] # list all the columns for a given table
+./willow details [table-name] # Show details (column names and types) of a given table
+./willow banner   # show the Willow introductory banner
 ```
 
 ### Contributing
 
 Do this:
-1. Fork this repo 
+1. Fork this repo
 2. Make changes on your fork
-3. Push a PR 
+3. Push a PR
 
-Note: the main branch isn't `master` it's `2.x` which is where you want to push your PR.
-   
+Note: the main branch isn't `master` it's `3.x` which is where you want to push your PR.
+
 
 <div align="center">
 
@@ -95,10 +101,10 @@ Special thanks to:
 
 [The Slim Framework](https://slimframework.com)
 
-[Illuminate / Eloquent ORM](https://github.com/illuminate/database) 
+[Illuminate / Eloquent ORM](https://github.com/illuminate/database)
 
 <small>
-Willow icon made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> 
+Willow icon made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a>
 from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
 is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
 </small>
