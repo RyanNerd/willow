@@ -15,28 +15,17 @@ class Script
      */
     public static function postCreateProjectCmd($event): void
     {
-        // Figure out what directory was created most recently
-        $time = 0;
-        $projectName = 'your-project-name';
-        foreach(glob(__DIR__ . '/../../../*',GLOB_ONLYDIR) as $dir) {
-            $cTime = filectime($dir);
-            if ($cTime !== false && $cTime > $time) {
-                $time = $cTime;
-                $projectName = basename($dir);
-            }
-        }
-
-        $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
-        $binDir = $event->getComposer()->getConfig()->get('bin-dir');
-        $baseDir = preg_replace('/vendor$/', '', $vendorDir);
-        $projectName = basename($baseDir);
-
         // Get a CLI object
         $cli = new CLImate();
         $cli->br();
 
         // Display Willow's fancy message
         self::fancyBanner($cli);
+
+        $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
+        $binDir = $event->getComposer()->getConfig()->get('bin-dir');
+        $baseDir = preg_replace('/vendor$/', '', $vendorDir);
+        $projectName = basename($baseDir);
 
         $isWindows = self::isWindows();
         $symlinkCreated = false;
@@ -62,7 +51,7 @@ class Script
 
         $cli->br();
         $cli->bold()->lightGray('# change directory to ' . $projectName);
-        $cli->bold()->lightGreen('cd ' . $projectName);
+        $cli->bold()->lightGreen('cd ' . $projectName)->br();
 
         // Display what commands to run depending on if the symlink was created and the O/S
         if ($symlinkCreated) {
