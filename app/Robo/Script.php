@@ -13,7 +13,7 @@ class Script
     /**
      * Composer hook that fires when composer create-project has finished.
      */
-    public static function postCreateProjectCmd(): void
+    public static function postCreateProjectCmd($event): void
     {
         // Figure out what directory was created most recently
         $time = 0;
@@ -75,6 +75,9 @@ class Script
                 $cli->bold()->white('For a list of available commands run: ./vendor/bin/robo list');
             }
         }
+
+        $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
+        $cli->shout($vendorDir);
     }
 
     /**
