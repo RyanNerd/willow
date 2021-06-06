@@ -5,15 +5,20 @@ namespace Willow\Robo\Plugin\Commands;
 
 use Illuminate\Database\Capsule\Manager as Eloquent;
 use Throwable;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-use Willow\Robo\Plugin\Commands\Traits\{EnvSetupTrait, ModelTrait, RegisterControllersTrait, TableSetupTrait};
+use Willow\Robo\Plugin\Commands\Traits\{
+    EnvSetupTrait,
+    ModelTrait,
+    RegisterControllersTrait,
+    RouteSetupTrait,
+    TableSetupTrait
+};
 
 class MakeCommands extends RoboBase
 {
     use EnvSetupTrait;
     use ModelTrait;
     use RegisterControllersTrait;
+    use RouteSetupTrait;
     use TableSetupTrait;
 
     private const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
@@ -73,37 +78,34 @@ class MakeCommands extends RoboBase
             $eloquent = $container->get('Eloquent');
             $conn = $eloquent->getConnection();
 
-            $selectedTables = $this->tableInit($conn);
-
-            // TODO: Table routes setup
-            $tableRouteList = [];
-            foreach ($selectedTables as $table) {
-                $tableRouteList[] = ['Table' => $table, 'Route' => strtolower($table)];
-            }
-
-            $cli->br();
-            $cli->bold()->blue()->table($tableRouteList);
-            $cli->br();
-
-            $input = $cli->input('Press enter to continue');
-            $input->prompt();
+            $rows = DatabaseUtilities::getTableList($conn);
         } catch (Throwable $throwable) {
             self::outputThrowableMessage($cli, $throwable);
             die('Unable to connect to database. Check that the .env configuration is correct');
         }
 
-        // TODO: Models, Controllers, etc.
-        $cli->white('Trying RegisterControllers...');
+        // Get the list of tables the user wants in their project
+        $selectedTables = $this->tableInit($rows);
 
-        // Set up Twig
-        $loader = new FilesystemLoader(__DIR__ . '/Templates');
-        $twig = new Environment($loader);
+        // Get the routes for each table that the user wants to use
+        $selectedRoutes = $this->routeInit($selectedTables);
 
-        $error = $this->forgeRegisterControllers($twig);
-        if ($error) {
-            die($error);
-        } else {
-            $cli->white('Finished RegisterControllers ');
-        }
+
+        $input = $cli->input('Press enter to continue');
+        $input->prompt();
+
+//        // TODO: Models, Controllers, etc.
+//        $cli->white('Trying RegisterControllers...');
+//
+//        // Set up Twig
+//        $loader = new FilesystemLoader(__DIR__ . '/Templates');
+//        $twig = new Environment($loader);
+//
+//        $error = $this->forgeRegisterControllers($twig);
+//        if ($error) {
+//            die($error);
+//        } else {
+//            $cli->white('Finished RegisterControllers ');
+//        }
     }
 }

@@ -3,16 +3,13 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands\Traits;
 
-use Illuminate\Database\Connection;
 use League\CLImate\CLImate;
-use Willow\Robo\Plugin\Commands\DatabaseUtilities;
 
 trait TableSetupTrait {
     protected CLImate $cli;
 
-    protected function tableInit(Connection $conn): array {
+    protected function tableInit(array $rows): array {
         $cli = $this->cli;
-        $rows = DatabaseUtilities::getTableList($conn);
 
         // Display the list of tables in a grid
         $cli->br();
