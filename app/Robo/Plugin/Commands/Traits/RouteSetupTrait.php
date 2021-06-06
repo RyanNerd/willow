@@ -51,8 +51,7 @@ trait RouteSetupTrait
             $cli->br();
 
             $input = $cli->lightGray()->confirm('This look okay?');
-            $response = $input->prompt();
-        } while ($response !== 'y');
+        } while (!$input->confirmed());
         return $selectedRoutes;
     }
 }

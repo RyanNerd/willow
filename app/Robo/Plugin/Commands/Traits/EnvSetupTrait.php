@@ -13,10 +13,9 @@ trait EnvSetupTrait
 
     /**
      * Initialization of the .env file
-     * @param string $envPath
-     * @return bool
+     * @return string
      */
-    protected function envInit(string $envPath): bool
+    protected function envInit(): string
     {
         $cli = $this->cli;
         $cli->br();
@@ -129,16 +128,9 @@ env;
             $cli->white($obfuscatedEnv);
             $cli->bold()->white()->border();
             $cli->br();
-            $this->warning('Make sure the information is correct.');
-            $input = $cli->confirm('Create .env?');
-            $input->defaultTo('y');
+            $input = $cli->lightGray()->confirm('This look okay?');
         } while (!$input->confirmed());
 
-        $spinner = $this->cli->white()->spinner('Working');
-        foreach (range(0, 2000) as $i) {
-            $spinner->advance();
-            usleep(500);
-        }
-        return (file_put_contents($envPath, $envText) !== false);
-    }
+        return $envText;
+   }
 }

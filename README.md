@@ -9,7 +9,7 @@
 
 For developers, Willow is an _opinionated_ PHP framework used to quickly create CRUD based RESTful APIs.
 
-💒Willow is a marriage between [Slim 4](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database)
+💒Willow is a marriage between [Slim](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database)
 with [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/wiki/Wedding_planner).
 
 For instructions and getting started see the [Willow Framework User Guide](https://www.notion.so/Willow-Framework-Users-Guide-bf56317580884ccd95ed8d3889f83c72)

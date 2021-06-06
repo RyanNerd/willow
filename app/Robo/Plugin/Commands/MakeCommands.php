@@ -23,38 +23,62 @@ class MakeCommands extends RoboBase
 
     private const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
 
+    protected const PROGRESS_STAGES = [
+        'Model',
+        'Controllers',
+        'Actions',
+        'Validators',
+        'Routes'
+    ];
+
     /**
-     * Builds the app using the tables in the DB to create routes, controllers, actions, middleware, etc.
+     * Builds the app using database tables
      */
     public function make() {
         $cli = $this->cli;
         $container = self::_getContainer();
 
+        // If viridian has any entries it means that make has already been run.
+        // In this case the use must run the reset command before running make again.
         $viridian = $container->get('viridian');
         if (count($viridian) > 0) {
-            $this->warning('Running make is destructive!');
-            $this->warning('Rerunning it will destroy and replace all Controllers, actions, etc.');
-            $input = $cli->input('Proceed?');
-            $input->defaultTo('No');
-            $input->accept(['Yes', 'No']);
-            $response = $input->prompt();
-            if ($response === 'No') {
-                return;
-            }
+            $cli->br();
+            $cli->bold()
+                ->backgroundLightRed()
+                ->white()
+                ->border('*');
+            $cli
+                ->bold()
+                ->backgroundLightRed()
+                ->white('Running make is destructive!');
+            $cli
+                ->bold()
+                ->backgroundLightRed()
+                ->white('Re-running make will destroy & replace all models, controllers, models etc.');
+            $cli->bold()
+                ->backgroundLightRed()
+                ->white()
+                ->border('*');
+            $cli->br();
+            $cli->bold()->red('You must run the reset command before you can re-run the make command.');
+            $cli->br();
+            $input = $cli->bold()->lightGray()->input('Press enter to exit');
+            $input->prompt();
+            die();
         }
 
-        // Create the .env file if it doesn't exist.
         try {
+            // Has .env file been read into ENV? If not create the .env file and load it into the container
             if (!$container->has('ENV')) {
-                if ($this->envInit(__DIR__ . '/../../../../.env')) {
+                // Get the .env contents from the user
+                $envText = $this->envInit();
+
+                // Was the .env file successfully created?
+                if (file_put_contents(__DIR__ . '/../../../../.env', $envText) !== false) {
                     // Validate the .env file.
                     $env = include  __DIR__ . '/../../../../config/_env.php';
                     // Dynamically add ENV to the container
                     $container->set('ENV', $env['ENV']);
-                    // Sanity check
-                    if (!$container->has('ENV')) {
-                        die(self::ENV_ERROR);
-                    }
                 } else {
                     die(self::ENV_ERROR);
                 }
@@ -64,8 +88,6 @@ class MakeCommands extends RoboBase
             die(self::ENV_ERROR);
         }
 
-        $cli->br();
-        $cli->bold()->white('Connecting to the database and getting list of tables');
         try {
             // Has Eloquent been defined?
             if (!$container->has('Eloquent')) {
@@ -76,19 +98,53 @@ class MakeCommands extends RoboBase
 
             /** @var Eloquent $eloquent */
             $eloquent = $container->get('Eloquent');
+
+            // Get the database connection object
             $conn = $eloquent->getConnection();
 
-            $rows = DatabaseUtilities::getTableList($conn);
+            // Get the tables from the database
+            $tables = DatabaseUtilities::getTableList($conn);
         } catch (Throwable $throwable) {
             self::outputThrowableMessage($cli, $throwable);
             die('Unable to connect to database. Check that the .env configuration is correct');
         }
 
         // Get the list of tables the user wants in their project
-        $selectedTables = $this->tableInit($rows);
+        $selectedTables = $this->tableInit($tables);
 
         // Get the routes for each table that the user wants to use
         $selectedRoutes = $this->routeInit($selectedTables);
+
+        /**
+         * TODO: Build out the model, controllers, actions, etc.
+         */
+
+        $cli->br();
+        $cli->bold()->white()->border('*');
+        $cli->bold()->white('Building project');
+        $cli->bold()->white()->border('*');
+        foreach ($selectedRoutes as $table => $route) {
+            $cli->br();
+            $cli->bold()->lightGreen('Working on: ' . $table);
+            $progress = $cli->progress()->total(count(self::PROGRESS_STAGES));
+            foreach (self::PROGRESS_STAGES as $key => $stage) {
+                $progress->current($key + 1, $stage);
+
+                // Simulate something happening
+                // TODO: Actually do something
+                usleep(800);
+            }
+        }
+
+        $viridianText = '';
+        foreach ($selectedRoutes as $table => $route) {
+            $viridianText .= $table . '=' . $route . PHP_EOL;
+        }
+
+        // TODO: At the end of it all.
+        if (file_put_contents(__DIR__ . '/../../../../.viridian', $viridianText) === false) {
+            die('Unable to create .viridian config file.');
+        }
 
 
         $input = $cli->input('Press enter to continue');
