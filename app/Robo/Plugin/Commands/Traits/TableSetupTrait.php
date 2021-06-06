@@ -36,9 +36,7 @@ trait TableSetupTrait {
                 $cli->bold()->lightBlue()->table($displayTables);
                 $cli->br();
 
-                $input = $cli->lightGray()->input('This look okay? (Y/n)');
-                $input->defaultTo('Y');
-                $input->accept(['Y', 'N']);
+                $input = $cli->lightGray()->confirm('This look okay?');
                 $response = $input->prompt();
             }
         } while (strtolower($response) !== 'y');

@@ -17,31 +17,42 @@ trait RouteSetupTrait
             $tableRouteList[] = ['Table' => $table, 'Route' => strtolower($table)];
         }
 
+        $cli->br();
         $cli->white('Routes are defaulted to the lowercase table name.');
         $cli->white('This is what the routes currently look like:');
         $cli->br();
         $cli->bold()->blue()->table($tableRouteList);
         $cli->br();
-        $cli->white('You will be prompted to change or keep a route for each table.');
+
+        $cli->out('You will be prompted to change or keep a route for each table.');
         $input = $cli->input('Press enter to continue.');
         $input->prompt();
+        $cli->br();
 
-        $selectedRoutes = [];
-        foreach ($tableRouteList as $item) {
-            $table = $item['Table'];
-            $route = $item['Route'];
+        do {
+            $selectedRoutes = [];
+            foreach ($tableRouteList as $item) {
+                $table = $item['Table'];
+                $route = $item['Route'];
 
-            $input = $cli->input($table);
-            $input->defaultTo($route);
+                $input = $cli->input('Table: ' . $table . " Enter Route ($route):");
+                $input->defaultTo($route);
+                $response = $input->prompt();
+                $selectedRoutes[$table] = $response;
+            }
+
+            $displayRouteList = [];
+            foreach ($selectedRoutes as $table => $route) {
+                $displayRouteList[] = ['Table' => $table, 'Route' => strtolower($route)];
+            }
+
+            $cli->br();
+            $cli->bold()->blue()->table($displayRouteList);
+            $cli->br();
+
+            $input = $cli->lightGray()->confirm('This look okay?');
             $response = $input->prompt();
-            $selectedRoutes[$table] = $response;
-        }
-
-        $cli->blue()->table($selectedRoutes);
-
-        $input = $cli->input('Press enter to continue.');
-        $input->prompt();
-
-        return $tableRouteList;
+        } while ($response !== 'y');
+        return $selectedRoutes;
     }
 }
