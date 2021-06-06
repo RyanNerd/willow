@@ -50,17 +50,24 @@ class MakeCommands extends RoboBase
             $cli
                 ->bold()
                 ->backgroundLightRed()
-                ->white('Running make is destructive!');
+                ->white('                 !!!Running make is destructive!!!                              ');
             $cli
                 ->bold()
                 ->backgroundLightRed()
-                ->white('Re-running make will destroy & replace all models, controllers, models etc.');
+                ->white(' Re-running make will destroy & replace all models, controllers, models etc.    ');
+            $cli
+                ->bold()
+                ->backgroundLightRed()
+                ->white()
+                ->border(' ');
+            $cli
+                ->bold()
+                ->backgroundLightRed()
+                ->white(' You must run the reset command before you can re-run the make command.         ');
             $cli->bold()
                 ->backgroundLightRed()
                 ->white()
                 ->border('*');
-            $cli->br();
-            $cli->bold()->red('You must run the reset command before you can re-run the make command.');
             $cli->br();
             $input = $cli->bold()->lightGray()->input('Press enter to exit');
             $input->prompt();
@@ -132,7 +139,7 @@ class MakeCommands extends RoboBase
 
                 // Simulate something happening
                 // TODO: Actually do something
-                usleep(800);
+                usleep(980000);
             }
         }
 
