@@ -59,7 +59,7 @@ class MakeCommands extends RoboBase
         } catch (Throwable $throwable) {
             $cli->br();
             $cli->error('Error: ' . $throwable->getMessage());
-            $cli->bold()->red()->json([$this->parseThrowableToArray($throwable)]);
+            $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);
             $cli->br();
             die(self::ENV_ERROR);
         }
@@ -88,7 +88,7 @@ class MakeCommands extends RoboBase
         } catch (Throwable $throwable) {
             $cli->br();
             $cli->error('Error: ' . $throwable->getMessage());
-            $cli->bold()->red()->json([$this->parseThrowableToArray($throwable)]);
+            $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);
             $cli->br();
             die('Unable to connect to database. Check that the .env configuration is correct');
         }
@@ -106,27 +106,5 @@ class MakeCommands extends RoboBase
         } else {
             $cli->white('Finished RegisterControllers ');
         }
-    }
-
-    /**
-     * Given a Throwable object parse the properties and return the result as [['label' => 'value],...]
-     * @param Throwable $t
-     * @return array[]
-     */
-    protected function parseThrowableToArray(Throwable $t): array
-    {
-        $traceString = $t->getTraceAsString();
-        $tracer = explode("\n", $traceString);
-        $contents =             [
-            'Message' => $t->getMessage(),
-            'File' => $t->getFile(),
-            'Line' => (string)$t->getLine()
-        ];
-
-        foreach ($tracer as $item=>$value) {
-            $contents['Trace' . (string)$item] = $value;
-        }
-
-        return $contents;
     }
 }

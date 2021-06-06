@@ -202,4 +202,26 @@ abstract class RoboBase extends Tasks
         }
         return $tableDetails;
     }
+
+    /**
+     * Given a Throwable object parse the properties and return the result as [['label' => 'value],...]
+     * @param Throwable $t
+     * @return array[]
+     */
+    public static function parseThrowableToArray(Throwable $t): array
+    {
+        $traceString = $t->getTraceAsString();
+        $tracer = explode("\n", $traceString);
+        $contents =             [
+            'Message' => $t->getMessage(),
+            'File' => $t->getFile(),
+            'Line' => (string)$t->getLine()
+        ];
+
+        foreach ($tracer as $item=>$value) {
+            $contents['Trace' . (string)$item] = $value;
+        }
+
+        return $contents;
+    }
 }
