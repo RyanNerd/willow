@@ -70,16 +70,14 @@ class MakeCommands extends RoboBase
             die();
         }
 
-
         // Has .env file been read into ENV?
-        if ($container->has('ENV')) {
-            if (!empty($container->get('ENV')['DB_NAME'])) {
-                $cli->bold()->lightGray("Database configuration already exists in .env");
-                $input = $cli->lightGray()->confirm('Do you want to OVERWRITE it?');
-                if ($input->confirmed()) {
-                    $this->setEnvFromUser();
-                }
-            } else {
+        if ($container->has('ENV') && !empty($container->get('ENV')['DB_NAME'])) {
+            $cli->bold()->yellow()->border();
+            $cli->bold()->white("Database configuration already exists in .env");
+            $cli->br();
+            $input = $cli->bold()->lightGray()->confirm('Do you want to OVERWRITE it?');
+            $cli->bold()->yellow()->border();
+            if ($input->confirmed()) {
                 $this->setEnvFromUser();
             }
         } else {
@@ -92,14 +90,33 @@ class MakeCommands extends RoboBase
         // Get the database connection object
         $conn = $eloquent->getConnection();
 
-        // Get the tables from the database
-        $tables = DatabaseUtilities::getTableList($conn);
+        try {
+            // Get the tables from the database
+            $tables = DatabaseUtilities::getTableList($conn);
+        } catch (Throwable $throwable) {
+            $cli->br();
+            $cli->bold()->yellow()->border('*');
+            $cli->bold()->yellow('An error occurred attempting to connect with the database.');
+            $cli->bold()->yellow('Check the .env file for misconfigurations.');
+            $cli->br();
+            $input = $cli->bold()->lightGray()->confirm('Do you want to see the error details?');
+            $cli->bold()->yellow()->border('*');
+            if ($input->confirmed()) {
+                $this->outputThrowableMessage($throwable);
+            }
+            die();
+        }
 
         // Get the list of tables the user wants in their project
         $selectedTables = $this->tableInit($tables);
 
         // Get the routes for each table that the user wants to use
         $selectedRoutes = $this->routeInit($selectedTables);
+
+        // Create the .viridian semaphore file
+        if (file_put_contents(__DIR__ . '/../../../../.viridian', 'TIMESTAMP=' . time()) === false) {
+            die('Unable to create .viridian file.');
+        }
 
         /**
          * TODO: Build out the model, controllers, actions, etc.
@@ -121,17 +138,6 @@ class MakeCommands extends RoboBase
                 usleep(980000);
             }
         }
-
-        $viridianText = '';
-        foreach ($selectedRoutes as $table => $route) {
-            $viridianText .= $table . '=' . $route . PHP_EOL;
-        }
-
-        // TODO: At the end of it all.
-        if (file_put_contents(__DIR__ . '/../../../../.viridian', $viridianText) === false) {
-            die('Unable to create .viridian config file.');
-        }
-
 
         $input = $cli->input('Press enter to continue');
         $input->prompt();
