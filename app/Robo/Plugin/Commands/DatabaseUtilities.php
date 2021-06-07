@@ -47,7 +47,7 @@ sql;
      * @param string $tableName
      * @return array<'column_name'=>'type'>
      */
-    static function getTableAttributes(Eloquent $eloquent, string $tableName): array {
+    public static function getTableAttributes(Eloquent $eloquent, string $tableName): array {
         $tableDetails = [];
         $schema = $eloquent::schema();
         $columns = $schema->getColumnListing($tableName);

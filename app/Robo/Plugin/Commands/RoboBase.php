@@ -21,6 +21,8 @@ abstract class RoboBase extends Tasks
     protected  static $_container;
 
     protected const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
+    protected const CONFIG_PATH = __DIR__ . '/../../../../config/';
+    protected const ENV_PATH = __DIR__ . '/../../../../.env';
 
     use EnvSetupTrait;
 
@@ -32,12 +34,12 @@ abstract class RoboBase extends Tasks
             // Set up DI
             if (!static::$_container instanceof Container) {
                 $builder = new ContainerBuilder();
-                $builder = $builder->addDefinitions( __DIR__ . '/../../../../config/_viridian.php');
+                $builder = $builder->addDefinitions( self::CONFIG_PATH . '/_viridian.php');
 
-                if (file_exists(__DIR__ . '/../../../../.env')) {
+                if (file_exists(self::ENV_PATH)) {
                     $builder = $builder
-                    ->addDefinitions(__DIR__ . '/../../../../config/_env.php')
-                    ->addDefinitions(__DIR__ . '/../../../../config/db.php');
+                    ->addDefinitions(self::CONFIG_PATH . '_env.php')
+                    ->addDefinitions(self::CONFIG_PATH . 'db.php');
                 }
                 $container = $builder->build();
                 self::_setContainer($container);
@@ -53,10 +55,18 @@ abstract class RoboBase extends Tasks
         }
     }
 
+    /**
+     * Set the DI/Container
+     * @param Container $container
+     */
     public static function _setContainer(Container $container) {
         static::$_container = $container;
     }
 
+    /**
+     * Return the DI/Container
+     * @return Container
+     */
     public static function _getContainer(): Container
     {
         return static::$_container;
@@ -83,133 +93,7 @@ abstract class RoboBase extends Tasks
     }
 
     /**
-     * Returns true if eloquent has booted and a connection is established to the database.
-     * @param bool $verbose
-     * @return bool
-     */
-    protected function isDatabaseEnvironmentReady(bool $verbose = true): bool
-    {
-        $container = $this->_getContainer();
-
-        if (!$container->has('Eloquent')) {
-            if ($verbose) {
-                $this->error('Database not set up. Run db:init or create the .env file manually.');
-            }
-            return false;
-        }
-
-        try {
-            /** @var Manager $eloquent */
-            $eloquent = $container->get('Eloquent');
-            $conn = $eloquent->getConnection();
-            $driver = $conn->getDriverName();
-
-            switch ($driver) {
-                case 'sqlite':
-                    $sql = 'SELECT name as table_name FROM sqlite_master';
-                    break;
-
-                default:
-                    $sql = 'SELECT table_name as table_name FROM INFORMATION_SCHEMA.TABLES';
-            }
-
-            $conn->select($sql . ' WHERE 1=0');
-        } catch (Throwable $exception) {
-            if ($verbose) {
-                $this->error('Cannot connect to database: ' . $exception->getMessage());
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns an array of all the tables in the database
-     *
-     * @return string[]
-     */
-    protected function getTables(): array
-    {
-        $capsule = $this->_getContainer()->get('Eloquent');
-        $conn = $capsule->getConnection();
-        $driver = $conn->getDriverName();
-        $db = $conn->getDatabaseName();
-
-        switch ($driver) {
-            case 'sqlite':
-                $select = 'SELECT name as table_name
-                    FROM sqlite_master
-                    ORDER BY table_name';
-                break;
-
-            default:
-                $select = "SELECT table_name as table_name
-            FROM INFORMATION_SCHEMA.TABLES
-            WHERE table_schema = '$db'
-            ORDER BY table_name;";
-        }
-
-
-        $rows = $conn->select($select);
-        $tables = [];
-        foreach($rows as $row) {
-            $tables[] = $row->table_name;
-        }
-        return $tables;
-    }
-
-    /**
-     * Returns an array of all the views in the database
-     *
-     * @return string[]
-     */
-    protected function getViews(): array
-    {
-        $capsule = $this->_getContainer()->get('Eloquent');
-        $conn = $capsule->getConnection();
-        $driver = $conn->getDriverName();
-        $db = $conn->getDatabaseName();
-
-        switch ($driver) {
-            case 'sqlite':
-                return [];
-
-            default:
-                $select = "SELECT table_name as table_name
-            FROM INFORMATION_SCHEMA.VIEWS
-            WHERE table_schema = '$db'
-            ORDER BY table_name;";
-                $rows = $conn->select($select);
-                $views = [];
-                foreach($rows as $row) {
-                    $views[] = $row->table_name;
-                }
-                return $views;
-        }
-    }
-
-    /**
-     * Returns an associative array of column names and column types for the given tableName
-     *   ex: 'id' => 'integer', 'first_name' => 'string'
-     *
-     * @param string $tableName
-     * @return array
-     */
-    protected function getTableDetails(string $tableName): array
-    {
-        $tableDetails = [];
-        $capsule = $this->_getContainer()->get('Eloquent');
-        $schema = $capsule::schema();
-        $columns = $schema->getColumnListing($tableName);
-        foreach ($columns as $column) {
-            $columnType = $schema->getColumnType($tableName, $column);
-            $tableDetails[$column] = $columnType;
-        }
-        return $tableDetails;
-    }
-
-    /**
-     * @param CLImate $cli
+     * Show error details
      * @param Throwable $throwable
      */
     protected function outputThrowableMessage(Throwable $throwable) {
@@ -229,7 +113,7 @@ abstract class RoboBase extends Tasks
     {
         $traceString = $t->getTraceAsString();
         $tracer = explode("\n", $traceString);
-        $contents =             [
+        $contents = [
             'Message' => $t->getMessage(),
             'File' => $t->getFile(),
             'Line' => (string)$t->getLine()
@@ -242,14 +126,20 @@ abstract class RoboBase extends Tasks
         return $contents;
     }
 
+    /**
+     * Get the .env settings from the user
+     * Save them in the .env file.
+     * Validate and set the 'ENV' entry in the container.
+     * @throws {self::ENV_ERROR}
+     */
     protected function setEnvFromUser() {
         try {
             // Get the .env contents from the user
             $envText = $this->envInit();
             // Was the .env file successfully created?
-            if (file_put_contents(__DIR__ . '/../../../../.env', $envText) !== false) {
+            if (file_put_contents(self::ENV_PATH, $envText) !== false) {
                 // Validate the .env file.
-                $env = include __DIR__ . '/../../../../config/_env.php';
+                $env = include self::CONFIG_PATH . '_env';
                 // Dynamically add ENV to the container
                 self::_getContainer()->set('ENV', $env['ENV']);
             } else {
@@ -261,17 +151,20 @@ abstract class RoboBase extends Tasks
         }
     }
 
+    /**
+     * Checks the container to see if Eloquent has already been defined.
+     * If not dynamically add Eloquent to the container;
+     * @return Eloquent
+     */
     protected function getEloquent(): Eloquent {
         try {
             // Has Eloquent been defined?
             if (!self::_getContainer()->has('Eloquent')) {
                 // Dynamically add Eloquent to the container
-                $db = include(__DIR__ . '/../../../../config/db.php');
+                $db = include self::CONFIG_PATH . 'db.php';
                 self::_getContainer()->set('Eloquent', $db['Eloquent']);
             }
-
             return self::_getContainer()->get('Eloquent');
-
         } catch (Throwable $throwable) {
             $this->outputThrowableMessage($throwable);
             die('Unable to connect to database. Check that the .env configuration is correct');

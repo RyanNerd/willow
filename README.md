@@ -72,20 +72,20 @@ The result in your browser should look something like this:
 ###  Willow (robo) Commands
 
 ```bash
+# Documentation and demo
 ./willow docs   # bring up the documentation web page
 ./willow list   # list all available Willow commands
 ./willow sample # launch the sample API in a web browser
+./willow banner # show the Willow introductory banner
+
+# Willow core commands
 ./willow make   # Connects to your database and builds routes, controllers, models, actions, etc.
 ./willow reset  # Resets the project back to factory defaults
-./willow eject  # Removes the sample controller and artifacts from the project
+./willow eject  # Removes the sample artifacts from the project
 
-# Utility commands
+# Database commands
 ./willow tables  # list all the tables in the database
-./willow columns [table-name] # list all the columns for a given table
 ./willow details [table-name] # Show details (column names and types) of a given table
-
-# Misc.
-./willow banner # show the Willow introductory banner
 ```
 
 ### Contributing
