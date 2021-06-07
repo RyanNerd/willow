@@ -27,6 +27,8 @@ class MakeCommands extends RoboBase
         'Routes'
     ];
 
+    private const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
+
     /**
      * Builds the app using database tables
      */
@@ -114,7 +116,7 @@ class MakeCommands extends RoboBase
         $selectedRoutes = $this->routeInit($selectedTables);
 
         // Create the .viridian semaphore file
-        if (file_put_contents(__DIR__ . '/../../../../.viridian', 'TIMESTAMP=' . time()) === false) {
+        if (file_put_contents(self::VIRIDIAN_PATH, 'TIMESTAMP=' . (string)time()) === false) {
             die('Unable to create .viridian file.');
         }
 
