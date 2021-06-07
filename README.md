@@ -76,13 +76,16 @@ The result in your browser should look something like this:
 ./willow list   # list all available Willow commands
 ./willow sample # launch the sample API in a web browser
 ./willow make   # Connects to your database and builds routes, controllers, models, actions, etc.
+./willow reset  # Resets the project back to factory defaults
 ./willow eject  # Removes the sample controller and artifacts from the project
 
 # Utility commands
 ./willow tables  # list all the tables in the database
 ./willow columns [table-name] # list all the columns for a given table
 ./willow details [table-name] # Show details (column names and types) of a given table
-./willow banner   # show the Willow introductory banner
+
+# Misc.
+./willow banner # show the Willow introductory banner
 ```
 
 ### Contributing

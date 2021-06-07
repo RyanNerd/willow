@@ -5,10 +5,11 @@ namespace Willow\Robo\Plugin\Commands;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Capsule\Manager as Eloquent;
 use League\CLImate\CLImate;
 use Robo\Tasks;
 use Throwable;
+use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
 
 abstract class RoboBase extends Tasks
 {
@@ -18,6 +19,10 @@ abstract class RoboBase extends Tasks
      * @var Container | null
      */
     protected  static $_container;
+
+    protected const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
+
+    use EnvSetupTrait;
 
     public function __construct()
     {
@@ -207,7 +212,8 @@ abstract class RoboBase extends Tasks
      * @param CLImate $cli
      * @param Throwable $throwable
      */
-    public static function outputThrowableMessage(CLImate $cli, Throwable $throwable) {
+    protected function outputThrowableMessage(Throwable $throwable) {
+        $cli = $this->cli;
         $cli->br();
         $cli->error('Error: ' . $throwable->getMessage());
         $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);
@@ -234,5 +240,41 @@ abstract class RoboBase extends Tasks
         }
 
         return $contents;
+    }
+
+    protected function setEnvFromUser() {
+        try {
+            // Get the .env contents from the user
+            $envText = $this->envInit();
+            // Was the .env file successfully created?
+            if (file_put_contents(__DIR__ . '/../../../../.env', $envText) !== false) {
+                // Validate the .env file.
+                $env = include __DIR__ . '/../../../../config/_env.php';
+                // Dynamically add ENV to the container
+                self::_getContainer()->set('ENV', $env['ENV']);
+            } else {
+                die(self::ENV_ERROR);
+            }
+        } catch (Throwable $throwable) {
+            $this->outputThrowableMessage($throwable);
+            die(self::ENV_ERROR);
+        }
+    }
+
+    protected function getEloquent(): Eloquent {
+        try {
+            // Has Eloquent been defined?
+            if (!self::_getContainer()->has('Eloquent')) {
+                // Dynamically add Eloquent to the container
+                $db = include(__DIR__ . '/../../../../config/db.php');
+                self::_getContainer()->set('Eloquent', $db['Eloquent']);
+            }
+
+            return self::_getContainer()->get('Eloquent');
+
+        } catch (Throwable $throwable) {
+            $this->outputThrowableMessage($throwable);
+            die('Unable to connect to database. Check that the .env configuration is correct');
+        }
     }
 }

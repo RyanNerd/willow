@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use Illuminate\Database\Capsule\Manager as Eloquent;
 use Throwable;
-use Willow\Robo\Plugin\Commands\Traits\{
-    EnvSetupTrait,
+use Willow\Robo\Plugin\Commands\Traits\{EnvSetupTrait,
     ModelTrait,
     RegisterControllersTrait,
     RouteSetupTrait,
@@ -20,8 +18,6 @@ class MakeCommands extends RoboBase
     use RegisterControllersTrait;
     use RouteSetupTrait;
     use TableSetupTrait;
-
-    private const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
 
     protected const PROGRESS_STAGES = [
         'Model',
@@ -39,7 +35,7 @@ class MakeCommands extends RoboBase
         $container = self::_getContainer();
 
         // If viridian has any entries it means that make has already been run.
-        // In this case the use must run the reset command before running make again.
+        // In this case the user must run the reset command before running make again.
         $viridian = $container->get('viridian');
         if (count($viridian) > 0) {
             $cli->br();
@@ -74,47 +70,30 @@ class MakeCommands extends RoboBase
             die();
         }
 
-        try {
-            // Has .env file been read into ENV? If not create the .env file and load it into the container
-            if (!$container->has('ENV')) {
-                // Get the .env contents from the user
-                $envText = $this->envInit();
 
-                // Was the .env file successfully created?
-                if (file_put_contents(__DIR__ . '/../../../../.env', $envText) !== false) {
-                    // Validate the .env file.
-                    $env = include  __DIR__ . '/../../../../config/_env.php';
-                    // Dynamically add ENV to the container
-                    $container->set('ENV', $env['ENV']);
-                } else {
-                    die(self::ENV_ERROR);
+        // Has .env file been read into ENV?
+        if ($container->has('ENV')) {
+            if (!empty($container->get('ENV')['DB_NAME'])) {
+                $cli->bold()->lightGray("Database configuration already exists in .env");
+                $input = $cli->lightGray()->confirm('Do you want to OVERWRITE it?');
+                if ($input->confirmed()) {
+                    $this->setEnvFromUser();
                 }
+            } else {
+                $this->setEnvFromUser();
             }
-        } catch (Throwable $throwable) {
-            self::outputThrowableMessage($cli, $throwable);
-            die(self::ENV_ERROR);
+        } else {
+            $this->setEnvFromUser();
         }
 
-        try {
-            // Has Eloquent been defined?
-            if (!$container->has('Eloquent')) {
-                // Dynamically add Eloquent to the container
-                $db = include (__DIR__ . '/../../../../config/db.php');
-                $container->set('Eloquent', $db['Eloquent']);
-            }
+        // Get Eloquent ORM manager
+        $eloquent = $this->getEloquent();
 
-            /** @var Eloquent $eloquent */
-            $eloquent = $container->get('Eloquent');
+        // Get the database connection object
+        $conn = $eloquent->getConnection();
 
-            // Get the database connection object
-            $conn = $eloquent->getConnection();
-
-            // Get the tables from the database
-            $tables = DatabaseUtilities::getTableList($conn);
-        } catch (Throwable $throwable) {
-            self::outputThrowableMessage($cli, $throwable);
-            die('Unable to connect to database. Check that the .env configuration is correct');
-        }
+        // Get the tables from the database
+        $tables = DatabaseUtilities::getTableList($conn);
 
         // Get the list of tables the user wants in their project
         $selectedTables = $this->tableInit($tables);
@@ -170,5 +149,27 @@ class MakeCommands extends RoboBase
 //        } else {
 //            $cli->white('Finished RegisterControllers ');
 //        }
+    }
+
+    /**
+     * Resets the project back to factory defaults
+     */
+    public function reset() {
+        $cli = $this->cli;
+        $container = self::_getContainer();
+
+        $viridian = $container->get('viridian');
+
+        // If viridian has no entries then there's nothing to do.
+        if (count($viridian) === 0) {
+            $cli->bold()->white('Project appears to be uninitialized. Nothing to do.');
+            $input = $cli->lightGray()->confirm('Do you want to force a reset anyway?');
+            if (!$input->confirmed()) {
+                die();
+            }
+        }
+
+        // TODO: Implement reset command
+        $cli->shout('reset not implemented.');
     }
 }
