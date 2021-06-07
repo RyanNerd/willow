@@ -120,7 +120,7 @@ abstract class RoboBase extends Tasks
         ];
 
         foreach ($tracer as $item=>$value) {
-            $contents['Trace' . (string)$item] = $value;
+            $contents['Trace' . $item] = $value;
         }
 
         return $contents;
@@ -139,7 +139,7 @@ abstract class RoboBase extends Tasks
             // Was the .env file successfully created?
             if (file_put_contents(self::ENV_PATH, $envText) !== false) {
                 // Validate the .env file.
-                $env = include self::CONFIG_PATH . '_env';
+                $env = include __DIR__ .  '/../../../../config/_env.php';
                 // Dynamically add ENV to the container
                 self::_getContainer()->set('ENV', $env['ENV']);
             } else {
@@ -161,7 +161,7 @@ abstract class RoboBase extends Tasks
             // Has Eloquent been defined?
             if (!self::_getContainer()->has('Eloquent')) {
                 // Dynamically add Eloquent to the container
-                $db = include self::CONFIG_PATH . 'db.php';
+                $db = include __DIR__ . '/../../../../config/db.php';
                 self::_getContainer()->set('Eloquent', $db['Eloquent']);
             }
             return self::_getContainer()->get('Eloquent');
