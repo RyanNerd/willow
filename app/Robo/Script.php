@@ -88,12 +88,8 @@ class Script
      *
      * @param CLImate|null $cli
      */
-    public static function fancyBanner(CLImate $cli = null): void
+    public static function fancyBanner(CLImate $cli): void
     {
-        if ($cli === null) {
-            $cli = new CLImate();
-        }
-
         // Display Willow's fancy message
         $cli->forceAnsiOn();
         $cli->green()->border('*', 55);

@@ -10,16 +10,14 @@ class WillowCommands extends RoboBase
     /**
      * Launch the Willow Framework User's Guide in the default web browser
      */
-    public function docs(): void
-    {
+    public function docs(): void {
         $this->taskOpenBrowser('https://www.notion.so/ryannerd/Get-Started-bf56317580884ccd95ed8d3889f83c72')->run();
     }
 
     /**
      * Launch the built-in PHP web server and launch the Sample in a web browser
      */
-    public function sample(): void
-    {
+    public function sample(): void {
         $this->taskServer(8088)
             ->host('127.0.0.1')
             ->dir(__DIR__ . '/../../../../public')
@@ -32,16 +30,14 @@ class WillowCommands extends RoboBase
     /**
      * Show Willow's fancy banner
      */
-    public function banner(): void
-    {
-        Script::fancyBanner();
+    public function banner(): void {
+        Script::fancyBanner($this->cli);
     }
 
     /*
      * Execute the unit tests
      */
-    public function test(): void
-    {
+    public function test(): void {
         $this->_exec(__DIR__ . '/../../../../vendor/bin/phpunit ' . __DIR__ . '/../../../../tests');
     }
 }

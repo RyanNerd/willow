@@ -6,7 +6,7 @@ namespace Willow\Robo\Plugin\Commands;
 use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
 
-class TableCommands extends RoboBase
+class databaseCommands extends RoboBase
 {
     use EnvSetupTrait;
 
