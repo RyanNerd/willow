@@ -7,7 +7,6 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Eloquent;
 use League\CLImate\CLImate;
-use phpDocumentor\Reflection\Types\Integer;
 use Robo\Tasks;
 use Throwable;
 use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
@@ -40,7 +39,8 @@ abstract class RoboBase extends Tasks
                 if (file_exists(self::ENV_PATH)) {
                     $builder = $builder
                     ->addDefinitions(self::CONFIG_PATH . '_env.php')
-                    ->addDefinitions(self::CONFIG_PATH . 'db.php');
+                    ->addDefinitions(self::CONFIG_PATH . 'db.php')
+                    ->addDefinitions(self::CONFIG_PATH . 'twig.php');
                 }
                 $container = $builder->build();
                 self::_setContainer($container);

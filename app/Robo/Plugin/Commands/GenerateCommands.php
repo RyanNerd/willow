@@ -7,7 +7,7 @@ use Willow\Robo\Plugin\Commands\Traits\{
     ControllerTrait,
     DeleteActionTrait,
     GetActionTrait,
-    ModelTrait,
+    ForgeModelTrait,
     PatchActionTrait,
     PostActionTrait,
     RegisterControllersTrait,
@@ -23,7 +23,7 @@ class GenerateCommands extends RoboBase
     use ControllerTrait;
     use DeleteActionTrait;
     use GetActionTrait;
-    use ModelTrait;
+    use ForgeModelTrait;
     use PatchActionTrait;
     use PostActionTrait;
     use RegisterControllersTrait;

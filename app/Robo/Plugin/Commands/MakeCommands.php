@@ -6,23 +6,23 @@ namespace Willow\Robo\Plugin\Commands;
 use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Throwable;
 use Willow\Robo\Plugin\Commands\Traits\{EnvSetupTrait,
-    ModelTrait,
+    ForgeModelTrait,
     RegisterControllersTrait,
     RouteSetupTrait,
-    TableSetupTrait
+    TableSetupTrait,
 };
 
 class MakeCommands extends RoboBase
 {
     use EnvSetupTrait;
-    use ModelTrait;
+    use ForgeModelTrait;
     use RegisterControllersTrait;
     use RouteSetupTrait;
     use TableSetupTrait;
 
     protected const PROGRESS_STAGES = [
         'Model',
-        'Controllers',
+        'Controller',
         'Actions',
         'Validators',
         'Routes'
@@ -127,6 +127,8 @@ class MakeCommands extends RoboBase
          * TODO: Build out the model, controllers, actions, etc.
          */
 
+        $this->twig = self::_getContainer()->get('twig');
+
         $cli->br();
         $cli->bold()->white()->border('*');
         $cli->bold()->white('Building project');
@@ -137,29 +139,34 @@ class MakeCommands extends RoboBase
             $progress = $cli->progress()->total(count(self::PROGRESS_STAGES));
             foreach (self::PROGRESS_STAGES as $key => $stage) {
                 $progress->current($key + 1, $stage);
+                switch ($stage) {
+                    case ('Model'): {
+                        $this->forgeModel($table);
+                        // TODO: Model stuff
+                        break;
+                    }
 
-                // Simulate something happening
-                // TODO: Actually do something
-                usleep(980000);
+                    case ('Controller'): {
+                        // TODO: Controller stuff
+                        break;
+                    }
+
+                    case ('Actions'): {
+                        // TODO: Action stuff
+                        break;
+                    }
+
+                    case ('Validators'): {
+                        // TODO: Validator stuff
+                        break;
+                    }
+
+                    case ('Routes'): {
+                        // TODO: Route stuff
+                    }
+                }
             }
         }
-
-        $input = $cli->input('Press enter to continue');
-        $input->prompt();
-
-//        // TODO: Models, Controllers, etc.
-//        $cli->white('Trying RegisterControllers...');
-//
-//        // Set up Twig
-//        $loader = new FilesystemLoader(__DIR__ . '/Templates');
-//        $twig = new Environment($loader);
-//
-//        $error = $this->forgeRegisterControllers($twig);
-//        if ($error) {
-//            die($error);
-//        } else {
-//            $cli->white('Finished RegisterControllers ');
-//        }
     }
 
     /**

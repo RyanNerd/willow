@@ -6,7 +6,7 @@ namespace Willow\Robo\Plugin\Commands\Traits;
 use Throwable;
 use Twig\Environment;
 
-trait ModelTrait
+trait ForgeModelTrait
 {
     /**
      * @var Environment
@@ -21,14 +21,10 @@ trait ModelTrait
      */
     protected function forgeModel(string $entity): ?string
     {
-        // Format the Model class name
-        $className = ucfirst($entity);
-
         // Render the Model code.
         try {
             $modelCode = $this->twig->render('Model.php.twig',
                 [
-                    'class_name' => $className,
                     'entity' => $entity
                 ]
             );
@@ -37,7 +33,7 @@ trait ModelTrait
         }
 
         // Save the Model code file into the Models directory.
-        $modelFile = __DIR__ . '/../../../Models/' . $className . '.php';
+        $modelFile = __DIR__ . '/../../../Models/' . ucfirst($entity) . '.php';
         if (file_put_contents($modelFile, $modelCode) === false) {
             return 'Unable to create: ' . $modelFile;
         }
