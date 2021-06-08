@@ -6,7 +6,7 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Environment as twig;
 return [
     'twig' => function(ContainerInterface $c) {
-        $loader = new FilesystemLoader(__DIR__ . '../app/Robo/Plugin/Commands/Templates');
+        $loader = new FilesystemLoader($c->get('template_path'));
         return new twig($loader);
     }
 ];

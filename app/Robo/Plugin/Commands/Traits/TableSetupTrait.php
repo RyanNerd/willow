@@ -26,13 +26,13 @@ trait TableSetupTrait {
         // TODO: Handle Window's choices for this. See: https://climate.thephpleague.com/terminal-objects/input/
         do {
             $cli->br();
-            $input = $cli
-                ->lightGreen()
-                ->checkboxes('Select all of the tables you want to add to your project', $tables);
-            $selectedTables = $input->prompt();
-            if (count($selectedTables) === 0) {
-                continue;
-            }
+
+            do {
+                $input = $cli
+                    ->lightGreen()
+                    ->checkboxes('Select all of the tables you want to add to your project', $tables);
+                $selectedTables = $input->prompt();
+            } while (count($selectedTables) === 0);
 
             $displayTables = [];
             foreach ($selectedTables as $table) {

@@ -33,7 +33,7 @@ trait ForgeModelTrait
         }
 
         // Save the Model code file into the Models directory.
-        $modelFile = __DIR__ . '/../../../Models/' . ucfirst($entity) . '.php';
+        $modelFile = self::_getContainer()->get('models_path') . ucfirst(strtolower($entity)) . '.php';
         if (file_put_contents($modelFile, $modelCode) === false) {
             return 'Unable to create: ' . $modelFile;
         }

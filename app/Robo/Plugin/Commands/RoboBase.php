@@ -23,6 +23,9 @@ abstract class RoboBase extends Tasks
     protected const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
     protected const CONFIG_PATH = __DIR__ . '/../../../../config/';
     protected const ENV_PATH = __DIR__ . '/../../../../.env';
+    protected const TEMPLATE_PATH = __DIR__ . '/Templates';
+    protected const MODELS_PATH = __DIR__ . '/../../../Robo/../Models/';
+    protected const CONTROLLERS_PATH = __DIR__ . '/../../../Robo/../Controllers/';
 
     use EnvSetupTrait;
 
@@ -34,8 +37,14 @@ abstract class RoboBase extends Tasks
             // Set up DI
             if (!static::$_container instanceof Container) {
                 $builder = new ContainerBuilder();
-                $builder = $builder->addDefinitions( self::CONFIG_PATH . '/_viridian.php');
-
+                $builder = $builder
+                    ->addDefinitions([
+                        'template_path' => self::TEMPLATE_PATH,
+                        'controllers_path' => self::CONTROLLERS_PATH,
+                        'models_path' => self::MODELS_PATH
+                    ])
+                    ->addDefinitions( self::CONFIG_PATH . '/_viridian.php')
+                    ->addDefinitions(self::CONFIG_PATH . 'twig.php');
                 if (file_exists(self::ENV_PATH)) {
                     $builder = $builder
                     ->addDefinitions(self::CONFIG_PATH . '_env.php')
