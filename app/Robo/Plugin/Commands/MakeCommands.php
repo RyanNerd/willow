@@ -5,7 +5,9 @@ namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Throwable;
-use Willow\Robo\Plugin\Commands\Traits\{EnvSetupTrait,
+use Willow\Robo\Plugin\Commands\Traits\{
+    EnvSetupTrait,
+    ForgeControllerTrait,
     ForgeModelTrait,
     RegisterControllersTrait,
     RouteSetupTrait,
@@ -15,6 +17,7 @@ use Willow\Robo\Plugin\Commands\Traits\{EnvSetupTrait,
 class MakeCommands extends RoboBase
 {
     use EnvSetupTrait;
+    use ForgeControllerTrait;
     use ForgeModelTrait;
     use RegisterControllersTrait;
     use RouteSetupTrait;
@@ -141,7 +144,7 @@ class MakeCommands extends RoboBase
                     }
 
                     case ('Controller'): {
-                        // TODO: Controller stuff
+                        $this->forgeController($table, $route);
                         break;
                     }
 
@@ -163,7 +166,57 @@ class MakeCommands extends RoboBase
         }
     }
 
-    /**
+//$error = $this->forgeGetAction($tableName);
+//if ($error) {
+//$this->error($error);
+//}
+//
+//$error = $this->forgePatchAction($tableName);
+//if ($error) {
+//    $this->error($error);
+//}
+//
+//$error = $this->forgePostAction($tableName);
+//if ($error) {
+//    $this->error($error);
+//}
+//
+//$error = $this->forgeWriteValidator($tableName);
+//if ($error) {
+//    $this->error($error);
+//}
+//
+//$error = $this->forgeSearchAction($tableName);
+//if ($error) {
+//    $this->error($error);
+//}
+//
+//$error = $this->forgeSearchValidator($tableName);
+//if ($error) {
+//    $this->error($error);
+//}
+//
+//$error = $this->forgeDeleteAction($tableName);
+//if ($error) {
+//    $this->error($error);
+//}
+//
+//$error = $this->forgeRestoreAction($tableName);
+//if ($error) {
+//    $this->error($error);
+//}
+//
+//$error = $this->forgeRestoreValidator($tableName);
+//if ($error) {
+//    $this->error($error);
+//}
+//
+//$error = $this->forgeRegisterControllers();
+//if ($error) {
+//    $this->error($error);
+//}
+
+/**
      * Resets the project back to factory defaults
      */
     public function reset() {

@@ -1,7 +1,0 @@
-# The viridian file is a table name = routing name list
-# This file is used by the
-# TableName=route
-Department=department
-Employee=employee
-EmployeePayHistory=employee-pay-history
-EmployeeDepartmentHistory=employee-department-history
