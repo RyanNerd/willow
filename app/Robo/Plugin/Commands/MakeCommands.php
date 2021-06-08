@@ -98,18 +98,13 @@ class MakeCommands extends RoboBase
             // Get the tables from the database
             $tables = DatabaseUtilities::getTableList($conn);
         } catch (Throwable $throwable) {
-            $cli->br();
-            $cli->bold()->yellow()->border('*');
-            $cli->bold()->yellow('An error occurred attempting to connect with the database.');
-            $cli->bold()->yellow('Check the .env file for misconfigurations.');
-            $cli->br();
-            /** @var Confirm $input */
-            $input = $cli->bold()->lightGray()->confirm('Do you want to see the error details?');
-            $cli->bold()->yellow()->border('*');
-            if ($input->confirmed()) {
-                $this->outputThrowableMessage($throwable);
-            }
-            die();
+            self::showThrowableAndDie(
+                $throwable,
+                [
+                    'An error occurred attempting to connect with the database.',
+                    'Check the .env file for misconfigurations.'
+                ]
+            );
         }
 
         // Get the list of tables the user wants in their project
@@ -142,7 +137,6 @@ class MakeCommands extends RoboBase
                 switch ($stage) {
                     case ('Model'): {
                         $this->forgeModel($table);
-                        // TODO: Model stuff
                         break;
                     }
 

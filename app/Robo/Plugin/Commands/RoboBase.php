@@ -7,6 +7,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Eloquent;
 use League\CLImate\CLImate;
+use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Robo\Tasks;
 use Throwable;
 use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
@@ -103,15 +104,31 @@ abstract class RoboBase extends Tasks
     }
 
     /**
-     * Show error details
+     * Display an optional error message and prompt the user if they want to see the details of the error then die.
      * @param Throwable $throwable
+     * @param array|null $message
      */
-    protected function outputThrowableMessage(Throwable $throwable) {
-        $cli = $this->cli;
+    public static function showThrowableAndDie(Throwable $throwable, ?array $message = null) {
+        $cli = new CLImate();
         $cli->br();
-        $cli->error('Error: ' . $throwable->getMessage());
-        $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);
+        $cli->bold()->yellow()->border('*');
+        if ($message !== null) {
+            foreach ($message as $text) {
+                $cli->bold()->yellow($text);
+            }
+        } else {
+            $cli->bold()->yellow('An error has occurred.');
+        }
         $cli->br();
+        /** @var Confirm $input */
+        $input = $cli->bold()->lightGray()->confirm('Do you want to see the error details?');
+        $cli->bold()->yellow()->border('*');
+        if ($input->confirmed()) {
+            $cli->br();
+            $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);
+            $cli->br();
+        }
+        die();
     }
 
     /**
@@ -128,11 +145,9 @@ abstract class RoboBase extends Tasks
             'File' => $t->getFile(),
             'Line' => (string)$t->getLine()
         ];
-
-        foreach ($tracer as $item=>$value) {
-            $contents['Trace' . $item] = $value;
+        foreach ($tracer as $key=>$value) {
+            $contents['Trace' . $key] = $value;
         }
-
         return $contents;
     }
 
