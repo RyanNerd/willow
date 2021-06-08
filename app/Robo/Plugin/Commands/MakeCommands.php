@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
+use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Throwable;
 use Willow\Robo\Plugin\Commands\Traits\{EnvSetupTrait,
     ModelTrait,
@@ -77,6 +78,7 @@ class MakeCommands extends RoboBase
             $cli->bold()->yellow()->border();
             $cli->bold()->white("Database configuration already exists in .env");
             $cli->br();
+            /** @var Confirm $input */
             $input = $cli->bold()->lightGray()->confirm('Do you want to OVERWRITE it?');
             $cli->bold()->yellow()->border();
             if ($input->confirmed()) {
@@ -101,6 +103,7 @@ class MakeCommands extends RoboBase
             $cli->bold()->yellow('An error occurred attempting to connect with the database.');
             $cli->bold()->yellow('Check the .env file for misconfigurations.');
             $cli->br();
+            /** @var Confirm $input */
             $input = $cli->bold()->lightGray()->confirm('Do you want to see the error details?');
             $cli->bold()->yellow()->border('*');
             if ($input->confirmed()) {
@@ -171,6 +174,7 @@ class MakeCommands extends RoboBase
         // If viridian has no entries then there's nothing to do.
         if (count($viridian) === 0) {
             $cli->bold()->white('Project appears to be uninitialized. Nothing to do.');
+            /** @var Confirm $input */
             $input = $cli->lightGray()->confirm('Do you want to force a reset anyway?');
             if (!$input->confirmed()) {
                 die();

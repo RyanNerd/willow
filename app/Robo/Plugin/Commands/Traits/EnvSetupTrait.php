@@ -128,6 +128,7 @@ env;
             $cli->white($obfuscatedEnv);
             $cli->bold()->white()->border();
             $cli->br();
+            /** @var Confirm $input */
             $input = $cli->lightGray()->confirm('This look okay?');
         } while (!$input->confirmed());
 

@@ -7,6 +7,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Eloquent;
 use League\CLImate\CLImate;
+use phpDocumentor\Reflection\Types\Integer;
 use Robo\Tasks;
 use Throwable;
 use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;

@@ -85,7 +85,7 @@ The result in your browser should look something like this:
 
 # Database commands
 ./willow tables  # list all the tables in the database
-./willow details [table-name] # Show details (column names and types) of a given table
+./willow details # Show details (column names and types) of a selected table
 ```
 
 ### Contributing
