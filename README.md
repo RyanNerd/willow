@@ -4,7 +4,6 @@
 
 ### TODOs
 TODO:
-- Add eject command
 - Code formatting
 - Target PHP version prompt and logic.
 - Unit tests rewrite?
