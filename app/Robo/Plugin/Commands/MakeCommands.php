@@ -155,7 +155,12 @@ class MakeCommands extends RoboBase
                     }
 
                     case ('Actions'): {
+                        $actionsForge->forgeDeleteAction($table);
                         $actionsForge->forgeGetAction($table);
+                        $actionsForge->forgePatchAction($table);
+                        $actionsForge->forgePostAction($table);
+                        $actionsForge->forgeRestoreAction($table);
+                        $actionsForge->forgeSearchAction($table);
                         break;
                     }
 
@@ -172,37 +177,13 @@ class MakeCommands extends RoboBase
         }
     }
 
-//$error = $this->forgePatchAction($tableName);
-//if ($error) {
-//    $this->error($error);
-//}
-//
-//$error = $this->forgePostAction($tableName);
-//if ($error) {
-//    $this->error($error);
-//}
-//
+
 //$error = $this->forgeWriteValidator($tableName);
 //if ($error) {
 //    $this->error($error);
 //}
 //
-//$error = $this->forgeSearchAction($tableName);
-//if ($error) {
-//    $this->error($error);
-//}
-//
 //$error = $this->forgeSearchValidator($tableName);
-//if ($error) {
-//    $this->error($error);
-//}
-//
-//$error = $this->forgeDeleteAction($tableName);
-//if ($error) {
-//    $this->error($error);
-//}
-//
-//$error = $this->forgeRestoreAction($tableName);
 //if ($error) {
 //    $this->error($error);
 //}
