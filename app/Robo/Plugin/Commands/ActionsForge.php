@@ -11,8 +11,9 @@ class ActionsForge
 {
     protected Twig $twig;
 
-    public function __construct(Twig $twig)
-    {
+    protected const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
+
+    public function __construct(Twig $twig) {
         $this->twig = $twig;
     }
 
@@ -20,8 +21,7 @@ class ActionsForge
      * Forge the GetAction code given the table name.
      * @param string $table
      */
-    public function forgeGetAction(string $table)
-    {
+    public function forgeGetAction(string $table) {
         try {
             // Format the GetAction class name
             $className = ucfirst($table);
@@ -32,7 +32,7 @@ class ActionsForge
                     'class_name' => $className
                 ]
             );
-            $controllerPath = $this->getControllersPath() . $className;
+            $controllerPath = SELF::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
                     $this->forgeActionError(new Exception('Unable to create directory: ' . $controllerPath), $table);
@@ -49,13 +49,35 @@ class ActionsForge
         }
     }
 
-
     /**
-     * Convenience function to return the path to the Controllers directory
-     * @return string
+     * Forge the PatchAction code given the table name.
+     * @param string $table
      */
-    protected function getControllersPath(): string {
-        return  __DIR__ . '/../../../Controllers/';
+    protected function forgePatchAction(string $table): void {
+        // Render the PatchAction code.
+        try {
+            // Format the PatchAction class name
+            $className = ucfirst($table);
+            $patchActionCode = $this->twig->render('PatchAction.php.twig', [
+                    'class_name' => $className
+                ]
+            );
+            $controllerPath = self::CONTROLLERS_PATH . $className;
+
+            if (is_dir($controllerPath) === false) {
+                if (mkdir($controllerPath) === false) {
+                    $this->forgeActionError(new Exception('Unable to create directory: ' . $controllerPath), $table);
+                }
+            }
+            // Save the patchAction code file into the Controllers/ directory.
+            if (file_put_contents($controllerPath . '/' . $className . 'PatchAction.php', $patchActionCode) === false) {
+                $this->forgeActionError(
+                    new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'PatchAction.php'), $table
+                );
+            }
+        } catch (Throwable $e) {
+            $this->forgeActionError($e, $table);
+        }
     }
 
     /**
