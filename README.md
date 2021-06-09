@@ -4,7 +4,6 @@
 
 ### TODOs
 TODO:
-- On EnvSetupTrait change the display errors to be a confirmed() on the UI but set to `true` or `false` on the back end.
 - Add eject command
 - Code formatting
 - Target PHP version prompt and logic.

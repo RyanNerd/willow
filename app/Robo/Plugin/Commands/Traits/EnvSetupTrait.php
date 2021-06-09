@@ -90,11 +90,8 @@ trait EnvSetupTrait
                 $dbName = $input->prompt();
             } while(strlen($dbName) === 0);
 
-            $input = $cli->input('DISPLAY_ERROR_DETAILS (true/false)');
-            $displayErrorDetails = $input
-                ->accept(['true', 'false'])
-                ->defaultTo('false')
-                ->prompt();
+            $input = $cli->input('DISPLAY_ERROR_DETAILS');
+            $displayErrorDetails = $input->confirmed() ? 'true' : 'false';
 
             $envText = <<<env
 DB_DRIVER=$dbDriver
