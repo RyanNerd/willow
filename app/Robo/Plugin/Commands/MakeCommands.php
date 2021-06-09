@@ -166,8 +166,17 @@ class MakeCommands extends RoboBase
             }
         }
 
+        $cli->br();
+        $cli->bold()->lightGreen('Registering controllers...');
+
         // Register the controllers
         $registerForge->forgeRegisterControllers();
+
+        $cli->br();
+        $cli->bold()->lightYellow()->border('*');
+        $cli->bold()->lightYellow('Project build completed!');
+        $cli->bold()->lightYellow()->border('*');
+        $cli->br();
     }
 
 /**
