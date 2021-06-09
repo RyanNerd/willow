@@ -31,7 +31,7 @@ trait ForgeControllerTrait
                 ]
             );
             // Create the controller directory
-            $controllerPath = self::_getContainer()->get('controller_path') . $className;
+            $controllerPath = self::_getContainer()->get('controllers_path') . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
                     $this->forgeControllerError(
