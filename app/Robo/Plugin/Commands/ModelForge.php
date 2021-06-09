@@ -32,7 +32,7 @@ class ModelForge extends ForgeBase
                 ]
             );
             // Save the Model code file into the Models directory.
-            $modelFile = self::CONTROLLERS_PATH . ucfirst($table) . '.php';
+            $modelFile = __DIR__ . '/../../../Models/' . ucfirst($table) . '.php';
             if (file_put_contents($modelFile, $modelCode) === false) {
                 $this->forgeError(new Exception('Unable to create: ' . $modelFile));
             }
