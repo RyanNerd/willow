@@ -1,22 +1,26 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Robo\Plugin\Commands\Traits;
+namespace Willow\Robo\Plugin\Commands;
 
 use Exception;
 use Throwable;
 use Twig\Environment as Twig;
 use Willow\Robo\Plugin\Commands\RoboBase;
 
-trait ForgeModelTrait
+class ModelForge extends ForgeBase
 {
     protected Twig $twig;
+
+    public function __construct(Twig $twig) {
+        $this->twig = $twig;
+    }
 
     /**
      * Forge the Model code given the table name.
      * @param string $table
      */
-    protected function forgeModel(string $table): void
+    public function forgeModel(string $table): void
     {
         try {
             // Render the Model code.
@@ -28,21 +32,12 @@ trait ForgeModelTrait
                 ]
             );
             // Save the Model code file into the Models directory.
-            $modelFile = self::_getContainer()->get('models_path') . ucfirst($table) . '.php';
+            $modelFile = self::CONTROLLERS_PATH . ucfirst($table) . '.php';
             if (file_put_contents($modelFile, $modelCode) === false) {
-                $this->forgeModelError(new Exception('Unable to create: ' . $modelFile), $table);
+                $this->forgeError(new Exception('Unable to create: ' . $modelFile));
             }
         } catch (Throwable $throwable) {
-            $this->forgeModelError($throwable, $table);
+            $this->forgeError($throwable);
         }
-    }
-
-    /**
-     * Called when an exception is encountered.
-     * @param Throwable $throwable
-     * @param string $table
-     */
-    protected function forgeModelError(Throwable $throwable, string $table) {
-        RoboBase::showThrowableAndDie($throwable, ["Model creation error for: $table"]);
     }
 }

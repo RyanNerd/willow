@@ -1,23 +1,26 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Robo\Plugin\Commands\Traits;
+namespace Willow\Robo\Plugin\Commands;
 
 use Throwable;
 use Twig\Environment as Twig;
-use Willow\Robo\Plugin\Commands\RoboBase;
 use Exception;
 
-trait ForgeControllerTrait
+class ControllerForge extends ForgeBase
 {
     protected Twig $twig;
+
+    public function __construct(Twig $twig) {
+        $this->twig = $twig;
+    }
 
     /**
      * Forge the Controller code given the tableName and the route
      * @param string $tableName
      * @param string $route
      */
-    protected function forgeController(string $tableName, string $route)
+    public function forgeController(string $tableName, string $route)
     {
         try {
             // Format the table name as a class
@@ -31,32 +34,23 @@ trait ForgeControllerTrait
                 ]
             );
             // Create the controller directory
-            $controllerPath = self::_getContainer()->get('controllers_path') . $className;
+            $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeControllerError(
-                        new Exception('Unable to create directory: ' . $controllerPath), $tableName
+                    $this->forgeError(
+                        new Exception('Unable to create directory: ' . $controllerPath)
                     );
                 }
             }
             // Save the Controller code file into the Controllers directory.
             $controllerFile = $controllerPath . '/' . $className . 'Controller.php';
             if (file_put_contents($controllerFile, $controllerCode) === false) {
-                $this->forgeControllerError(
-                    new Exception('Unable to create: ' . $controllerFile), $tableName
+                $this->forgeError(
+                    new Exception('Unable to create: ' . $controllerFile)
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeControllerError($e, $tableName);
+            $this->forgeError($e);
         }
-    }
-
-    /**
-     * Called when an exception is encountered.
-     * @param Throwable $throwable
-     * @param string $table
-     */
-    protected function forgeControllerError(Throwable $throwable, string $table) {
-        RoboBase::showThrowableAndDie($throwable, ["Controller creation error for: $table"]);
     }
 }

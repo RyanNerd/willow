@@ -4,22 +4,19 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\TerminalObject\Dynamic\Confirm;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment as Twig;
 use Throwable;
 use Willow\Robo\Plugin\Commands\Traits\{
     EnvSetupTrait,
-    ForgeControllerTrait,
-    ForgeModelTrait,
     RegisterControllersTrait,
     RouteSetupTrait,
     TableSetupTrait,
-
 };
 
 class MakeCommands extends RoboBase
 {
     use EnvSetupTrait;
-    use ForgeControllerTrait;
-    use ForgeModelTrait;
     use RegisterControllersTrait;
     use RouteSetupTrait;
     use TableSetupTrait;
@@ -28,8 +25,7 @@ class MakeCommands extends RoboBase
         'Model',
         'Controller',
         'Actions',
-        'Validators',
-        'Routes'
+        'Validators'
     ];
 
     private const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
@@ -122,16 +118,14 @@ class MakeCommands extends RoboBase
             die('Unable to create .viridian file.');
         }
 
-        /**
-         * TODO: Build out the model, controllers, actions, etc.
-         */
+        $loader = new FilesystemLoader(__DIR__ . '/Templates');
+        $twig = New Twig($loader);
+        $actionsForge = new ActionsForge($twig);
+        $controllerForge = new ControllerForge($twig);
+        $modelForge = new ModelForge($twig);
+        $registerForge = new RegisterForge($twig);
+        $validatorForge = new ValidatorForge($twig);
 
-        $this->twig = self::_getContainer()->get('twig');
-
-        // TODO: Consider moving forgeModel() and forgeController() into classes instead of traits?
-
-        /** @var ActionsForge $actionsForge */
-        $actionsForge = self::_getContainer()->get(ActionsForge::class);
 
         $cli->br();
         $cli->bold()->white()->border('*');
@@ -145,12 +139,12 @@ class MakeCommands extends RoboBase
                 $progress->current($key + 1, $stage);
                 switch ($stage) {
                     case ('Model'): {
-                        $this->forgeModel($table);
+                        $modelForge->forgeModel($table);
                         break;
                     }
 
                     case ('Controller'): {
-                        $this->forgeController($table, $route);
+                        $controllerForge->forgeController($table, $route);
                         break;
                     }
 
@@ -165,38 +159,18 @@ class MakeCommands extends RoboBase
                     }
 
                     case ('Validators'): {
-                        // TODO: Validator stuff
+                        $validatorForge->forgeRestoreValidator($table);
+                        $validatorForge->forgeSearchValidator($table);
+                        $validatorForge->forgeWriteValidator($table);
                         break;
-                    }
-
-                    case ('Routes'): {
-                        // TODO: Route stuff
                     }
                 }
             }
         }
+
+        // Register the controllers
+        $registerForge->forgeRegisterControllers();
     }
-
-
-//$error = $this->forgeWriteValidator($tableName);
-//if ($error) {
-//    $this->error($error);
-//}
-//
-//$error = $this->forgeSearchValidator($tableName);
-//if ($error) {
-//    $this->error($error);
-//}
-//
-//$error = $this->forgeRestoreValidator($tableName);
-//if ($error) {
-//    $this->error($error);
-//}
-//
-//$error = $this->forgeRegisterControllers();
-//if ($error) {
-//    $this->error($error);
-//}
 
 /**
      * Resets the project back to factory defaults

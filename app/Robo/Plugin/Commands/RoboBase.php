@@ -45,20 +45,11 @@ abstract class RoboBase extends Tasks
                         'controllers_path' => self::CONTROLLERS_PATH,
                         'models_path' => self::MODELS_PATH
                     ])
-                    ->addDefinitions( self::CONFIG_PATH . '/_viridian.php')
-                    ->addDefinitions(self::CONFIG_PATH . 'twig.php')
-                    ->addDefinitions(
-                        [
-                            ActionsForge::class => function(ContainerInterface $c) {
-                                return new ActionsForge($c->get('twig'));
-                            }
-                        ]
-                    );
+                    ->addDefinitions( self::CONFIG_PATH . '/_viridian.php');
                 if (file_exists(self::ENV_PATH)) {
                     $builder = $builder
                     ->addDefinitions(self::CONFIG_PATH . '_env.php')
-                    ->addDefinitions(self::CONFIG_PATH . 'db.php')
-                    ->addDefinitions(self::CONFIG_PATH . 'twig.php');
+                    ->addDefinitions(self::CONFIG_PATH . 'db.php');
                 }
                 $container = $builder->build();
                 self::_setContainer($container);
