@@ -191,14 +191,27 @@ class MakeCommands extends RoboBase
         // If viridian has no entries then there's nothing to do.
         if (count($viridian) === 0) {
             $cli->bold()->white('Project appears to be uninitialized. Nothing to do.');
-            /** @var Confirm $input */
-            $input = $cli->lightGray()->confirm('Do you want to force a reset anyway?');
-            if (!$input->confirmed()) {
-                die();
-            }
+            die();
         }
 
-        // TODO: Implement reset command
-        $cli->shout('reset not implemented.');
+        $cli->br();
+        $cli->bold()
+            ->backgroundLightRed()
+            ->white()
+            ->border('*');
+        $cli->bold()->backgroundLightRed()->white('Running reset will allow the make command to be re-run.');
+        $cli->bold()->backgroundLightRed()->white('Running make more than once is a destructive action.');
+        $cli->bold()->backgroundLightRed()->white('Any code in the controllers, models, routes, etc. will be overwritten.');
+        $cli->br();
+        $input = $cli->bold()->lightGray()->input('Are you sure you want to reset?');
+        if ($input->confirmed()) {
+            unlink(self::VIRIDIAN_PATH);
+        }
+        $cli->bold()
+            ->backgroundLightRed()
+            ->white()
+            ->border('*');
+        $cli->br();
+        die();
     }
 }

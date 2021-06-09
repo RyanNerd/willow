@@ -21,7 +21,6 @@ trait EnvSetupTrait
         $cli->br();
         $cli->lightGreen()->border('*', 80);
         $cli->bold()->green('Willow uses a .env file to configure database access.');
-        // TODO: Add url link instead
         $cli->bold()->lightGreen('Run `./willow docs` for more information.');
         $cli->lightGreen()->border('*', 80);
         $cli->br();
