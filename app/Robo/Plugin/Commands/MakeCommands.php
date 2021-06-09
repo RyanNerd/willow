@@ -12,6 +12,7 @@ use Willow\Robo\Plugin\Commands\Traits\{
     RegisterControllersTrait,
     RouteSetupTrait,
     TableSetupTrait,
+
 };
 
 class MakeCommands extends RoboBase
@@ -127,6 +128,11 @@ class MakeCommands extends RoboBase
 
         $this->twig = self::_getContainer()->get('twig');
 
+        // TODO: Consider moving forgeModel() and forgeController() into classes instead of traits?
+
+        /** @var ActionsForge $actionsForge */
+        $actionsForge = self::_getContainer()->get(ActionsForge::class);
+
         $cli->br();
         $cli->bold()->white()->border('*');
         $cli->bold()->white('Building project');
@@ -149,7 +155,7 @@ class MakeCommands extends RoboBase
                     }
 
                     case ('Actions'): {
-                        // TODO: Action stuff
+                        $actionsForge->forgeGetAction($table);
                         break;
                     }
 
@@ -166,11 +172,6 @@ class MakeCommands extends RoboBase
         }
     }
 
-//$error = $this->forgeGetAction($tableName);
-//if ($error) {
-//$this->error($error);
-//}
-//
 //$error = $this->forgePatchAction($tableName);
 //if ($error) {
 //    $this->error($error);

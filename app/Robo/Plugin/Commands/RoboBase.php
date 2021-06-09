@@ -8,6 +8,7 @@ use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Eloquent;
 use League\CLImate\CLImate;
 use League\CLImate\TerminalObject\Dynamic\Confirm;
+use Psr\Container\ContainerInterface;
 use Robo\Tasks;
 use Throwable;
 use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
@@ -45,7 +46,14 @@ abstract class RoboBase extends Tasks
                         'models_path' => self::MODELS_PATH
                     ])
                     ->addDefinitions( self::CONFIG_PATH . '/_viridian.php')
-                    ->addDefinitions(self::CONFIG_PATH . 'twig.php');
+                    ->addDefinitions(self::CONFIG_PATH . 'twig.php')
+                    ->addDefinitions(
+                        [
+                            ActionsForge::class => function(ContainerInterface $c) {
+                                return new ActionsForge($c->get('twig'));
+                            }
+                        ]
+                    );
                 if (file_exists(self::ENV_PATH)) {
                     $builder = $builder
                     ->addDefinitions(self::CONFIG_PATH . '_env.php')
