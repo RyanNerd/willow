@@ -52,12 +52,10 @@ class ActionsForge
 
     /**
      * Convenience function to return the path to the Controllers directory
-     * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @return string
      */
-    protected function getControllersPath() {
-        return RoboBase::_getContainer()->get('controllers_path');
+    protected function getControllersPath(): string {
+        return  __DIR__ . '/../../../Controllers/';
     }
 
     /**
