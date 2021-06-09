@@ -45,7 +45,7 @@ class RegisterForge extends ForgeBase
             $this->forgeError($e);
         }
 
-        $registerControllersPath = __DIR__ . '/../../../../Middleware/RegisterControllers.php';
+        $registerControllersPath = __DIR__. '/../../../Middleware/RegisterControllers.php';
 
         // Save the registerControllersCode overwriting Middleware/RegisterControllers.php
         if (file_put_contents($registerControllersPath, $registerControllersCode) === false) {

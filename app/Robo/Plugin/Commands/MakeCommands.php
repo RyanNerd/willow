@@ -9,7 +9,6 @@ use Twig\Environment as Twig;
 use Throwable;
 use Willow\Robo\Plugin\Commands\Traits\{
     EnvSetupTrait,
-    RegisterControllersTrait,
     RouteSetupTrait,
     TableSetupTrait,
 };
@@ -17,7 +16,6 @@ use Willow\Robo\Plugin\Commands\Traits\{
 class MakeCommands extends RoboBase
 {
     use EnvSetupTrait;
-    use RegisterControllersTrait;
     use RouteSetupTrait;
     use TableSetupTrait;
 
