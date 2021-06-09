@@ -10,8 +10,7 @@ abstract class ActionBase
     protected ModelBase $model;
 
     /**
-     * Set the model
-     * todo: remove this
+     * Set the model (Need to use this for PHP 7.4 since union types aren't supported)
      * @param ModelBase $model
      */
     protected function setModel(ModelBase $model)
@@ -19,6 +18,11 @@ abstract class ActionBase
         $this->model = $model;
     }
 
+    /**
+     * Any fields marked with '*' in their data type are NOT to be a part of the response (e.g. passwordHash)
+     * @param array $data
+     * @param array $modelFields
+     */
     protected function sanitize(array &$data, array $modelFields): void
     {
         foreach ($data as $field => $value) {
