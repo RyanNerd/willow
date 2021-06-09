@@ -11,7 +11,7 @@ abstract class ActionBase
 
     /**
      * Set the model
-     *
+     * todo: remove this
      * @param ModelBase $model
      */
     protected function setModel(ModelBase $model)

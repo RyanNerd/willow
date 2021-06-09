@@ -9,12 +9,16 @@ use Willow\Models\{{ class_name }};
 class {{ class_name }}GetAction extends GetActionBase
 {
     /**
+     * @var {{ class_name|ModelBase }}
+     */
+    protected $model;
+
+    /**
      * Get the model via Dependency Injection and save it as a property.
-     *
      * @param {{ class_name }} $model
      */
     public function __construct({{ class_name }} $model)
     {
-        $this->setModel($model);
+        $this->$model = $model;
     }
 }
