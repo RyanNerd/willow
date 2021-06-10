@@ -6,7 +6,6 @@ namespace Willow\Robo\Plugin\Commands;
 use Exception;
 use Throwable;
 use Twig\Environment as Twig;
-use Willow\Robo\Plugin\Commands\RoboBase;
 
 class ModelForge extends ForgeBase
 {
@@ -20,8 +19,7 @@ class ModelForge extends ForgeBase
      * Forge the Model code given the table name.
      * @param string $table
      */
-    public function forgeModel(string $table): void
-    {
+    final public function forgeModel(string $table): void {
         try {
             // Render the Model code.
             $modelCode = $this->twig->render(

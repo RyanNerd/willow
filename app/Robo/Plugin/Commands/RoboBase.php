@@ -84,7 +84,7 @@ abstract class RoboBase extends Tasks
      * @param Throwable $throwable
      * @param array|null $message
      */
-    public static function showThrowableAndDie(Throwable $throwable, ?array $message = null): void {
+    public static function showThrowableAndDie(Throwable $throwable, ?array $message = null): void { // phpcs:ignore
         $cli = new CLImate();
         $cli->br();
         $cli->bold()->yellow()->border('*');

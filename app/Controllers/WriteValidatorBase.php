@@ -10,8 +10,7 @@ use Willow\Middleware\ResponseBody;
 
 abstract class WriteValidatorBase
 {
-    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
-    {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedRequest = $responseBody->getParsedRequest();
@@ -34,5 +33,6 @@ abstract class WriteValidatorBase
      * @param ResponseBody $responseBody
      * @param array $parsedRequest
      */
-    protected function processValidation(ResponseBody $responseBody, array &$parsedRequest): void {}
+    final protected function processValidation(ResponseBody $responseBody, array &$parsedRequest): void {
+    }
 }

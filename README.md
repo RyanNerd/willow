@@ -7,6 +7,12 @@
 - [ ] Add support for other drivers Postgres and MS SQL in EnvSetupTrait.php
 - [ ] Target PHP version prompt and logic.
 - [ ] Unit tests rewrite?
+- SearchActionBase
+  - [ ] [Additional where clauses such as WhereBetween](https://laravel.com/docs/8.x/queries#where-clauses)
+  - [ ] [Validate ORDER BY](https://laravel.com/docs/8.x/queries#ordering-grouping-limit-and-offset])
+  - [ ] Validate limit
+  - [ ] Validate [joins](https://laravel.com/docs/8.x/queries#joins)
+  - [ ] Val
 
 
 >[![willow](https://raw.githubusercontent.com/RyanNerd/willow/master/willow.png)](https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3) Willow is a type a girl who is beautiful and amazing and is kinda a special person and loved by everyone around her

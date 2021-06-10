@@ -19,8 +19,7 @@ class DeleteActionBase extends ActionBase
      * @param array $args
      * @return ResponseInterface
      */
-    public function __invoke(Request $request, Response $response, array $args): ResponseInterface
-    {
+    public function __invoke(Request $request, Response $response, array $args): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 

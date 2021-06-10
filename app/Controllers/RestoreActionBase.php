@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
 /**
  * Class SearchActionBase
@@ -19,8 +18,7 @@ class RestoreActionBase extends ActionBase
      * @param Response $response
      * @return ResponseInterface
      */
-    public function __invoke(Request $request, Response $response): ResponseInterface
-    {
+    public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 

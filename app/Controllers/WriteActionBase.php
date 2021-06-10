@@ -11,8 +11,7 @@ use Willow\Models\ModelBase;
 
 abstract class WriteActionBase extends ActionBase
 {
-    public function __invoke(Request $request, Response $response): ResponseInterface
-    {
+    public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $body = $responseBody->getParsedRequest();
@@ -83,5 +82,6 @@ abstract class WriteActionBase extends ActionBase
      *
      * @param ModelBase $model
      */
-    protected function beforeSave(ModelBase $model): void {}
+    final protected function beforeSave(ModelBase $model): void {
+    }
 }

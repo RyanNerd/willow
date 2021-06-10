@@ -5,7 +5,7 @@ namespace Willow\Controllers;
 
 use Slim\Interfaces\RouteCollectorProxyInterface;
 
-Interface IController
+interface IController
 {
-    public function register(RouteCollectorProxyInterface $group);
+    public function register(RouteCollectorProxyInterface $group): void;
 }

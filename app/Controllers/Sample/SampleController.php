@@ -8,8 +8,7 @@ use Willow\Controllers\IController;
 
 class SampleController implements IController
 {
-    public function register(RouteCollectorProxyInterface $group): void
-    {
+    final public function register(RouteCollectorProxyInterface $group): void {
         $group->get('/sample/{id}', SampleGetAction::class);
     }
 }

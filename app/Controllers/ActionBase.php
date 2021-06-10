@@ -13,8 +13,7 @@ abstract class ActionBase
      * Set the model (Need to use this for PHP 7.4 since union types aren't supported)
      * @param ModelBase $model
      */
-    protected function setModel(ModelBase $model)
-    {
+    final protected function setModel(ModelBase $model): void {
         $this->model = $model;
     }
 
@@ -23,8 +22,7 @@ abstract class ActionBase
      * @param array $data
      * @param array $modelFields
      */
-    protected function sanitize(array &$data, array $modelFields): void
-    {
+    final protected function sanitize(array &$data, array $modelFields): void {
         foreach ($data as $field => $value) {
             if (array_key_exists($field, $modelFields)) {
                 $dataType = $modelFields[$field];

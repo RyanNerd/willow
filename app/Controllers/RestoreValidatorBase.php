@@ -15,8 +15,7 @@ class RestoreValidatorBase
      * @param RequestHandler $handler
      * @return ResponseInterface
      */
-    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
-    {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedBody = $responseBody->getParsedRequest();
