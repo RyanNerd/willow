@@ -179,7 +179,7 @@ class MakeCommands extends RoboBase
         $cli->br();
     }
 
-/**
+    /**
      * Resets the project back to factory defaults
      */
     public function reset() {
@@ -216,17 +216,18 @@ class MakeCommands extends RoboBase
     }
 
     /**
-     * Remove Sample controller, routes, and other artifacts from the project
+     * Remove Sample controller, routes, & other artifacts from the project
      */
     public function eject () {
         $cli = $this->cli;
+        $cli->br();
         $cli->bold()->backgroundLightRed()->white()->border('*');
         $cli->bold()->backgroundLightRed()->white('eject is a destructive operation. It removes the Sample controller, route, etc.');
         $cli->bold()->backgroundLightRed()->white('It will also overwrite the RegisterControllers.php file.');
-        $cli->br();
-        $input = $cli->bold()->lightGray()->input('Are you sure you want to proceed?');
         $cli->bold()->backgroundLightRed()->white()->border('*');
-
+        $cli->br();
+        /** @var Confirm $input */
+        $input = $cli->bold()->lightGray()->confirm('Are you sure you want to proceed?');
         if (!$input->confirmed()) {
             die();
         }

@@ -15,7 +15,7 @@ class WillowCommands extends RoboBase
     }
 
     /**
-     * Launch the built-in PHP web server and launch the Sample in a web browser
+     * Launch the built-in PHP server and load the Sample in a web browser
      */
     public function sample(): void {
         $this->taskServer(8088)
