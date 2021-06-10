@@ -9,6 +9,8 @@
         <!-- Allow beginning brace on the same line for functions -->
         <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine" />
     </rule>
+
+    <!-- Enforce functions have starting braces on the same line -->
     <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie">
         <properties>
             <property name="checkFunctions" value="true" />
@@ -79,5 +81,9 @@
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
 
     <!-- No superfluous whitespace. -->
-    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
 </ruleset>
