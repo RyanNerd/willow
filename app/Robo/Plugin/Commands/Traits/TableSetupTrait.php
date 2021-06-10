@@ -5,14 +5,15 @@ namespace Willow\Robo\Plugin\Commands\Traits;
 
 use League\CLImate\CLImate;
 
-trait TableSetupTrait {
+trait TableSetupTrait
+{
     protected CLImate $cli;
 
     /**
      * @param array $rows
      * @return array<string>
      */
-    protected function tableInit(array $tableList): array {
+    final private function tableInit(array $tableList): array {
         $cli = $this->cli;
 
         // Display the list of tables in a grid
@@ -23,10 +24,9 @@ trait TableSetupTrait {
         // Get just the table names as an array
         $tables = array_column($tableList, 'table_name');
 
-        // TODO: Handle Window's choices for this. See: https://climate.thephpleague.com/terminal-objects/input/
+        // Get the tables the user wants to add to the project
         do {
             $cli->br();
-
             do {
                 $input = $cli
                     ->lightGreen()
