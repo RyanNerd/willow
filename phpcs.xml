@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset name="willow-rulset">
-    <file>app</file>
-    <file>public</file>
-    <file>config</file>
+    <file>./app</file>
+    <file>./public</file>
+    <file>./config</file>
+
+    <!-- Explicitly ignore tests -->
+    <exclude-pattern>*/tests/*</exclude-pattern>
+
+    <!-- Explicitly ignore the vendor directory -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
 
     <!-- All of PSR-2: http://www.php-fig.org/psr/psr-2/ -->
     <rule ref="PSR2">

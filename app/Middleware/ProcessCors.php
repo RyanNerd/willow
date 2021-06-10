@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
-
 class ProcessCors
 {
     /**
@@ -16,9 +15,9 @@ class ProcessCors
      * @param Request $request
      * @param RequestHandler $handler
      * @return ResponseInterface
+     * phpcs:disable
      */
-    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
-    {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         $response = $handler->handle($request);
         return $response
             ->withHeader('Access-Control-Allow-Origin', '*')

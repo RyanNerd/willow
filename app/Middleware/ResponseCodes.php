@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Willow\Middleware;
 
-abstract class ResponseCodes {
+abstract class ResponseCodes
+{
     /**
      * HTTP Response code constants
      * @final

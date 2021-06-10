@@ -24,8 +24,7 @@ class Willow
      *
      * @param ContainerInterface $container Dependency Injection container object
      */
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(ContainerInterface $container) {
         // Set the container in the app
         AppFactory::setContainer($container);
 

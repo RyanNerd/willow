@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
 class SearchValidatorBase extends ActionBase
 {
@@ -37,8 +36,7 @@ class SearchValidatorBase extends ActionBase
      * @param RequestHandler $handler
      * @return ResponseInterface
      */
-    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
-    {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedBody = $responseBody->getParsedRequest();
@@ -59,7 +57,7 @@ class SearchValidatorBase extends ActionBase
         }
 
         $where = $parsedBody['where'] ?? [];
-        foreach ($where as $item) { // FIXME: PHP Notice:  Undefined index: where in /var/www/rxchart-app/app/Controllers/SearchValidatorBase.php on line 46
+        foreach ($where as $item) {
             $column = $item['column'] ?? '';
 
             // Check the white listed columns for the model.

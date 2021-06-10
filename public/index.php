@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+// phpcs:ignoreFile -- redefining STDERR only happens if it's not defined in the first place
 use Willow\Willow;
 use DI\ContainerBuilder;
 use League\CLImate\CLImate;
@@ -29,10 +30,6 @@ try {
     }
 } catch (Throwable $throwable) {
     // See: https://github.com/krakjoe/pthreads/issues/806
-    if (!defined('STDOUT')) {
-        define('STDOUT', fopen('php://stdout', 'wb'));
-    }
-
     if (!defined('STDERR')) {
         define('STDERR', fopen('php://stderr', 'wb'));
     }

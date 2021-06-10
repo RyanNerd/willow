@@ -10,8 +10,7 @@ class RegisterControllers
 {
     protected SampleController $sampleController;
 
-    public function __construct(SampleController $sampleController)
-    {
+    public function __construct(SampleController $sampleController) {
         $this->sampleController = $sampleController;
     }
 
@@ -20,8 +19,7 @@ class RegisterControllers
     * @param RouteCollectorProxy $collectorProxy
     * @return self
     */
-    public function __invoke(RouteCollectorProxy $collectorProxy): self
-    {
+    public function __invoke(RouteCollectorProxy $collectorProxy): self {
         $this->sampleController->register($collectorProxy);
         return $this;
     }
