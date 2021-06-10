@@ -35,9 +35,9 @@ Willow works best as a framework in this situation:
     - MSSQL (untested)
 * [Composer](https://getcomposer.org) (For Willow to work best this must be installed globally)
 
-| Notes: |
-| Willow will work on Windows only if running in the Windows Subsystem for Linux (WSL) |
-| Previous versions of Willow are no longer supported (sorry I don't have the bandwidth to support these) |
+|Notes:|
+|Willow will work on Windows only if running in the Windows Subsystem for Linux (WSL)|
+|Previous versions of Willow are no longer supported (sorry I don't have the bandwidth to support these)|
 
 ### 💾 Installation
 To install Willow run:
