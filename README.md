@@ -16,28 +16,28 @@ TODO:
 
 For developers, Willow is an _opinionated_ PHP framework used to quickly create CRUD based RESTful APIs.
 
-💒Willow is a marriage between [Slim](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database)
+Willow is a marriage 💒 between [Slim](http://slimframework.com) and [Eloquent ORM](https://github.com/illuminate/database)
 with [Robo](http://robo.li/) as your [wedding planner](https://en.wikipedia.org/wiki/Wedding_planner).
 
 For instructions and getting started see the [Willow Framework User Guide](https://www.notion.so/Willow-Framework-Users-Guide-bf56317580884ccd95ed8d3889f83c72)
 
-Go [here](https://github.com/RyanNerd/willow/tree/1.x) for the previous version of Willow (1.1)
-
 Willow works best as a framework in this situation:
 * You need to quickly spin up a [RESTful](https://restfulapi.net/) [datacentric](https://www.codecademy.com/articles/what-is-crud) API
-* You have defined your database with entities (tables/views) already in place
-* You are just starting your project (for the backend API handler) and need to _hit the ground running_
+* You have defined your database with your tables already in place
+* You are just starting your project and need to _hit the ground running_
 
 ### 📃 Requirements
 * PHP 7.4+ (Willow 3.0+)
-* ~~PHP 7.4+ (Willow 2.0+)~~ _No longer supported_
-* ~~PHP 7.2+ (Willow 1.1+)~~ _No longer supported_
 * Databases:
     - MySQL 5.6+
     - SQLite3
     - Postgres (untested)
     - MSSQL (untested)
 * [Composer](https://getcomposer.org) (For Willow to work best this must be installed globally)
+
+| Notes: |
+| Willow will work on Windows only if running in the Windows Subsystem for Linux (WSL) |
+| Previous versions of Willow are no longer supported (sorry I don't have the bandwidth to support these) |
 
 ### 💾 Installation
 To install Willow run:
@@ -49,15 +49,10 @@ cd [your-project-name]
 
 This will create a skeleton Willow project. Willow tries to symlink to [robo](https://robo.li/) You can then use Willow (robo) commands to build your app.
 
-### Sample
+### Demo
 
-```
-// Linux / Mac users do this:
+```bash
 ./willow sample
-
-// Windows users execute this:
-php -S localhost:8088 -t public
-// Then in your favorite web browser go to: localhost:8088/v1/sample/hello-world
 ```
 
 The result in your browser should look something like this:

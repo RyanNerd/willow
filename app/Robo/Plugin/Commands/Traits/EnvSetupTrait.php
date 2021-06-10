@@ -26,33 +26,20 @@ trait EnvSetupTrait
         $cli->br();
         $cli->bold()->white('Enter values for the .env file');
 
-        // If we are using Windows we need to prompt the user differently since it doesn't support multiple choice.
-        if (Script::isWindows()) {
-            $drivers = ['mysql', 'pgsql', 'sqlsrv', 'sqlite'];
-            do {
-                $cli->out('Driver must be one of: ' . implode(', ', $drivers));
+        do {
+            $drivers = [
+                'MySQL/MariaDB' => 'mysql',
+                'Postgres' => 'pgsql',
+                'MS SQL' => 'sqlsrv',
+                'SQLite' => 'sqlite'
+            ];
 
-                /** @var Confirm $input */
-                $input = $cli->input('DB_DRIVER (default: mysql)');
-                $input->defaultTo('mysql');
-                $dbDriver = $input->prompt();
-            } while (!in_array($dbDriver, $drivers));
-        } else {
-            do {
-                $drivers = [
-                    'MySQL/MariaDB' => 'mysql',
-                    'Postgres' => 'pgsql',
-                    'MS SQL' => 'sqlsrv',
-                    'SQLite' => 'sqlite'
-                ];
-
-                $driverChoices = array_keys($drivers);
-                /** @var Confirm $input */
-                $input = $cli->radio('Select database driver', $driverChoices);
-                $driverSelection = $input->prompt();
-                $dbDriver = $drivers[$driverSelection];
-            } while (strlen($dbDriver) === 0);
-        }
+            $driverChoices = array_keys($drivers);
+            /** @var Confirm $input */
+            $input = $cli->radio('Select database driver', $driverChoices);
+            $driverSelection = $input->prompt();
+            $dbDriver = $drivers[$driverSelection];
+        } while (strlen($dbDriver) === 0);
 
         // TODO: Add support for other drivers Postgres and MS SQL
         do {
