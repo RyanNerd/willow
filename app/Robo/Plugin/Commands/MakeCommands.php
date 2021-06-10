@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use League\CLImate\TerminalObject\Dynamic\Confirm;
+use League\CLImate\TerminalObject\Dynamic\Input;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment as Twig;
 use Throwable;
@@ -76,7 +76,7 @@ class MakeCommands extends RoboBase
             $cli->bold()->yellow()->border();
             $cli->bold()->white("Database configuration already exists in .env");
             $cli->br();
-            /** @var Confirm $input */
+            /** @var Input $input */
             $input = $cli->bold()->lightGray()->confirm('Do you want to OVERWRITE it?');
             $cli->bold()->yellow()->border();
             if ($input->confirmed()) {
@@ -203,7 +203,8 @@ class MakeCommands extends RoboBase
         $cli->bold()->backgroundLightRed()->white('Running make more than once is a destructive action.');
         $cli->bold()->backgroundLightRed()->white('Any code in the controllers, models, routes, etc. will be overwritten.');
         $cli->br();
-        $input = $cli->bold()->lightGray()->input('Are you sure you want to reset?');
+        /** @var Input $input */
+        $input = $cli->bold()->lightGray()->confirm('Are you sure you want to reset?');
         if ($input->confirmed()) {
             unlink(self::VIRIDIAN_PATH);
         }
@@ -226,7 +227,7 @@ class MakeCommands extends RoboBase
         $cli->bold()->backgroundLightRed()->white('It will also overwrite the RegisterControllers.php file.');
         $cli->bold()->backgroundLightRed()->white()->border('*');
         $cli->br();
-        /** @var Confirm $input */
+        /** @var Input $input */
         $input = $cli->bold()->lightGray()->confirm('Are you sure you want to proceed?');
         if (!$input->confirmed()) {
             die();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands\Traits;
 
 use League\CLImate\CLImate;
+use League\CLImate\TerminalObject\Dynamic\Input;
 
 trait TableSetupTrait
 {
@@ -43,6 +44,7 @@ trait TableSetupTrait
             $cli->bold()->lightBlue()->table($displayTables);
             $cli->br();
 
+            /** @var Input $input */
             $input = $cli->lightGray()->confirm('This look okay?');
         } while (!$input->confirmed());
 

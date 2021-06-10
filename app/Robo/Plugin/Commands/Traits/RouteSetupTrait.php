@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands\Traits;
 
 use League\CLImate\CLImate;
+use League\CLImate\TerminalObject\Dynamic\Input;
 
 trait RouteSetupTrait
 {
@@ -50,6 +51,7 @@ trait RouteSetupTrait
             $cli->bold()->blue()->table($displayRouteList);
             $cli->br();
 
+            /** @var Input $input */
             $input = $cli->lightGray()->confirm('This look okay?');
         } while (!$input->confirmed());
         return $selectedRoutes;

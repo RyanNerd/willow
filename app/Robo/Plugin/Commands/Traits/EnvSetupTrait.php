@@ -80,7 +80,7 @@ trait EnvSetupTrait
             } while (strlen($dbName) === 0);
 
             /** @var Input $input */
-            $input = $cli->input('DISPLAY_ERROR_DETAILS');
+            $input = $cli->confirm('DISPLAY_ERROR_DETAILS');
             $displayErrorDetails = $input->confirmed() ? 'true' : 'false';
 
             $envText = <<<env
