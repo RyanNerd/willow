@@ -39,6 +39,9 @@
         }
     },
     "scripts": {
-        "post-create-project-cmd":["Willow\\Robo\\Script::postCreateProjectCmd"]
+        "post-create-project-cmd":["Willow\\Robo\\Script::postCreateProjectCmd"],
+        "cs": ["phpcs --standard=phpcs.xml ."],
+        "sniff": ["phpcs --standard=phpcs.xml ."],
+        "pwd": ["pwd"]
     }
 }

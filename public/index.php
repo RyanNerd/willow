@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Willow\Main\App;
+use Willow\Willow;
 use DI\ContainerBuilder;
 use League\CLImate\CLImate;
 
@@ -44,15 +44,8 @@ try {
     $cli->to('error')->red('Line: ')->white((string)$throwable->getLine());
     $cli->to('error')->red('Trace: ')->white($throwable->getTraceAsString());
     $cli->to('error')->br(2);
-
-    $cli->to('out')->br(2);
-    $cli->to('out')->red('Message')->white($throwable->getMessage());
-    $cli->to('out')->red('File: ')->white($throwable->getFile());
-    $cli->to('out')->red('Line: ')->white((string)$throwable->getLine());
-    $cli->to('out')->red('Trace: ')->white($throwable->getTraceAsString());
-    $cli->to('out')->br(2);
     exit();
 }
 
 // Launch the app
-new App($container);
+new Willow($container);

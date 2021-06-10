@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="willow-rulset">
+    <file>app</file>
+    <file>public</file>
+    <file>config</file>
+
+    <!-- All of PSR-2: http://www.php-fig.org/psr/psr-2/ -->
+    <rule ref="PSR2"/>
+
+    <!-- No empty bodies for control structures, etc. -->
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+
+    <!-- No unconditional if statements (if (true)) -->
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+
+    <!-- No useless overrides that just call the parent method. -->
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+
+    <!-- No TODOs or FIXMEs in comments. -->
+    <rule ref="Generic.Commenting.Todo"/>
+    <rule ref="Generic.Commenting.Fixme"/>
+
+    <!-- Control structures must have braces. -->
+    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+
+    <!-- Deprecated php functions not allowed. -->
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+
+    <!-- No use of alias functions like sizeof() -->
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+
+    <!-- No unnecessary string concatenation. -->
+    <rule ref="Generic.Strings.UnnecessaryStringConcat"/>
+
+    <!-- No use of the @ operator to suppress errors. -->
+    <rule ref="Generic.PHP.NoSilencedErrors">
+        <properties>
+            <property name="error" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- No # comments -->
+    <rule ref="PEAR.Commenting.InlineComment"/>
+
+    <!-- Proper spacing around operators -->
+    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+
+    <!-- No commented out code. -->
+    <rule ref="Squiz.PHP.CommentedOutCode"/>
+
+    <!-- Warns when eval() is used. -->
+    <rule ref="Squiz.PHP.Eval"/>
+
+    <!-- No global keyword. -->
+    <rule ref="Squiz.PHP.GlobalKeyword"/>
+
+    <!-- Warns about code that can never execute. -->
+    <rule ref="Squiz.PHP.NonExecutableCode"/>
+
+    <!-- No use of $this in static methods. -->
+    <rule ref="Squiz.Scope.StaticThisUsage"/>
+
+    <!-- No whitespace inside cast statement. -->
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
+
+    <!-- Language constructs only have one space between them. -->
+    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+
+    <!-- No whitespace before semicolon -->
+    <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+
+    <!-- No superfluous whitespace. -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+</ruleset>

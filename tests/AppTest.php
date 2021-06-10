@@ -2,15 +2,16 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Willow\Main\App;
+use Willow\Willow;
 
 final class AppTest extends TestCase
 {
     public function testApp(): void
     {
-        $app = new App(false);
+        /** @var \DI\Container $mockContainer */
+        $mockContainer = $this->createMock(DI\Container::class);
+        $app = new Willow($mockContainer);
 
-        $this->assertInstanceOf(App::class, $app);
+        $this->assertInstanceOf(Willow::class, $app);
     }
 }
-

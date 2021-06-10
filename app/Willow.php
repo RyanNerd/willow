@@ -1,10 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Main;
+namespace Willow;
 
-use DI\ContainerBuilder;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Request;
@@ -14,11 +12,18 @@ use Willow\Middleware\RegisterControllers;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\ValidateRequest;
 
-class App
+/**
+ * Willow framework class
+ *
+ * @category Go_Away
+ */
+class Willow
 {
-    protected static Capsule $capsule;
-    protected static ContainerInterface $container;
-
+    /**
+     * Willow constructor.
+     *
+     * @param ContainerInterface $container Dependency Injection container object
+     */
     public function __construct(ContainerInterface $container)
     {
         // Set the container in the app
@@ -31,7 +36,9 @@ class App
         $app->addRoutingMiddleware();
         $app->addBodyParsingMiddleware();
 
-        $displayErrors = $container->get('DEMO') || $container->get('ENV')['DISPLAY_ERROR_DETAILS'] === 'true';
+        $displayErrors
+            = $container->get('DEMO') ||
+              $container->get('ENV')['DISPLAY_ERROR_DETAILS'] === 'true';
         $app->addErrorMiddleware(
             $displayErrors,
             true,
@@ -42,7 +49,7 @@ class App
         $v1 = $app->group('/v1', RegisterControllers::class);
 
         // Add middleware that validates the overall request.
-        // TODO: Edit ValidateRequest to handle ALL request validations (e.g. API key validations)
+        // !!! You should edit ValidateRequest to handle things such as API key validations !!!
         $v1->add(ValidateRequest::class);
 
         // Add ResponseBody as a Request attribute
@@ -50,9 +57,12 @@ class App
 
         // Preflight OPTION pattern allows for all routes
         // See: https://www.slimframework.com/docs/v4/cookbook/enable-cors.html
-        $app->options('/{routes:.+}', function (Request $request, Response $response) {
-            return $response;
-        });
+        $app->options(
+            '/{routes:.+}',
+            function (Request $request, Response $response) {
+                return $response;
+            }
+        );
 
         // Add CORS processing middleware
         $app->add(ProcessCors::class);
