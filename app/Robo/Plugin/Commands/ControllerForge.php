@@ -20,8 +20,7 @@ class ControllerForge extends ForgeBase
      * @param string $tableName
      * @param string $route
      */
-    public function forgeController(string $tableName, string $route)
-    {
+    final public function forgeController(string $tableName, string $route): void {
         try {
             // Format the table name as a class
             $className = ucfirst($tableName);

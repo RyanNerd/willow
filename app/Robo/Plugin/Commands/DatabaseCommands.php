@@ -13,8 +13,7 @@ class DatabaseCommands extends RoboBase
     /**
      * Display all the tables in a grid
      */
-    final public function tables(): void
-    {
+    final public function tables(): void {
         $cli = $this->cli;
         $this->checkEnv();
 
@@ -45,7 +44,7 @@ class DatabaseCommands extends RoboBase
         $details = DatabaseUtilities::getTableAttributes($eloquent, $tableName);
 
         $displayDetails = [];
-        foreach ($details as $column=>$type) {
+        foreach ($details as $column => $type) {
             $displayDetails[] = ['Column' => $column, 'Type' => $type];
         }
         $cli->br();

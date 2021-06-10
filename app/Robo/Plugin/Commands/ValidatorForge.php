@@ -19,8 +19,7 @@ class ValidatorForge extends ForgeBase
      * Forge the RestoreValidator code given the table name.
      * @param string $table
      */
-    final public function forgeRestoreValidator(string $table): void
-    {
+    final public function forgeRestoreValidator(string $table): void {
         try {
             // Format the RestoreValidator class name
             $className = ucfirst($table);
@@ -53,8 +52,7 @@ class ValidatorForge extends ForgeBase
      * Forge the SearchValidator code given the entity table name.
      * @param string $table
      */
-    final public function forgeSearchValidator(string $table): void
-    {
+    final public function forgeSearchValidator(string $table): void {
 
         try {
             // Format the SearchValidator class name
@@ -88,8 +86,7 @@ class ValidatorForge extends ForgeBase
      * Forge the WriteValidator code given the entity table name.
      * @param string $table
      */
-    final public function forgeWriteValidator(string $table): void
-    {
+    final public function forgeWriteValidator(string $table): void {
         try {
             // Format the WriteValidator class name
             $className = ucfirst($table);
