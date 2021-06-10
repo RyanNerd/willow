@@ -30,8 +30,7 @@ abstract class RoboBase extends Tasks
 
     use EnvSetupTrait;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->cli = new CLImate();
 
         try {
@@ -76,8 +75,7 @@ abstract class RoboBase extends Tasks
      * Return the DI/Container
      * @return Container
      */
-    public static function getWillowContainer(): Container
-    {
+    public static function getWillowContainer(): Container {
         return static::$willowContainer;
     }
 
@@ -114,8 +112,7 @@ abstract class RoboBase extends Tasks
      * @param Throwable $t
      * @return array[]
      */
-    public static function parseThrowableToArray(Throwable $t): array
-    {
+    public static function parseThrowableToArray(Throwable $t): array {
         $traceString = $t->getTraceAsString();
         $tracer = explode("\n", $traceString);
         $contents = [

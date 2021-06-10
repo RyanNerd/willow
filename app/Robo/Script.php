@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Willow\Robo;
 
 use League\CLImate\CLImate;
+use Composer\Script\Event;
+use Composer\Util\Platform;
 
 /**
  * Composer script
@@ -12,17 +14,17 @@ class Script
 {
     /**
      * Composer hook that fires when composer create-project has finished.
+     * @param Event $event
      */
-    public static function postCreateProjectCmd($event): void
-    {
+    public static function postCreateProjectCmd(Event $event): void {
         // Get a CLI object
         $cli = new CLImate();
         $cli->br();
 
         // Is the user running windows?
-        if (self::isWindows()) {
+        if (Platform::isWindows()) {
             // Is the user running under WSL? If not then display warning message and die.
-            if (!self::isWSL()) {
+            if (!Platform::isWindowsSubsystemForLinux()) {
                 $cli->br();
                 $cli
                     ->bold()
@@ -96,8 +98,7 @@ class Script
      * Show Willow fancy Banner
      * @param CLImate $cli
      */
-    public static function fancyBanner(CLImate $cli): void
-    {
+    public static function fancyBanner(CLImate $cli): void {
         // Display Willow's fancy message
         $cli->forceAnsiOn();
         $cli->green()->border('*', 55);
@@ -110,32 +111,5 @@ class Script
         $cli->bold()->white()->inline('Thanks for installing ');
         $cli->bold()->lightGreen()->inline('Willow');
         $cli->bold()->white('!');
-    }
-
-    /**
-     * Return true if we are running on Windows in the Linux Subsystem (WSL)
-     * @see https://stackoverflow.com/q/38086185/4323201
-     * @return bool
-     */
-    public static function isWSL(): bool
-    {
-        if (false === ($procFileVersion = file_get_contents('/proc/version'))) {
-            if (false === ($procFileVersion = file_get_contents('/proc/sys/kernel/osrelease'))) {
-                return false;
-            }
-        }
-        if (str_contains($procFileVersion, 'WSL') || str_contains($procFileVersion, 'Microsoft')) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Returns true if the current O/S is any flavor of Windows
-     *
-     * @return bool
-     */
-    public static function isWindows(): bool {
-        return stripos(PHP_OS, 'WIN') === 0;
     }
 }

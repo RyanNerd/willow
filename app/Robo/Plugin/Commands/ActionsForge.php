@@ -19,16 +19,14 @@ class ActionsForge extends ForgeBase
      * Forge the DeleteAction code given the table name.
      * @param string $table
      */
-    public function forgeDeleteAction(string $table): void
-    {
+    final public function forgeDeleteAction(string $table): void {
         try {
             // Format the DeleteAction class name
             $className = ucfirst($table);
             // Render the DeleteAction code.
             $deleteActionCode = $this->twig->render('DeleteAction.php.twig', [
                     'class_name' => $className
-                ]
-            );
+                ]);
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
@@ -36,7 +34,11 @@ class ActionsForge extends ForgeBase
                 }
             }
             // Save the deleteAction code file into the Controllers/ directory.
-            if (file_put_contents($controllerPath . '/' . $className . 'DeleteAction.php', $deleteActionCode) === false) {
+            if (file_put_contents(
+                $controllerPath . '/' . $className . 'DeleteAction.php',
+                $deleteActionCode
+            ) === false
+            ) {
                 $this->forgeError(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'DeleteAction.php')
                 );
@@ -50,7 +52,7 @@ class ActionsForge extends ForgeBase
      * Forge the GetAction code given the table name.
      * @param string $table
      */
-    public function forgeGetAction(string $table) {
+    final public function forgeGetAction(string $table): void {
         try {
             // Format the GetAction class name
             $className = ucfirst($table);
@@ -61,7 +63,7 @@ class ActionsForge extends ForgeBase
                     'class_name' => $className
                 ]
             );
-            $controllerPath = SELF::CONTROLLERS_PATH . $className;
+            $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
                     $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
@@ -82,7 +84,7 @@ class ActionsForge extends ForgeBase
      * Forge the PatchAction code given the table name.
      * @param string $table
      */
-    public function forgePatchAction(string $table): void {
+    final public function forgePatchAction(string $table): void {
         // Render the PatchAction code.
         try {
             // Format the PatchAction class name
@@ -90,8 +92,7 @@ class ActionsForge extends ForgeBase
             // Render the PatchAction code
             $patchActionCode = $this->twig->render('PatchAction.php.twig', [
                     'class_name' => $className
-                ]
-            );
+                ]);
             $controllerPath = self::CONTROLLERS_PATH . $className;
 
             if (is_dir($controllerPath) === false) {
@@ -114,13 +115,14 @@ class ActionsForge extends ForgeBase
      * Forge the PostAction code given the table name.
      * @param string $table
      */
-    public function forgePostAction(string $table): void
-    {
+    final public function forgePostAction(string $table): void {
         try {
             // Format the PostAction class name
             $className = ucfirst($table);
             // Render the PostAction code
-            $postActionCode = $this->twig->render('PostAction.php.twig', [
+            $postActionCode = $this->twig->render(
+                'PostAction.php.twig',
+                [
                     'class_name' => $className
                 ]
             );
@@ -145,16 +147,14 @@ class ActionsForge extends ForgeBase
      * Forge the SearchAction code given the table name.
      * @param string $table
      */
-    public function forgeSearchAction(string $table): void
-    {
+    final public function forgeSearchAction(string $table): void {
         try {
             // Format the SearchAction class name
             $className = ucfirst($table);
             // Render the SearchAction code
             $searchActionCode = $this->twig->render('SearchAction.php.twig', [
                     'class_name' => $className
-                ]
-            );
+                ]);
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
@@ -162,7 +162,8 @@ class ActionsForge extends ForgeBase
                 }
             }
             // Save the searchAction code file into the Controllers/ directory.
-            if (file_put_contents($controllerPath . '/' . $className . 'SearchAction.php', $searchActionCode) === false) {
+            if (file_put_contents($controllerPath . '/' . $className . 'SearchAction.php', $searchActionCode) === false
+            ) {
                 $this->forgeError(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'SearchAction.php')
                 );
@@ -172,22 +173,18 @@ class ActionsForge extends ForgeBase
         }
     }
 
-
-
     /**
      * Forge the RestoreAction code given the entity table name.
      * @param string $table
      */
-    public function forgeRestoreAction(string $table): void
-    {
+    final public function forgeRestoreAction(string $table): void {
         try {
             // Format the RestoreAction class name
             $className = ucfirst($table);
             // Render the RestoreAction code.
             $restoreActionCode = $this->twig->render('RestoreAction.php.twig', [
                     'class_name' => $className
-                ]
-            );
+                ]);
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
@@ -196,7 +193,11 @@ class ActionsForge extends ForgeBase
             }
 
             // Save the restoreAction code file into the Controllers/ directory.
-            if (file_put_contents($controllerPath . '/' . $className . 'RestoreAction.php', $restoreActionCode) === false) {
+            if (file_put_contents(
+                $controllerPath . '/' . $className . 'RestoreAction.php',
+                $restoreActionCode
+            ) === false
+            ) {
                 $this->forgeError(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'RestoreAction.php')
                 );
