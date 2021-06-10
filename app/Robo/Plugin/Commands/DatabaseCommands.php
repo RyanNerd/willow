@@ -19,7 +19,7 @@ class DatabaseCommands extends RoboBase
         $this->checkEnv();
 
         // Get the tables from the database
-        $tableList = DatabaseUtilities::getTableList($this->getEloquent()->getConnection());
+        $tableList = DatabaseUtilities::getTableList(RoboBase::getEloquent()->getConnection());
 
         // Display the list of tables in a grid
         $cli->br();
@@ -34,7 +34,7 @@ class DatabaseCommands extends RoboBase
         $cli = $this->cli;
         $this->checkEnv();
 
-        $eloquent = $this->getEloquent();
+        $eloquent = RoboBase::getEloquent();
         $tableList = DatabaseUtilities::getTableList($eloquent->getConnection());
 
         $tableChoices = array_column($tableList, 'table_name');
@@ -57,7 +57,7 @@ class DatabaseCommands extends RoboBase
      * Check if .env exists and has been validated. If not prompt the user to set up the configuration now.
      */
     private function checkEnv(): void {
-        if (!self::_getContainer()->has('ENV')) {
+        if (!self::getWillowContainer()->has('ENV')) {
             $this->cli->bold()->lightGray("Database configuration hasn't been set up yet.");
             /** @var Input $input */
             $input = $this->cli->lightGray()->confirm('Do you want to set up the database configuration now?');

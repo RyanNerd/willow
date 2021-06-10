@@ -8,7 +8,6 @@ use DI\ContainerBuilder;
 use Illuminate\Database\Capsule\Manager as Eloquent;
 use League\CLImate\CLImate;
 use League\CLImate\TerminalObject\Dynamic\Confirm;
-use Psr\Container\ContainerInterface;
 use Robo\Tasks;
 use Throwable;
 use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
@@ -20,7 +19,7 @@ abstract class RoboBase extends Tasks
     /**
      * @var Container | null
      */
-    protected  static $_container;
+    protected static $willowContainer;
 
     protected const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
     protected const CONFIG_PATH = __DIR__ . '/../../../../config/';
@@ -37,7 +36,7 @@ abstract class RoboBase extends Tasks
 
         try {
             // Set up DI
-            if (!static::$_container instanceof Container) {
+            if (!static::$willowContainer instanceof Container) {
                 $builder = new ContainerBuilder();
                 $builder = $builder
                     ->addDefinitions([
@@ -45,14 +44,14 @@ abstract class RoboBase extends Tasks
                         'controllers_path' => self::CONTROLLERS_PATH,
                         'models_path' => self::MODELS_PATH
                     ])
-                    ->addDefinitions( self::CONFIG_PATH . '/_viridian.php');
+                    ->addDefinitions(self::CONFIG_PATH . '/_viridian.php');
                 if (file_exists(self::ENV_PATH)) {
                     $builder = $builder
                     ->addDefinitions(self::CONFIG_PATH . '_env.php')
                     ->addDefinitions(self::CONFIG_PATH . 'db.php');
                 }
                 $container = $builder->build();
-                self::_setContainer($container);
+                self::setWillowContainer($container);
             }
         } catch (Throwable $throwable) {
             $cli = $this->cli;
@@ -69,37 +68,17 @@ abstract class RoboBase extends Tasks
      * Set the DI/Container
      * @param Container $container
      */
-    public static function _setContainer(Container $container) {
-        static::$_container = $container;
+    public static function setWillowContainer(Container $container): void {
+        static::$willowContainer = $container;
     }
 
     /**
      * Return the DI/Container
      * @return Container
      */
-    public static function _getContainer(): Container
+    public static function getWillowContainer(): Container
     {
-        return static::$_container;
-    }
-
-    /**
-     * Climate helper function
-     * @param string $warningMessage
-     */
-    protected function warning(string $warningMessage): void
-    {
-        $this->cli->bold()->yellow()->inline('[WARNING] ');
-        $this->cli->yellow($warningMessage);
-    }
-
-    /**
-     * Climate helper function
-     * @param string $errorMessage
-     */
-    protected function error(string $errorMessage): void
-    {
-        $this->cli->bold()->red()->inline('[ERROR] ');
-        $this->cli->lightRed($errorMessage);
+        return static::$willowContainer;
     }
 
     /**
@@ -107,7 +86,7 @@ abstract class RoboBase extends Tasks
      * @param Throwable $throwable
      * @param array|null $message
      */
-    public static function showThrowableAndDie(Throwable $throwable, ?array $message = null) {
+    public static function showThrowableAndDie(Throwable $throwable, ?array $message = null): void {
         $cli = new CLImate();
         $cli->br();
         $cli->bold()->yellow()->border('*');
@@ -144,7 +123,7 @@ abstract class RoboBase extends Tasks
             'File' => $t->getFile(),
             'Line' => (string)$t->getLine()
         ];
-        foreach ($tracer as $key=>$value) {
+        foreach ($tracer as $key => $value) {
             $contents['Trace' . $key] = $value;
         }
         return $contents;
@@ -156,7 +135,7 @@ abstract class RoboBase extends Tasks
      * Validate and set the 'ENV' entry in the container.
      * @throws {self::ENV_ERROR}
      */
-    protected function setEnvFromUser() {
+    final protected function setEnvFromUser(): void {
         try {
             // Get the .env contents from the user
             $envText = $this->envInit();
@@ -165,13 +144,12 @@ abstract class RoboBase extends Tasks
                 // Validate the .env file.
                 $env = include __DIR__ .  '/../../../../config/_env.php';
                 // Dynamically add ENV to the container
-                self::_getContainer()->set('ENV', $env['ENV']);
+                self::getWillowContainer()->set('ENV', $env['ENV']);
             } else {
                 die(self::ENV_ERROR);
             }
         } catch (Throwable $throwable) {
-            $this->outputThrowableMessage($throwable);
-            die(self::ENV_ERROR);
+            self::showThrowableAndDie($throwable, [self::ENV_ERROR]);
         }
     }
 
@@ -180,18 +158,21 @@ abstract class RoboBase extends Tasks
      * If not dynamically add Eloquent to the container;
      * @return Eloquent
      */
-    protected function getEloquent(): Eloquent {
+    public static function getEloquent(): Eloquent {
         try {
             // Has Eloquent been defined?
-            if (!self::_getContainer()->has('Eloquent')) {
+            if (!self::getWillowContainer()->has('Eloquent')) {
                 // Dynamically add Eloquent to the container
                 $db = include __DIR__ . '/../../../../config/db.php';
-                self::_getContainer()->set('Eloquent', $db['Eloquent']);
+                self::getWillowContainer()->set('Eloquent', $db['Eloquent']);
             }
-            return self::_getContainer()->get('Eloquent');
+            return self::getWillowContainer()->get('Eloquent');
         } catch (Throwable $throwable) {
-            $this->outputThrowableMessage($throwable);
-            die('Unable to connect to database. Check that the .env configuration is correct');
+            self::showThrowableAndDie(
+                $throwable,
+                ['Unable to connect to database. Check that the .env configuration is correct']
+            );
         }
+        die();
     }
 }

@@ -19,8 +19,7 @@ class RegisterForge extends ForgeBase
     /**
      * Forge the RegisterControllers code
      */
-    final public function forgeRegisterControllers(): void
-    {
+    final public function forgeRegisterControllers(): void {
         $controllerPath = self::CONTROLLERS_PATH . '*';
         $dirList = glob($controllerPath, GLOB_ONLYDIR);
         // Error getting directory list or no directories.
@@ -41,15 +40,14 @@ class RegisterForge extends ForgeBase
                     'class_list' => $classList
                 ]
             );
+            $registerControllersPath = __DIR__. '/../../../Middleware/RegisterControllers.php';
+
+            // Save the registerControllersCode overwriting Middleware/RegisterControllers.php
+            if (file_put_contents($registerControllersPath, $registerControllersCode) === false) {
+                $this->forgeError(new Exception('RegisterControllers - Unable to create: ' . $registerControllersPath));
+            }
         } catch (Throwable $e) {
             $this->forgeError($e);
-        }
-
-        $registerControllersPath = __DIR__. '/../../../Middleware/RegisterControllers.php';
-
-        // Save the registerControllersCode overwriting Middleware/RegisterControllers.php
-        if (file_put_contents($registerControllersPath, $registerControllersCode) === false) {
-            $this->forgeError(new Exception('RegisterControllers - Unable to create: ' . $registerControllersPath));
         }
     }
 }

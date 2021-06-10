@@ -31,9 +31,9 @@ class MakeCommands extends RoboBase
     /**
      * Builds the app using database tables
      */
-    public function make() {
+    final public function make(): void {
         $cli = $this->cli;
-        $container = self::_getContainer();
+        $container = self::getWillowContainer();
 
         // If viridian has any entries it means that make has already been run.
         // In this case the user must run the reset command before running make again.
@@ -87,7 +87,7 @@ class MakeCommands extends RoboBase
         }
 
         // Get Eloquent ORM manager
-        $eloquent = $this->getEloquent();
+        $eloquent = RoboBase::getEloquent();
 
         // Get the database connection object
         $conn = $eloquent->getConnection();
@@ -184,7 +184,7 @@ class MakeCommands extends RoboBase
      */
     public function reset() {
         $cli = $this->cli;
-        $container = self::_getContainer();
+        $container = self::getWillowContainer();
 
         $viridian = $container->get('viridian');
 
