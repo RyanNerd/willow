@@ -17,12 +17,13 @@
         "sort-packages": true
     },
     "require": {
-        "doctrine/dbal": "^3.1.0",
+        "php": "^7.4 | ^8.0",
         "ext-json": "*",
         "ext-pdo": "*",
+        "carbon-cli/carbon-cli": "^1.2",
+        "doctrine/dbal": "^3.1.0",
         "illuminate/database": "^8.42.1",
         "league/climate": "^3.7.0",
-        "php": "^7.4 | ^8.0",
         "php-di/php-di": "^6.3.3",
         "slim/psr7": "^1.4.0",
         "slim/slim": "^4.8.0",
@@ -41,6 +42,7 @@
     },
     "scripts": {
         "post-create-project-cmd":["Willow\\Robo\\Script::postCreateProjectCmd"],
+        "willow": ["robo "],
         "cs": ["phpcs --standard=phpcs.xml ."],
         "sniff": ["phpcs --standard=phpcs.xml "],
         "fix": ["phpcbf --standard=phpcs.xml "]

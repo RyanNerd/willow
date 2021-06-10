@@ -19,10 +19,10 @@ class RegisterForge extends ForgeBase
     /**
      * Forge the RegisterControllers code
      */
-    public function forgeRegisterControllers(): void
+    final public function forgeRegisterControllers(): void
     {
         $controllerPath = self::CONTROLLERS_PATH . '*';
-        $dirList = glob($controllerPath,GLOB_ONLYDIR);
+        $dirList = glob($controllerPath, GLOB_ONLYDIR);
         // Error getting directory list or no directories.
         if ($dirList === false || count($dirList) === 0) {
             $this->forgeError(new Exception('No controllers found at ' . $controllerPath . PHP_EOL . 'Nothing to do.'));
