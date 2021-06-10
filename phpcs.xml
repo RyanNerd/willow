@@ -5,7 +5,10 @@
     <file>config</file>
 
     <!-- All of PSR-2: http://www.php-fig.org/psr/psr-2/ -->
-    <rule ref="PSR2"/>
+    <rule ref="PSR2">
+        <!-- Allow beginning brace on the same line for functions -->
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine" />
+    </rule>
 
     <!-- No empty bodies for control structures, etc. -->
     <rule ref="Generic.CodeAnalysis.EmptyStatement"/>

@@ -24,10 +24,22 @@ class Script
             // Is the user running under WSL? If not then display warning message and die.
             if (!self::isWSL()) {
                 $cli->br();
-                $cli->bold()->lightYellow('Warning: The Willow command line will only work in Linux, Mac or Windows running WSL');
-                $cli->bold()->lightYellow('It appears you are running Windows without WSL. Please install WSL on Windows,');
+                $cli
+                    ->bold()
+                    ->lightYellow(
+                        'Warning: The Willow command line will only work in Linux, Mac or Windows running WSL'
+                    );
+                $cli
+                    ->bold()
+                    ->lightYellow(
+                        'It appears you are running Windows without WSL. Please install WSL on Windows,'
+                    );
                 $cli->bold()->lightYellow('then re-run `composer create-project ...`');
-                $cli->bold()->lightYellow('See https://itsfoss.com/run-linux-commands-in-windows for methods of installing WSL');
+                $cli
+                    ->bold()
+                    ->lightYellow(
+                        'See https://itsfoss.com/run-linux-commands-in-windows for methods of installing WSL'
+                    );
                 $cli->br();
                 die();
             }
@@ -105,7 +117,8 @@ class Script
      * @see https://stackoverflow.com/q/38086185/4323201
      * @return bool
      */
-    public static function isWSL(): bool {
+    public static function isWSL(): bool
+    {
         if (false === ($procFileVersion = file_get_contents('/proc/version'))) {
             if (false === ($procFileVersion = file_get_contents('/proc/sys/kernel/osrelease'))) {
                 return false;
