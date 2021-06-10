@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands\Traits;
 
 use League\CLImate\CLImate;
-use League\CLImate\TerminalObject\Dynamic\Confirm;
-use Willow\Robo\Script;
+use League\CLImate\TerminalObject\Dynamic\Input;
 
 trait EnvSetupTrait
 {
@@ -15,8 +14,7 @@ trait EnvSetupTrait
      * Initialization of the .env file
      * @return string
      */
-    protected function envInit(): string
-    {
+    private function envInit(): string {
         $cli = $this->cli;
         $cli->br();
         $cli->lightGreen()->border('*', 80);
@@ -35,13 +33,12 @@ trait EnvSetupTrait
             ];
 
             $driverChoices = array_keys($drivers);
-            /** @var Confirm $input */
+            /** @var Input $input */
             $input = $cli->radio('Select database driver', $driverChoices);
             $driverSelection = $input->prompt();
             $dbDriver = $drivers[$driverSelection];
         } while (strlen($dbDriver) === 0);
 
-        // TODO: Add support for other drivers Postgres and MS SQL
         do {
             if ($dbDriver === 'sqlite') {
                 $dbHost = '';
@@ -50,33 +47,39 @@ trait EnvSetupTrait
                 $dbPassword = '';
             } else {
                 do {
+                    /** @var Input $input */
                     $input = $cli->input('DB_HOST (default: 127.0.0.1)');
                     $input->defaultTo('127.0.0.1');
                     $dbHost = $input->prompt();
-                } while(strlen($dbHost) === 0);
+                } while (strlen($dbHost) === 0);
 
                 do {
+                    /** @var Input $input */
                     $input = $cli->input('DB_PORT (default: 3306)');
                     $input->defaultTo('3306');
                     $dbPort = $input->prompt();
-                } while(strlen($dbPort) === 0 || (int)$dbPort <= 0 || (int)$dbPort > 65535);
+                } while (strlen($dbPort) === 0 || (int)$dbPort <= 0 || (int)$dbPort > 65535);
 
                 do {
+                    /** @var Input $input */
                     $input = $cli->input('DB_USER');
                     $dbUser = $input->prompt();
-                } while(strlen($dbUser) === 0);
+                } while (strlen($dbUser) === 0);
 
                 do {
+                    /** @var Input $input */
                     $input = $cli->password('DB_PASSWORD');
                     $dbPassword = $input->prompt();
-                } while(strlen($dbPassword) === 0);
+                } while (strlen($dbPassword) === 0);
             }
 
             do {
+                /** @var Input $input */
                 $input = $cli->input('DB_NAME');
                 $dbName = $input->prompt();
-            } while(strlen($dbName) === 0);
+            } while (strlen($dbName) === 0);
 
+            /** @var Input $input */
             $input = $cli->input('DISPLAY_ERROR_DETAILS');
             $displayErrorDetails = $input->confirmed() ? 'true' : 'false';
 
@@ -111,10 +114,10 @@ env;
             $cli->white($obfuscatedEnv);
             $cli->bold()->white()->border();
             $cli->br();
-            /** @var Confirm $input */
-            $input = $cli->lightGray()->confirm('This look okay?');
+            /** @var Input $input */
+            $input = $cli->bold()->lightGray()->confirm('This look okay?');
         } while (!$input->confirmed());
 
         return $envText;
-   }
+    }
 }

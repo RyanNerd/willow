@@ -31,7 +31,8 @@
     },
     "require-dev": {
         "consolidation/robo": "^3.0.3",
-        "phpunit/phpunit": "^8.5.15"
+        "phpunit/phpunit": "^8.5.15",
+        "squizlabs/php_codesniffer": "3.*"
     },
     "autoload": {
         "psr-4": {
@@ -41,7 +42,7 @@
     "scripts": {
         "post-create-project-cmd":["Willow\\Robo\\Script::postCreateProjectCmd"],
         "cs": ["phpcs --standard=phpcs.xml ."],
-        "sniff": ["phpcs --standard=phpcs.xml ."],
-        "pwd": ["pwd"]
+        "sniff": ["phpcs --standard=phpcs.xml "],
+        "fix": ["phpcbf --standard=phpcs.xml "]
     }
 }

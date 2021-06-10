@@ -13,7 +13,7 @@ trait TableSetupTrait
      * @param array $rows
      * @return array<string>
      */
-    final private function tableInit(array $tableList): array {
+    private function tableInit(array $tableList): array {
         $cli = $this->cli;
 
         // Display the list of tables in a grid

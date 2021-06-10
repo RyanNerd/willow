@@ -13,12 +13,13 @@ class DatabaseUtilities
      * @param Connection $conn
      * @return array
      */
-    static function getTableList(Connection $conn): array {
+    public static function getTableList(Connection $conn): array {
         $driver = $conn->getDriverName();
 
         switch ($driver) {
             case 'sqlite':
-                $select = <<<sql
+                $select = /** @lang SQLite */
+                    <<<sql
                     SELECT name as table_name
                     FROM sqlite_master
                     ORDER BY table_name

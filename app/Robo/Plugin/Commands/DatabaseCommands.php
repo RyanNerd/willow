@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use League\CLImate\TerminalObject\Dynamic\Confirm;
+use League\CLImate\TerminalObject\Dynamic\Input;
 use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
 
-class databaseCommands extends RoboBase
+class DatabaseCommands extends RoboBase
 {
     use EnvSetupTrait;
 
     /**
      * Display all the tables in a grid
      */
-    public function tables()
+    final public function tables(): void
     {
         $cli = $this->cli;
         $this->checkEnv();
@@ -28,9 +28,9 @@ class databaseCommands extends RoboBase
     }
 
     /**
-     * Display column details for a table
+     * Display column details for a selected table
      */
-    public function details() {
+    final public function details(): void {
         $cli = $this->cli;
         $this->checkEnv();
 
@@ -38,7 +38,7 @@ class databaseCommands extends RoboBase
         $tableList = DatabaseUtilities::getTableList($eloquent->getConnection());
 
         $tableChoices = array_column($tableList, 'table_name');
-        /** @var Confirm $input */
+        /** @var Input $input */
         $input = $cli->radio('Select a table', $tableChoices);
         $tableName = $input->prompt();
 
@@ -56,9 +56,10 @@ class databaseCommands extends RoboBase
     /**
      * Check if .env exists and has been validated. If not prompt the user to set up the configuration now.
      */
-    protected function checkEnv() {
+    private function checkEnv(): void {
         if (!self::_getContainer()->has('ENV')) {
             $this->cli->bold()->lightGray("Database configuration hasn't been set up yet.");
+            /** @var Input $input */
             $input = $this->cli->lightGray()->confirm('Do you want to set up the database configuration now?');
             if ($input->confirmed()) {
                 $this->setEnvFromUser();

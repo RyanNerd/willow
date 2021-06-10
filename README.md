@@ -4,6 +4,7 @@
 
 ### TODO:
 - [ ] Code formatting
+- [ ] Add support for other drivers Postgres and MS SQL in EnvSetupTrait.php
 - [ ] Target PHP version prompt and logic.
 - [ ] Unit tests rewrite?
 

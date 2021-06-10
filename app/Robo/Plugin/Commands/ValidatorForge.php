@@ -19,7 +19,7 @@ class ValidatorForge extends ForgeBase
      * Forge the RestoreValidator code given the table name.
      * @param string $table
      */
-    public function forgeRestoreValidator(string $table): void
+    final public function forgeRestoreValidator(string $table): void
     {
         try {
             // Format the RestoreValidator class name
@@ -27,8 +27,7 @@ class ValidatorForge extends ForgeBase
             // Render the RestoreValidator code.
             $restoreActionCode = $this->twig->render('RestoreValidator.php.twig', [
                     'class_name' => $className
-                ]
-            );
+                ]);
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
@@ -36,7 +35,11 @@ class ValidatorForge extends ForgeBase
                 }
             }
             // Save the restoreAction code file into the Controllers/ directory.
-            if (file_put_contents($controllerPath . '/' . $className . 'RestoreValidator.php', $restoreActionCode) === false) {
+            if (file_put_contents(
+                $controllerPath . '/' . $className . 'RestoreValidator.php',
+                $restoreActionCode
+            ) === false
+            ) {
                 $this->forgeError(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'RestoreValidator.php')
                 );
@@ -50,7 +53,7 @@ class ValidatorForge extends ForgeBase
      * Forge the SearchValidator code given the entity table name.
      * @param string $table
      */
-    public function forgeSearchValidator(string $table): void
+    final public function forgeSearchValidator(string $table): void
     {
 
         try {
@@ -59,8 +62,7 @@ class ValidatorForge extends ForgeBase
             // Render the SearchValidator code.
             $searchValidatorCode = $this->twig->render('SearchValidator.php.twig', [
                     'class_name' => $className
-                ]
-            );
+                ]);
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
@@ -68,7 +70,11 @@ class ValidatorForge extends ForgeBase
                 }
             }
             // Save the WriteValidator code file into the Controllers/ directory.
-            if (file_put_contents($controllerPath . '/' . $className . 'SearchValidator.php', $searchValidatorCode) === false) {
+            if (file_put_contents(
+                $controllerPath . '/' . $className . 'SearchValidator.php',
+                $searchValidatorCode
+            ) === false
+            ) {
                 $this->forgeError(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'SearchValidator.php')
                 );
@@ -82,7 +88,7 @@ class ValidatorForge extends ForgeBase
      * Forge the WriteValidator code given the entity table name.
      * @param string $table
      */
-    public function forgeWriteValidator(string $table): void
+    final public function forgeWriteValidator(string $table): void
     {
         try {
             // Format the WriteValidator class name
@@ -90,8 +96,7 @@ class ValidatorForge extends ForgeBase
             // Render the WriteValidator code.
             $writeValidatorCode = $this->twig->render('WriteValidator.php.twig', [
                     'class_name' => $className
-                ]
-            );
+                ]);
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
@@ -99,7 +104,11 @@ class ValidatorForge extends ForgeBase
                 }
             }
             // Save the WriteValidator code file into the Controllers/ directory.
-            if (file_put_contents($controllerPath . '/' . $className . 'WriteValidator.php', $writeValidatorCode) === false) {
+            if (file_put_contents(
+                $controllerPath . '/' . $className . 'WriteValidator.php',
+                $writeValidatorCode
+            ) === false
+            ) {
                 $this->forgeError(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'WriteValidator.php')
                 );
