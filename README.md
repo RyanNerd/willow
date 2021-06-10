@@ -2,11 +2,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### TODOs
-TODO:
-- Code formatting
-- Target PHP version prompt and logic.
-- Unit tests rewrite?
+### TODO:
+[ ] Code formatting
+[ ] Target PHP version prompt and logic.
+[ ] Unit tests rewrite?
 
 
 >[![willow](https://raw.githubusercontent.com/RyanNerd/willow/master/willow.png)](https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3) Willow is a type a girl who is beautiful and amazing and is kinda a special person and loved by everyone around her
