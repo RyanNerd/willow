@@ -10,11 +10,12 @@ require __DIR__ . '/../vendor/autoload.php';
 
 try {
     // Establish DI
+    // Note: Add these definitions if you are in a production environment
+    //       ->enableCompilation(__DIR__ . '/tmp/cache')
+    //       ->writeProxiesToFile(true, __DIR__ . '/tmp/cache')
     $builder = new ContainerBuilder();
     if (file_exists(__DIR__ . '/../.env')) {
         $builder
-            ->enableCompilation(__DIR__ . '/tmp/cache')
-            ->writeProxiesToFile(true, __DIR__ . '/tmp/cache')
             ->addDefinitions(['DEMO' => false])
             ->addDefinitions(__DIR__ . '/../config/_env.php')
             ->addDefinitions(__DIR__ . '/../config/db.php');

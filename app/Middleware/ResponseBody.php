@@ -4,54 +4,58 @@ declare(strict_types=1);
 namespace Willow\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
+use Slim\Psr7\Factory\StreamFactory;
+use Slim\Psr7\Headers;
 use Slim\Psr7\Response;
 
 class ResponseBody extends ResponseCodes
 {
     /**
      * Associative array of the request
-     *
-     * @var array
      */
-    protected $parsedRequest = null;
+    private static ?array $parsedRequest = null;
 
     /**
      * @var bool
      */
-    protected $isAuthenticated = false;
+    protected bool $isAuthenticated = false;
 
     /**
      * @var bool
      */
-    protected $isAdmin = false;
+    protected bool $isAdmin = false;
 
     /**
      * The response data
      *
      * @var array | null
      */
-    protected $data = null;
+    protected ?array $data = null;
 
     /**
      * HTTP status code
      *
      * @var int
      */
-    protected $status = 200;
+    protected int $status = 200;
 
     /**
      * Response informational string
      *
      * @var string
      */
-    protected $message = '';
+    protected string $message = '';
 
     /**
      * Missing parameters
      *
      * @var array
      */
-    protected $missing = [];
+    protected array $missing = [];
+
+    public function __construct(array $parsedRequest) {
+        self::setParsedRequest($parsedRequest);
+    }
 
     /**
      * Generate the response
@@ -67,23 +71,24 @@ class ResponseBody extends ResponseCodes
             'timestamp' => time()
         ];
 
-        $response = new Response();
-        $response->getBody()->write(json_encode($payload));
-        return $response
-            ->withStatus($this->status)
-            ->withHeader('content-type', 'application\json');
+        return (
+            new Response(
+                $this->status,
+                new Headers(['content-type' => 'application\json']),
+                (new StreamFactory())->createStream(json_encode($payload))
+            )
+        );
     }
 
     /**
      * Set the parsed request array
      *
      * @param array $parsedRequest
-     * @return ResponseBody
      */
-    final public function setParsedRequest(array $parsedRequest): self {
-        $clone = clone $this;
-        $clone->parsedRequest = $parsedRequest;
-        return $clone;
+    final public static function setParsedRequest(array $parsedRequest): void {
+        if (self::$parsedRequest === null) {
+            self::$parsedRequest = $parsedRequest;
+        }
     }
 
     /**
@@ -92,7 +97,7 @@ class ResponseBody extends ResponseCodes
      * @return array
      */
     final public function getParsedRequest(): array {
-        return $this->parsedRequest;
+        return self::$parsedRequest;
     }
 
     /**

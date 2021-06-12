@@ -11,20 +11,6 @@ use Slim\Routing\RouteContext;
 class ResponseBodyFactory
 {
     /**
-     * @var ResponseBody
-     */
-    protected $responseBody;
-
-    /**
-     * ResponseBodyFactory constructor.
-     *
-     * @param ResponseBody $responseBody
-     */
-    public function __construct(ResponseBody $responseBody) {
-        $this->responseBody = $responseBody;
-    }
-
-    /**
      * Inject a new ResponseBody object into the middleware setting the deserialized request array.
      *
      * @param Request $request
@@ -32,19 +18,30 @@ class ResponseBodyFactory
      * @return ResponseInterface
      */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
-        $routeContext = RouteContext::fromRequest($request);
-        $route = $routeContext->getRoute();
-        $id = $route->getArgument('id');
+        // Add 'response_body' attribute to the $request
+        // The 'response_body' is a ResponseBody object
+        // with parseBody, queryParams, and id argument as a deserialized array
+        return $handler
+            ->handle(
+                $request
+                ->withAttribute(
+                    'response_body',
+                    self::create(
+                        array_merge(
+                            ['id' => RouteContext::fromRequest($request)->getRoute()->getArgument('id')],
+                            $request->getQueryParams(),
+                            $request->getParsedBody() ?? []
+                        )
+                    )
+                )
+            );
+    }
 
-        // Get the body and query parameters as a deserialized array
-        $parsedBody = $request->getParsedBody() ?? [];
-        $queryParameters = $request->getQueryParams();
-
-        $this->responseBody =
-            $this->
-            responseBody->
-            setParsedRequest(array_merge(['id' => $id], $queryParameters, $parsedBody));
-        $request = $request->withAttribute('response_body', $this->responseBody);
-        return $handler->handle($request);
+    /**
+     * @param array $parsedRequest
+     * @return ResponseBody
+     */
+    public static function create(array $parsedRequest): ResponseBody {
+        return new ResponseBody($parsedRequest);
     }
 }

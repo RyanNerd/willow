@@ -14,11 +14,14 @@ use Willow\Middleware\ValidateRequest;
 
 /**
  * Willow framework class
- *
- * @category Go_Away
  */
 class Willow
 {
+    /**
+     * @var ContainerInterface|null
+     */
+    protected static ?ContainerInterface $container;
+
     /**
      * Willow constructor.
      *
@@ -28,8 +31,10 @@ class Willow
         // Set the container in the app
         AppFactory::setContainer($container);
 
-        // Get an instance of Slim\App
-        $app = AppFactory::create();
+        self::$container = $container;
+
+        // Get an instance of Slim\App and add our default middleware
+        $app = AppFactory::createFromContainer($container);
 
         // Add all the needed middleware
         $app->addRoutingMiddleware();
@@ -68,5 +73,9 @@ class Willow
 
         // Execute the app
         $app->run();
+    }
+
+    final public static function getContainer(): ContainerInterface {
+        return self::$container;
     }
 }

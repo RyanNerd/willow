@@ -15,11 +15,11 @@ class ProcessCors
      * @param Request $request
      * @param RequestHandler $handler
      * @return ResponseInterface
-     * phpcs:disable
+     * phpcs:disable -- allow really long Access-Control-Allow-Headers header string
      */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
-        $response = $handler->handle($request);
-        return $response
+        return $handler
+            ->handle($request)
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Credentials', 'true')
             ->withHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers')
