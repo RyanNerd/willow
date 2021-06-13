@@ -4,15 +4,8 @@
 
 ### TODO:
 - [x] Code formatting
-- [ ] Add support for other drivers Postgres and MS SQL in EnvSetupTrait.php
-- [ ] Target PHP version prompt and logic.
-- [ ] Unit tests rewrite?
-- SearchActionBase
-  - [ ] [Additional where clauses such as WhereBetween](https://laravel.com/docs/8.x/queries#where-clauses)
-  - [ ] [Validate ORDER BY](https://laravel.com/docs/8.x/queries#ordering-grouping-limit-and-offset])
-  - [ ] Validate limit
-  - [ ] Validate [joins](https://laravel.com/docs/8.x/queries#joins)
-  - [ ] FIXME: PHP Notice:  Undefined index: where in app/Controllers/SearchValidatorBase.php on line 46
+- [x] Add support for other drivers Postgres and MS SQL in EnvSetupTrait.php
+- [ ] Unit tests rewrite
 
 >[![willow](https://raw.githubusercontent.com/RyanNerd/willow/master/willow.png)](https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3) Willow is a type a girl who is beautiful and amazing and is kinda a special person and loved by everyone around her
 >most willows can be your best of friends she's up for anything and she's loves anything fun you throw at her...

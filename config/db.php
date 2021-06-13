@@ -12,6 +12,8 @@ return [
 
         $eloquent = new Manager();
         $env = $c->get('ENV');
+
+        // @see https://github.com/illuminate/database/blob/master/README.md
         $eloquent->addConnection([
             'driver'    => $env['DB_DRIVER'],
             'host'      => $env['DB_HOST'],

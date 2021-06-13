@@ -2,7 +2,9 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use Willow\Middleware\RegisterControllers;
 use Willow\Willow;
+use Slim\Routing\RouteCollectorProxy;
 
 final class AppTest extends TestCase
 {
@@ -10,8 +12,15 @@ final class AppTest extends TestCase
     {
         /** @var \DI\Container $mockContainer */
         $mockContainer = $this->createMock(DI\Container::class);
-        $app = new Willow($mockContainer);
+//        $mockSampleController = $this->createMock(\Willow\Controllers\Sample\SampleController::class);
+        $mockRegisterControllers = $this->getMockBuilder(RouteCollectorProxy::class)->disableOriginalConstructor()->getMock();
+        $mockWillow = $this->getMockBuilder(Willow::class)->setConstructorArgs([$mockContainer])->addMethods(['group'])->getMock();
+        $mockWillow->expects($this->once())->method('group')->with('/v1', RegisterControllers::class);
+        $mockWillow->run();
 
-        $this->assertInstanceOf(Willow::class, $app);
+//      $mockRegisterControllers = $this->createMock(RegisterControllers::class);
+//      group('/v1', RegisterControllers::class);
+
+
     }
 }

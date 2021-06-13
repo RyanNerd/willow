@@ -14,21 +14,25 @@
         "issues": "https://github.com/RyanNerd/willow/issues"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "optimize-autoloader": true
     },
     "require": {
         "php": "^7.4 | ^8.0",
         "ext-json": "*",
         "ext-pdo": "*",
-        "carbon-cli/carbon-cli": "^1.2",
+        "carbon-cli/carbon-cli": "^1.2.1",
         "doctrine/dbal": "^3.1.0",
-        "illuminate/database": "^8.42.1",
+        "illuminate/database": "^8.46.0",
         "league/climate": "^3.7.0",
-        "php-di/php-di": "^6.3.3",
+        "php-di/php-di": "^6.3.4",
         "slim/psr7": "^1.4.0",
         "slim/slim": "^4.8.0",
         "twig/twig": "^3.3.2",
-        "vlucas/phpdotenv": "^v5.3.0"
+        "vlucas/phpdotenv": "^v5.3.0",
+        "psr/container": "^1.1.1",
+        "psr/http-message": "^1.0.1",
+        "psr/http-server-handler": "^1.0.1"
     },
     "require-dev": {
         "composer/composer": "2.1.3",

@@ -34,7 +34,7 @@ class WillowCommands extends RoboBase
         Script::fancyBanner($this->cli);
     }
 
-    /*
+    /**
      * Execute the unit tests
      */
     public function test(): void {

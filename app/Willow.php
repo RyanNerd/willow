@@ -42,7 +42,7 @@ class Willow
 
         $displayErrors
             = $container->get('DEMO') ||
-              $container->get('ENV')['DISPLAY_ERROR_DETAILS'] === 'true';
+              ($container->has('ENV') && $container->get('ENV')['DISPLAY_ERROR_DETAILS'] === 'true');
         $app->addErrorMiddleware(
             $displayErrors,
             true,
@@ -70,9 +70,10 @@ class Willow
 
         // Add CORS processing middleware
         $app->add(ProcessCors::class);
+    }
 
-        // Execute the app
-        $app->run();
+    final public function run(): void {
+        $this->run();
     }
 
     final public static function getContainer(): ContainerInterface {

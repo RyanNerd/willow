@@ -46,4 +46,4 @@ try {
 }
 
 // Launch the app
-new Willow($container);
+(new Willow($container))->run();
