@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Willow;
 
 use Psr\Container\ContainerInterface;
+use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -18,9 +19,9 @@ use Willow\Middleware\ValidateRequest;
 class Willow
 {
     /**
-     * @var ContainerInterface|null
+     * @var App
      */
-    protected static ?ContainerInterface $container;
+    private App $app;
 
     /**
      * Willow constructor.
@@ -30,8 +31,6 @@ class Willow
     public function __construct(ContainerInterface $container) {
         // Set the container in the app
         AppFactory::setContainer($container);
-
-        self::$container = $container;
 
         // Get an instance of Slim\App and add our default middleware
         $app = AppFactory::createFromContainer($container);
@@ -49,15 +48,8 @@ class Willow
             true
         );
 
-        // Register the routes via the controllers
-        $v1 = $app->group('/v1', RegisterControllers::class);
-
-        // Add middleware that validates the overall request.
-        // !!! You should edit ValidateRequest to handle things such as API key validations !!!
-        $v1->add(ValidateRequest::class);
-
-        // Add ResponseBody as a Request attribute
-        $v1->add(ResponseBodyFactory::class);
+        // Add CORS processing middleware
+        $app->add(ProcessCors::class);
 
         // Preflight OPTION pattern allows for all routes
         // See: https://www.slimframework.com/docs/v4/cookbook/enable-cors.html
@@ -68,15 +60,24 @@ class Willow
             }
         );
 
-        // Add CORS processing middleware
-        $app->add(ProcessCors::class);
+        // Register the routes via the controllers
+        $v1 = $app->group('/v1', RegisterControllers::class);
+
+        // Add middleware that validates the overall request.
+        // !!! You should edit ValidateRequest to handle things such as API key validations !!!
+        $v1->add(ValidateRequest::class);
+
+        // Add ResponseBody as a Request attribute
+        $v1->add(ResponseBodyFactory::class);
+
+        // Save state
+        $this->app = $app;
     }
 
+    /**
+     * App is launched from here to allow unit testing.
+     */
     final public function run(): void {
-        $this->run();
-    }
-
-    final public static function getContainer(): ContainerInterface {
-        return self::$container;
+        $this->app->run();
     }
 }
