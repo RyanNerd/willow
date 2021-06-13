@@ -33,6 +33,6 @@ abstract class WriteValidatorBase
      * @param ResponseBody $responseBody
      * @param array $parsedRequest
      */
-    final protected function processValidation(ResponseBody $responseBody, array &$parsedRequest): void {
+    protected function processValidation(ResponseBody $responseBody, array &$parsedRequest): void {
     }
 }
