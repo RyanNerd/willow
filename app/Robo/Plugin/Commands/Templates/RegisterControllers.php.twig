@@ -11,7 +11,7 @@ use Willow\Controllers\{{ class_name }}\{{ class_name }}Controller;
 class RegisterControllers
 {
 {% for class_name in class_list %}
-    protected {{ class_name }}Controller ${{ class_name|lower }}Controller;
+    private {{ class_name }}Controller ${{ class_name|lower }}Controller;
 {%  endfor %}
 
     public function __construct(
