@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Willow;
 
 use Psr\Container\ContainerInterface;
-use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
