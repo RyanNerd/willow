@@ -21,12 +21,12 @@ abstract class RoboBase extends Tasks
      */
     protected static $willowContainer;
 
-    protected const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
-    protected const CONFIG_PATH = __DIR__ . '/../../../../config/';
-    protected const ENV_PATH = __DIR__ . '/../../../../.env';
-    protected const TEMPLATE_PATH = __DIR__ . '/Templates';
-    protected const MODELS_PATH = __DIR__ . '/../../../Robo/../Models/';
-    protected const CONTROLLERS_PATH = __DIR__ . '/../../../Robo/../Controllers/';
+    private const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
+    private const CONFIG_PATH = __DIR__ . '/../../../../config/';
+    private const ENV_PATH = __DIR__ . '/../../../../.env';
+    private const TEMPLATE_PATH = __DIR__ . '/Templates';
+    private const MODELS_PATH = __DIR__ . '/../../../Robo/../Models/';
+    private const CONTROLLERS_PATH = __DIR__ . '/../../../Robo/../Controllers/';
 
     use EnvSetupTrait;
 
