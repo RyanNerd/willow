@@ -29,7 +29,7 @@ class {{ class_name }}WriteValidator extends WriteValidatorBase
             // If the request is missing this field so register it as optional
             $responseBody->registerParam('optional', $field, $dataType);
             } else {
-                // If Datatype is proceeded with an * it means the field is protected and can not be changed (e.g. password_hash)
+                // If Datatype is proceeded with an * then the field is protected and can not be changed (e.g. password_hash)
                 if ($dataType[1] === '*') {
                     $responseBody->registerParam('invalid', $field, null);
                 }
