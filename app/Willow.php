@@ -19,13 +19,7 @@ use Willow\Middleware\ValidateRequest;
 class Willow
 {
     /**
-     * @var App
-     */
-    private App $app;
-
-    /**
      * Willow constructor.
-     *
      * @param ContainerInterface $container Dependency Injection container object
      */
     public function __construct(ContainerInterface $container) {
@@ -70,14 +64,6 @@ class Willow
         // Add ResponseBody as a Request attribute
         $v1->add(ResponseBodyFactory::class);
 
-        // Save state
-        $this->app = $app;
-    }
-
-    /**
-     * App is launched from here to allow unit testing.
-     */
-    final public function run(): void {
-        $this->app->run();
+        $app->run();
     }
 }
