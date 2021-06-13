@@ -222,46 +222,4 @@ class MakeCommands extends RoboBase
             RoboBase::showThrowableAndDie($e);
         }
     }
-
-    /**
-     * Remove Sample controller, routes, & other artifacts from the project
-     */
-    final public function eject(): void {
-        $cli = $this->cli;
-        $cli->br();
-        $cli
-            ->bold()
-            ->backgroundLightRed()
-            ->white()
-            ->border('*');
-        $cli
-            ->bold()
-            ->backgroundLightRed()
-            ->white('eject is a destructive operation. It removes the Sample controller, route, etc.');
-        $cli
-            ->bold()
-            ->backgroundLightRed()
-            ->white('It will also overwrite the RegisterControllers.php file.');
-        $cli
-            ->bold()
-            ->backgroundLightRed()
-            ->white()
-            ->border('*');
-        $cli->br();
-        /** @var Input $input */
-        $input = $cli->bold()->lightGray()->confirm('Are you sure you want to proceed?');
-        if (!$input->confirmed()) {
-            die();
-        }
-
-        $sampleDirPath = __DIR__ . '/../../../Controllers/Sample';
-        array_map('unlink', glob("$sampleDirPath/*.*"));
-        unlink($sampleDirPath);
-
-        // Rebuild RegisterControllers.php
-        $loader = new FilesystemLoader(__DIR__ . '/Templates');
-        $twig = new Twig($loader);
-        $registerControllers = new RegisterForge($twig);
-        $registerControllers->forgeRegisterControllers();
-    }
 }
