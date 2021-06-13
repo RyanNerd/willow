@@ -42,6 +42,7 @@ class EjectCommands extends RoboBase
             die();
         }
 
+        // Destroy the files in the Controllers/Sample directory and the Controllers/Sample directory itself
         $sampleDirPath = self::CONTROLLERS_PATH . 'Sample';
         array_map('unlink', glob("$sampleDirPath/*.*"));
         if (file_exists($sampleDirPath)) {
@@ -50,7 +51,12 @@ class EjectCommands extends RoboBase
             }
         }
 
-        // Get a file list of any controllers
+        // Remove the SampleCommands.php file if it exists
+        if (file_exists(__DIR__ . '/SampleCommands.php')) {
+            unlink(__DIR__ . '/SampleCommands.php');
+        }
+
+        // Get a file list of any controllers in the Controllers directory
         $dirList = glob(self::CONTROLLERS_PATH . '*', GLOB_ONLYDIR);
         // No need to register controllers if there are none.
         if ($dirList === false || count($dirList) === 0) {
