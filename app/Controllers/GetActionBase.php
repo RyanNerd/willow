@@ -31,8 +31,7 @@ class GetActionBase extends ActionBase
             $status = ResponseBody::HTTP_NOT_FOUND;
         } else {
             // Remove any protected fields from the response
-            $data = $model->toArray();
-            $this->sanitize($data, $model::FIELDS);
+            $data = $model->attibutesToArray();
             $status = ResponseBody::HTTP_OK;
         }
 

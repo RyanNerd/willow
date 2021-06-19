@@ -22,7 +22,6 @@ class SearchActionBase extends ActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $model = $this->model;
-        $modelColumns = $model::FIELDS;
 
         // Get the request to build the query
         $parsedBody = $responseBody->getParsedRequest();
@@ -82,10 +81,6 @@ class SearchActionBase extends ActionBase
         // Did we get any results?
         if ($models !== null && count($models) > 0) {
             $data = $models->toArray();
-            foreach ($data as &$datum) {
-                $this->sanitize($datum, $modelColumns);
-            }
-
             $status = ResponseBody::HTTP_OK;
         } else {
             $data = null;

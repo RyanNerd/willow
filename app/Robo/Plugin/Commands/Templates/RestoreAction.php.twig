@@ -10,11 +10,9 @@ class {{ class_name }}RestoreAction extends RestoreActionBase
 {
     /**
      * {{ class_name }}RestoreAction constructor.
-     *
      * @param {{ class_name }} $model
      */
-    public function __construct({{ class_name }} $model)
-    {
-        $this->setModel($model);
+    public function __construct({{ class_name }} $model) {
+        $this->model = $model;
     }
 }

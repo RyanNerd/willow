@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Willow\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
 
@@ -12,7 +12,6 @@ class ResponseBodyFactory
 {
     /**
      * Inject a new ResponseBody object into the middleware setting the deserialized request array.
-     *
      * @param Request $request
      * @param RequestHandler $handler
      * @return ResponseInterface
@@ -29,7 +28,7 @@ class ResponseBodyFactory
                     self::create(
                         array_merge(
                             ['id' => RouteContext::fromRequest($request)->getRoute()->getArgument('id')],
-                            $request->getQueryParams(),
+                            $request->getQueryParams() ?? [],
                             $request->getParsedBody() ?? []
                         )
                     )
