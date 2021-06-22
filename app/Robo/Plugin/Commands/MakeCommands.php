@@ -91,6 +91,9 @@ class MakeCommands extends RoboBase
                 RoboBase::showThrowableAndDie($e);
         }
 
+        // todo: Ask user if they want to use Eloquent's event engine
+        // If so then run `composer require "illuminate/events": "^v8.47.0"`
+
         try {
             // Get Eloquent ORM manager
             $eloquent = RoboBase::getEloquent();

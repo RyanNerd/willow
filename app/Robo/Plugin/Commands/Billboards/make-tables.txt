@@ -1,0 +1,16 @@
+              * *
+           *    *  *            Table Selection
+      *  *    *     *  *        ===============
+     *     *    *  *    *       Willow will now try to connect
+ * *   *    *    *    *   *     to your database, and if successful
+ *     *  *    * * .#  *   *    You will be prompted for what tables
+ *   *     * #.  .# *   *       you want to include in your project.
+  *     "#.  #: #" * *    *
+ *   * * "#. ##"       *        +-----------+----------+
+   *       "###                 |   Table   |  Include |
+             "##                +-----------+----------+
+              ##.               | User      |   [X]    |
+              .##:              | Client    |   [X]    |
+              :###              | DankMemes |   [ ]    |
+              ;###              | Payroll   |   [X]    |
+            ,####.              +-----------+----------+

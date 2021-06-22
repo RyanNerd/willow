@@ -28,7 +28,8 @@ sql;
 
             default:
                 $db = $conn->getDatabaseName();
-                $select = <<<sql
+                $select = /** @lang MySQL */
+                    <<<sql
                     SELECT TABLE_NAME as table_name,
                            TABLE_ROWS as row_count,
                            CREATE_TIME as created,

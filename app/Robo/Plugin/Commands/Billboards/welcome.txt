@@ -1,0 +1,16 @@
+              * *
+           *    *  *           Willow Make Command
+      *  *    *     *  *       ===================
+     *     *    *  *    *      Willow uses a .env file for
+ * *   *    *    *    *   *    Database configuation and
+ *     *  *    * * .#  *   *   other settings.
+ *   *     * #.  .# *   *
+  *     "#.  #: #" * *    *    You'll be asked a series of
+ *   * * "#. ##"       *       questions to build out the
+   *       "###                configuration of the database
+             "##               tables, and routes.
+              ##.
+              .##:             Willow will connect to the
+              :###             Database and generate the
+              ;###             Models, controllers, & actions.
+            ,####.

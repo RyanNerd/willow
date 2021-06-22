@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Dotenv\Dotenv;
 
+// todo: sqlite does NOT require host, port, name, etc.
 const RULE_SET = [
     'DB_DRIVER' => ['required', 'notEmpty', 'allowedValues' => ['mysql', 'pgsql', 'sqlsrv', 'sqlite']],
     'DB_HOST' => ['required', 'notEmpty'],

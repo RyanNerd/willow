@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 use Illuminate\Database\Capsule\Manager;
 use Psr\Container\ContainerInterface;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Container\Container;
 
 return [
     'Eloquent' => function (ContainerInterface $c) {
@@ -25,6 +27,10 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix'    => ''
         ]);
+
+        // If we want events to work we need to do this
+        // Link: https://stackoverflow.com/a/35274727/4323201
+        $eloquent->setEventDispatcher(new Dispatcher(new Container()));
 
         // Make this Capsule instance available globally via static methods
         $eloquent->setAsGlobal();

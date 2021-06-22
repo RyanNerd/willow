@@ -172,4 +172,18 @@ abstract class RoboBase extends Tasks
         }
         die();
     }
+
+    final public function billboard(string $path, string $art, int $speed, string $enterFrom): void {
+        $cli = $this->cli;
+        $cli->clear();
+        $cli->forceAnsiOn();
+        $cli->green()->border('*');
+        $cli->addArt($path);
+        if (substr($enterFrom, 0, 1) === '-') {
+            $cli->bold()->lightGreen()->animation($art)->speed($speed)->exitTo(substr($enterFrom, 1));
+        } else {
+            $cli->bold()->lightGreen()->animation($art)->speed($speed)->enterFrom($enterFrom);
+        }
+        $cli->green()->border('*');
+    }
 }

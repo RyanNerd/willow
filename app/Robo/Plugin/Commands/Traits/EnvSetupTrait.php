@@ -24,6 +24,8 @@ trait EnvSetupTrait
         $cli->br();
         $cli->bold()->white('Enter values for the .env file');
 
+        // TODO: extension_loaded('pdo_<database type here>')
+        // See: https://stackoverflow.com/a/6113496/4323201
         do {
             $drivers = [
                 'MySQL/MariaDB' => 'mysql',
@@ -83,14 +85,22 @@ trait EnvSetupTrait
             $input = $cli->confirm('DISPLAY_ERROR_DETAILS');
             $displayErrorDetails = $input->confirmed() ? 'true' : 'false';
 
+            $input = $cli->confirm('Do you want to include model events');
+            $modelEvents = $input->confirmed() ? 'true' : 'false';
             $envText = <<<env
+# Database configuration
 DB_DRIVER=$dbDriver
 DB_HOST=$dbHost
 DB_PORT=$dbPort
 DB_NAME=$dbName
 DB_USER=$dbUser
 DB_PASSWORD=$dbPassword
+
+# Show error details as a HTML response
 DISPLAY_ERROR_DETAILS=$displayErrorDetails
+
+# Use Eloquent's event handling engine
+MODEL_EVENTS=$modelEvents
 
 env;
 
