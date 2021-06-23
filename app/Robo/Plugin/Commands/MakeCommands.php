@@ -132,14 +132,15 @@ class MakeCommands extends RoboBase
                     switch ($stage) {
                         case 'Model':
                             $tableDetails = DatabaseUtilities::getTableAttributes($eloquent, $tableName);
-                            $columnListing = [];
+                            $columnList = [];
                             foreach ($tableDetails as $columnName => $type) {
-                                $columnListing = [
-                                    'column_name' => $columnName,
-                                    'type' => $type
-                                ];
+                                if ($type === 'datetime') {
+                                    $type = 'DateTime';
+                                }
+                                $columnList[] = ['column_name' => $columnName,
+                                    'type' => $type];
                             }
-                            $modelForge->forgeModel($tableName, $columnListing);
+                            $modelForge->forgeModel($tableName, $columnList);
                             break;
 
                         case 'Controller':

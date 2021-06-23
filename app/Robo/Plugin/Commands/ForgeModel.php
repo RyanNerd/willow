@@ -28,12 +28,12 @@ class ForgeModel extends ForgeBase
                 'Model.php.twig',
                 [
                     'table' => $table,
-                    'class_name' => Str::camel($table),
+                    'class_name' => ucfirst(Str::camel($table)),
                     'column_list' => $columnList
                 ]
             );
             // Save the Model code file into the Models directory.
-            $modelFile = __DIR__ . '/../../../Models/' . ucfirst($table) . '.php';
+            $modelFile = __DIR__ . '/../../../Models/' . ucfirst(Str::camel($table)) . '.php';
             if (file_put_contents($modelFile, $modelCode) === false) {
                 $this->forgeError(new Exception('Unable to create: ' . $modelFile));
             }

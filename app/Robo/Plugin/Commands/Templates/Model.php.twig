@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use DateTime;
 
 /**
 {% for column in column_list %}
@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Builder;
 {% endfor %}
  */
 #[ApplyModelRule(ModelDefaultRules::class)]
-#[ApplyModelRule({{ class_name }}Rules::class)]
+#[ApplyModelRule({{ class_name }}ModelRules::class)]
 {% for column in column_list %}
-    #[ApplyModelColumnAttribute('{{ column.column_name }}', '{{ column.type }}')]
+#[ApplyModelColumnAttributes('{{ column.column_name }}', '{{ column.type }}')]
 {% endfor %}
 class {{ class_name }} extends ModelBase
 {
