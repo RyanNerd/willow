@@ -12,13 +12,9 @@ class {{ class_name }}Controller implements IController
         // GET (Read)
         $group->get('/{{ route }}/{id}', {{ class_name }}GetAction::class);
 
-        // POST (Create)
+        // POST (Create / Update)
         $group->post('/{{ route }}', {{ class_name }}PostAction::class)
-            ->add({{ class_name }}WriteValidator::class);
-
-        // PATCH (Update)
-        $group->patch('/{{ route }}', {{ class_name }}PatchAction::class)
-            ->add({{ class_name }}WriteValidator::class);
+            ->add({{ class_name }}ModelValidator::class);
 
         // DELETE (Delete)
         $group->delete('/{{ route }}/{id}', {{ class_name }}DeleteAction::class);

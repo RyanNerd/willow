@@ -7,7 +7,7 @@ use Twig\Environment as Twig;
 use Throwable;
 use Exception;
 
-class ValidatorForge extends ForgeBase
+class ForgeValidator extends ForgeBase
 {
     protected Twig $twig;
 

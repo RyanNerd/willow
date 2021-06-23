@@ -6,11 +6,16 @@ namespace Willow\Models;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * @mixin Builder
+{% for column in column_list %}
+ * @property {{ column.type }} ${{ column.column_name }}
+{% endfor %}
  */
+#[ApplyModelRule(ModelDefaultRules::class)]
+#[ApplyModelRule({{ class_name }}Rules::class)]
+{% for column in column_list %}
+    #[ApplyModelColumnAttribute('{{ column.column_name }}', '{{ column.type }}')]
+{% endfor %}
 class {{ class_name }} extends ModelBase
 {
-    public const FIELDS = [];
-
     protected $table = '{{ table }}';
 }

@@ -91,9 +91,6 @@ class MakeCommands extends RoboBase
                 RoboBase::showThrowableAndDie($e);
         }
 
-        // todo: Ask user if they want to use Eloquent's event engine
-        // If so then run `composer require "illuminate/events": "^v8.47.0"`
-
         try {
             // Get Eloquent ORM manager
             $eloquent = RoboBase::getEloquent();
@@ -117,43 +114,50 @@ class MakeCommands extends RoboBase
             $loader = new FilesystemLoader(__DIR__ . '/Templates');
             $twig = new Twig($loader);
             $actionsForge = new ActionsForge($twig);
-            $controllerForge = new ControllerForge($twig);
-            $modelForge = new ModelForge($twig);
-            $registerForge = new RegisterForge($twig);
-            $validatorForge = new ValidatorForge($twig);
+            $controllerForge = new ForgeController($twig);
+            $modelForge = new ForgeModel($twig);
+            $registerForge = new ForgeRegister($twig);
+            $validatorForge = new ForgeValidator($twig);
 
             $cli->br();
             $cli->bold()->white()->border('*');
             $cli->bold()->white('Building project');
             $cli->bold()->white()->border('*');
-            foreach ($selectedRoutes as $table => $route) {
+            foreach ($selectedRoutes as $tableName => $route) {
                 $cli->br();
-                $cli->bold()->lightGreen('Working on: ' . $table);
+                $cli->bold()->lightGreen('Working on: ' . $tableName);
                 $progress = $cli->progress()->total(count(self::PROGRESS_STAGES));
                 foreach (self::PROGRESS_STAGES as $key => $stage) {
                     $progress->current($key + 1, $stage);
                     switch ($stage) {
                         case 'Model':
-                            $modelForge->forgeModel($table);
+                            $tableDetails = DatabaseUtilities::getTableAttributes($eloquent, $tableName);
+                            $columnListing = [];
+                            foreach ($tableDetails as $columnName => $type) {
+                                $columnListing = [
+                                    'column_name' => $columnName,
+                                    'type' => $type
+                                ];
+                            }
+                            $modelForge->forgeModel($tableName, $columnListing);
                             break;
 
                         case 'Controller':
-                            $controllerForge->forgeController($table, $route);
+                            $controllerForge->forgeController($tableName, $route);
                             break;
 
                         case 'Actions':
-                            $actionsForge->forgeDeleteAction($table);
-                            $actionsForge->forgeGetAction($table);
-                            $actionsForge->forgePatchAction($table);
-                            $actionsForge->forgePostAction($table);
-                            $actionsForge->forgeRestoreAction($table);
-                            $actionsForge->forgeSearchAction($table);
+                            $actionsForge->forgeDeleteAction($tableName);
+                            $actionsForge->forgeGetAction($tableName);
+                            $actionsForge->forgePostAction($tableName);
+                            $actionsForge->forgeRestoreAction($tableName);
+                            $actionsForge->forgeSearchAction($tableName);
                             break;
 
                         case 'Validators':
-                            $validatorForge->forgeRestoreValidator($table);
-                            $validatorForge->forgeSearchValidator($table);
-                            $validatorForge->forgeWriteValidator($table);
+                            $validatorForge->forgeRestoreValidator($tableName);
+                            $validatorForge->forgeSearchValidator($tableName);
+                            $validatorForge->forgeWriteValidator($tableName);
                             break;
                     }
                 }

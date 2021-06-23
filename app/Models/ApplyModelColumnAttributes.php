@@ -7,7 +7,7 @@ use Attribute;
 use JetBrains\PhpStorm\ArrayShape;
 
 #[Attribute(Attribute::IS_REPEATABLE|Attribute::TARGET_CLASS)]
-class ApplyModelColumnAttribute
+class ApplyModelColumnAttributes
 {
     /**
      * These are flags "stolen" from MySQL workbench adding some of our own
@@ -43,9 +43,13 @@ class ApplyModelColumnAttribute
         private ?array $flags = null,
         private ?string $default = null
     ) {
-        assert(in_array($this->flags, self::VALID_FLAGS), 'Invalid ModelColumnAttribute.flags');
+        assert(in_array($this->flags, self::VALID_FLAGS), 'Invalid ModelColumnAttribute flags[]');
     }
 
+    /**
+     * Return the column attributes as a structured array
+     * @return array
+     */
     #[ArrayShape([
         'ColumnName' => "string",
         'Type' => "string",

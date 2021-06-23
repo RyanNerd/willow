@@ -8,7 +8,7 @@ use Throwable;
 
 use Twig\Environment as Twig;
 
-class RegisterForge extends ForgeBase
+class ForgeRegister extends ForgeBase
 {
     protected Twig $twig;
 

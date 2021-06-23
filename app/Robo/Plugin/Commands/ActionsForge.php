@@ -81,37 +81,6 @@ class ActionsForge extends ForgeBase
     }
 
     /**
-     * Forge the PatchAction code given the table name.
-     * @param string $table
-     */
-    final public function forgePatchAction(string $table): void {
-        // Render the PatchAction code.
-        try {
-            // Format the PatchAction class name
-            $className = ucfirst($table);
-            // Render the PatchAction code
-            $patchActionCode = $this->twig->render('PatchAction.php.twig', [
-                    'class_name' => $className
-                ]);
-            $controllerPath = self::CONTROLLERS_PATH . $className;
-
-            if (is_dir($controllerPath) === false) {
-                if (mkdir($controllerPath) === false) {
-                    $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
-                }
-            }
-            // Save the patchAction code file into the Controllers/ directory.
-            if (file_put_contents($controllerPath . '/' . $className . 'PatchAction.php', $patchActionCode) === false) {
-                $this->forgeError(
-                    new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'PatchAction.php')
-                );
-            }
-        } catch (Throwable $e) {
-            $this->forgeError($e);
-        }
-    }
-
-    /**
      * Forge the PostAction code given the table name.
      * @param string $table
      */

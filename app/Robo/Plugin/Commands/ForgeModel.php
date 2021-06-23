@@ -6,8 +6,9 @@ namespace Willow\Robo\Plugin\Commands;
 use Exception;
 use Throwable;
 use Twig\Environment as Twig;
+use Illuminate\Support\Str;
 
-class ModelForge extends ForgeBase
+class ForgeModel extends ForgeBase
 {
     protected Twig $twig;
 
@@ -16,17 +17,19 @@ class ModelForge extends ForgeBase
     }
 
     /**
-     * Forge the Model code given the table name.
+     * Forge the Model code given the table name and $columnList
      * @param string $table
+     * @param array $columnList
      */
-    final public function forgeModel(string $table): void {
+    final public function forgeModel(string $table, array $columnList): void {
         try {
             // Render the Model code.
             $modelCode = $this->twig->render(
                 'Model.php.twig',
                 [
                     'table' => $table,
-                    'class_name' => ucfirst($table)
+                    'class_name' => Str::camel($table),
+                    'column_list' => $columnList
                 ]
             );
             // Save the Model code file into the Models directory.

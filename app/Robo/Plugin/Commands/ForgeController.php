@@ -6,8 +6,9 @@ namespace Willow\Robo\Plugin\Commands;
 use Throwable;
 use Twig\Environment as Twig;
 use Exception;
+use Illuminate\Support\Str;
 
-class ControllerForge extends ForgeBase
+class ForgeController extends ForgeBase
 {
     protected Twig $twig;
 
@@ -23,7 +24,7 @@ class ControllerForge extends ForgeBase
     final public function forgeController(string $tableName, string $route): void {
         try {
             // Format the table name as a class
-            $className = ucfirst($tableName);
+            $className = Str::camel($tableName);
             // Render the Controller code.
             $controllerCode = $this->twig->render(
                 'Controller.php.twig',

@@ -1,0 +1,12 @@
+<?php
+declare(strict_types=1);
+
+namespace Willow\Controllers\{{ class_name }};
+
+use Willow\Controllers\ModelValidatorBase;
+use Willow\Models\{{ class_name }};
+
+class {{ class_name }}ModelValidator extends ModelValidatorBase
+{
+    protected string $modelClass = {{ class_name }}Medicine::class;
+}

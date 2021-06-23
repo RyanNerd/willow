@@ -37,7 +37,8 @@
         "consolidation/robo": "^3.0.3",
         "league/climate": "^3.7.0",
         "squizlabs/php_codesniffer": "^3.6.0",
-        "twig/twig": "^3.3.2"
+        "twig/twig": "^3.3.2",
+        "jetbrains/phpstorm-stubs": "v2021.1"
     },
     "autoload": {
         "psr-4": {

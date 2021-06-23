@@ -3,17 +3,20 @@ declare(strict_types=1);
 
 namespace Willow\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Class ModelBase
- */
 abstract class ModelBase extends Model
 {
-    public const FIELDS = [];
-
     use SoftDeletes;
+
+    /**
+     * Used by SearchActionBase.
+     * Override this to true if you want to allow the model searchAction to not include a where filter (all records).
+     * @override
+     * @var bool
+     */
+    public bool $allowAll = false;
 
     /**
      * Return the name of the primary key column (usually but not always "id")

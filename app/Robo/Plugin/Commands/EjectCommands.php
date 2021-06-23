@@ -65,7 +65,7 @@ class EjectCommands extends RoboBase
             // Rebuild RegisterControllers.php
             $loader = new FilesystemLoader(__DIR__ . '/Templates');
             $twig = new Twig($loader);
-            $registerControllers = new RegisterForge($twig);
+            $registerControllers = new ForgeRegister($twig);
             $registerControllers->forgeRegisterControllers();
         }
     }
