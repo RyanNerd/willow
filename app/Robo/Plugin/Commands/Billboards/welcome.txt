@@ -10,7 +10,7 @@
    *       "###                configuration of the database
              "##               tables, and routes.
               ##.
-              .##:             Willow will connect to the
-              :###             Database and generate the
+              .##:             Willow will then connect to the
+              :###             database and generate the
               ;###             Models, controllers, & actions.
             ,####.

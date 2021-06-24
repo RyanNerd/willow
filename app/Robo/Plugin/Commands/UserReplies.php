@@ -49,20 +49,16 @@ final class UserReplies
      */
     final public static function getDotEnv(): string {
         $cli = CliBase::getCli();
-        $cli->br();
-        $cli->lightGreen()->border('*', 80);
-        $cli->bold()->green('Willow uses a .env file to configure database access.');
-        $cli->bold()->lightGreen('Run `./willow docs` for more information.');
-        $cli->lightGreen()->border('*', 80);
-        $cli->br();
-        $cli->bold()->white('Enter values for the .env file');
-
         do {
+            $mySQL = extension_loaded('pdo_mysql') ? 'MySQL' : 'MySQL [pdo_sql driver not installed]';
+            $postgres = extension_loaded('pdo_pgsql') ? 'Postgres' : 'Postgres [pdo_pgsql driver not installed]';
+            $msSQL = extension_loaded('pdo_sqlsrv') ? 'MS SQL' : 'MS SQL [pdo_sqlsrv driver not installed]';
+            $sqlite = extension_loaded('pdo_sqlite') ? 'SQLite' : 'SQLite [pdo_sqlite driver not installed]';
             $drivers = [
-                'MySQL' . extension_loaded('pdo_mysql') ? '' : ' [note: pdo_mysql driver not installed]' => 'mysql',
-                'Postgres'  . extension_loaded('pdo_pgsql') ? '' : ' [note: pdo_pgsql driver not installed]' => 'pgsql',
-                'MS SQL' . extension_loaded('pdo_sqlsrv') ? '' : ' [note: pdo_sqlsrv driver not installed]' => 'sqlsrv',
-                'SQLite' . extension_loaded('pdo_sqlite') ? '' : ' [note: pdo_sqlite driver not installed]' => 'sqlite'
+                $mySQL => 'mysql',
+                $postgres => 'pgsql',
+                $msSQL => 'sqlsrv',
+                $sqlite => 'sqlite'
             ];
 
             $driverChoices = array_keys($drivers);

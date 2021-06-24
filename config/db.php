@@ -2,27 +2,25 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Capsule\Manager;
-use Psr\Container\ContainerInterface;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
 
 return [
-    'Eloquent' => function (ContainerInterface $c) {
-        if (!$c->has('ENV')) {
-            die('.env file missing or corrupt.');
+    'Eloquent' => function () {
+        if (!file_exists(__DIR__ . '/../.env')) {
+            throw new Exception('Missing required .env file');
         }
 
         $eloquent = new Manager();
-        $env = $c->get('ENV');
 
         // @see https://github.com/illuminate/database/blob/master/README.md
         $eloquent->addConnection([
-            'driver'    => $env['DB_DRIVER'],
-            'host'      => $env['DB_HOST'],
-            'port'      => $env['DB_PORT'],
-            'database'  => $env['DB_NAME'],
-            'username'  => $env['DB_USER'],
-            'password'  => $env['DB_PASSWORD'],
+            'driver'    => $_ENV['DB_DRIVER'],
+            'host'      => $_ENV['DB_HOST'] ?? '',
+            'port'      => $_ENV['DB_PORT'] ?? '',
+            'database'  => $_ENV['DB_NAME'],
+            'username'  => $_ENV['DB_USER'] ?? '',
+            'password'  => $_ENV['DB_PASSWORD'] ?? '',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => ''
