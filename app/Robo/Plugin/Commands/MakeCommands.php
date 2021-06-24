@@ -37,16 +37,19 @@ class MakeCommands
         try {
             // Does the .env file not exist?
             if (!file_exists(self::DOT_ENV_PATH)) {
+                $cli = CliBase::getCli();
+                CliBase::billboard('make-env', 160, 'top');
+                $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
+                $input->prompt();
+                CliBase::billboard('welcome', 160, '-top');
+                $cli->clear();
                 UserReplies::setEnvFromUser();
             }
             include_once self::DOT_ENV_INCLUDE_FILE;
 
-            $container = DatabaseUtilities::getContainer();
-
             // If viridian has any entries it means that make has already been run.
             // In this case the user must run the reset command before running make again.
-            $viridian = $container->get('viridian');
-            if (count($viridian) > 0) {
+            if (file_exists(__DIR__ . '/../../../../.viridian')) {
                 $cli->br();
                 $cli->bold()
                     ->backgroundLightRed()
@@ -83,6 +86,13 @@ class MakeCommands
         }
 
         try {
+            $cli = CliBase::getCli();
+            CliBase::billboard('make-tables', 165, 'bottom');
+            $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
+            $input->prompt();
+            CliBase::billboard('make-tables', 165, '-top');
+            $cli->clear();
+
             // Get the list of tables the user wants in their project
             $selectedTables = UserReplies::getTableSelection(DatabaseUtilities::getTableList());
 

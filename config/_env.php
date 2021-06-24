@@ -10,7 +10,7 @@ $env = $dotEnv->load();
 $dotEnv->required(['DB_DRIVER','DB_NAME'])->notEmpty();
 
 // All drivers except for SQLite require DB_HOST, DB_PORT, DB_USER, and DB_PASSWORD and these cannot be empty.
-if ($env['DB_DRIVER'] !== 'sqlite') {
+if ($env['DB_DRIVER'] ?? '' !== 'sqlite') {
     $dotEnv->required(['DB_HOST', 'DB_PORT', 'DB_USER', 'DB_PASSWORD'])->notEmpty();
 }
 

@@ -11,13 +11,6 @@ final class UserReplies
      * When the .env file does not exist this function is called to prompt the user to create the .env file
      */
     public static function setEnvFromUser(): void {
-        $cli = CliBase::getCli();
-        CliBase::billboard('welcome', 160, 'top');
-        $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
-        $input->prompt();
-        CliBase::billboard('welcome', 160, '-top');
-        $cli->clear();
-
         $dotEnvFile = __DIR__ . '/../../../../.env';
         while (!file_exists($dotEnvFile)) {
             $envFileContent = self::getDotEnv();

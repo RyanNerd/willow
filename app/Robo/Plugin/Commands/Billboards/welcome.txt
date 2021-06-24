@@ -2,15 +2,15 @@
            *    *  *           Willow Configuration
       *  *    *     *  *       ====================
      *     *    *  *    *      Willow uses a .env file for
- * *   *    *    *    *   *    Database configuation and
+ * *   *    *    *    *   *    Database configuration and
  *     *  *    * * .#  *   *   other settings.
  *   *     * #.  .# *   *
-  *     "#.  #: #" * *    *    You'll be asked a series of
- *   * * "#. ##"       *       questions to build out the
-   *       "###                configuration of the database
-             "##               tables, and routes.
+  *     "#.  #: #" * *    *
+ *   * * "#. ##"       *
+   *       "###
+             "##
               ##.
-              .##:             Willow will then connect to the
-              :###             database and generate the
-              ;###             Models, controllers, & actions.
+              .##:
+              :###
+              ;###
             ,####.
