@@ -8,7 +8,24 @@ use League\CLImate\TerminalObject\Dynamic\Input;
 final class UserReplies
 {
     /**
-     * Formerly tableInit()
+     * When the .env file does not exist this function is called to prompt the user to create the .env file
+     */
+    public static function setEnvFromUser(): void {
+        $cli = CliBase::getCli();
+        CliBase::billboard('welcome', 160, 'top');
+        $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
+        $input->prompt();
+        CliBase::billboard('welcome', 160, '-top');
+        $cli->clear();
+
+        $dotEnvFile = __DIR__ . '/../../../../.env';
+        while (!file_exists($dotEnvFile)) {
+            $envFileContent = self::getDotEnv();
+            file_put_contents($dotEnvFile, $envFileContent);
+        }
+    }
+
+    /**
      * Get the tables the user wants to include in their project
      * @param array<string> $tables
      * @return array<string>
@@ -43,12 +60,12 @@ final class UserReplies
     }
 
     /**
-     * Formerly envInit()
      * Get the .env file settings from the user
      * @return string The .env settings
      */
-    final public static function getDotEnv(): string {
+    private static function getDotEnv(): string {
         $cli = CliBase::getCli();
+        $cli->bold()->green('');
         do {
             $mySQL = extension_loaded('pdo_mysql') ? 'MySQL' : 'MySQL [pdo_sql driver not installed]';
             $postgres = extension_loaded('pdo_pgsql') ? 'Postgres' : 'Postgres [pdo_pgsql driver not installed]';
@@ -69,6 +86,7 @@ final class UserReplies
         } while (strlen($dbDriver) === 0);
 
         do {
+            $cli->br();
             if ($dbDriver === 'sqlite') {
                 $dbHost = '';
                 $dbPort = '';
@@ -77,43 +95,40 @@ final class UserReplies
             } else {
                 do {
                     /** @var Input $input */
-                    $input = $cli->input('DB_HOST (default: 127.0.0.1)');
+                    $input = $cli->bold()->green()->input('DB_HOST (default: 127.0.0.1)');
                     $input->defaultTo('127.0.0.1');
                     $dbHost = $input->prompt();
                 } while (strlen($dbHost) === 0);
 
                 do {
                     /** @var Input $input */
-                    $input = $cli->input('DB_PORT (default: 3306)');
+                    $input = $cli->bold()->green()->input('DB_PORT (default: 3306)');
                     $input->defaultTo('3306');
                     $dbPort = $input->prompt();
                 } while (strlen($dbPort) === 0 || (int)$dbPort <= 0 || (int)$dbPort > 65535);
 
                 do {
                     /** @var Input $input */
-                    $input = $cli->input('DB_USER');
+                    $input = $cli->bold()->green()->input('DB_USER');
                     $dbUser = $input->prompt();
                 } while (strlen($dbUser) === 0);
 
                 do {
                     /** @var Input $input */
-                    $input = $cli->password('DB_PASSWORD');
+                    $input = $cli->bold()->green()->password('DB_PASSWORD');
                     $dbPassword = $input->prompt();
                 } while (strlen($dbPassword) === 0);
             }
 
             do {
                 /** @var Input $input */
-                $input = $cli->input('DB_NAME');
+                $input = $cli->bold()->green()->input('DB_NAME');
                 $dbName = $input->prompt();
             } while (strlen($dbName) === 0);
 
             /** @var Input $input */
-            $input = $cli->confirm('DISPLAY_ERROR_DETAILS');
-            $displayErrorDetails = $input->confirmed() ? 'true' : 'false';
-
-            $input = $cli->confirm('Do you want to include model events');
-            $modelEvents = $input->confirmed() ? 'true' : 'false';
+            $input = $cli->bold()->green()->confirm('SHOW_ERRORS');
+            $showErrors = $input->confirmed() ? 'true' : 'false';
             $envText = <<<env
 # Database configuration
 DB_DRIVER=$dbDriver
@@ -124,10 +139,7 @@ DB_USER=$dbUser
 DB_PASSWORD=$dbPassword
 
 # Show error details as a HTML response
-DISPLAY_ERROR_DETAILS=$displayErrorDetails
-
-# Use Eloquent's event handling engine
-MODEL_EVENTS=$modelEvents
+SHOW_ERRORS=$showErrors
 
 env;
 
@@ -154,7 +166,6 @@ env;
             /** @var Input $input */
             $input = $cli->bold()->lightGray()->confirm('This look okay?');
         } while (!$input->confirmed());
-
         return $envText;
     }
 

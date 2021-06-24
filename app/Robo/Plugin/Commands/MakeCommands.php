@@ -21,6 +21,7 @@ class MakeCommands
 
     private const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
     private const DOT_ENV_PATH = __DIR__ . '/../../../../.env';
+    private const DOT_ENV_INCLUDE_FILE = __DIR__ . '/../../../../config/_env.php';
     private CLImate $cli;
 
     public function __construct() {
@@ -36,13 +37,9 @@ class MakeCommands
         try {
             // Does the .env file not exist?
             if (!file_exists(self::DOT_ENV_PATH)) {
-                CliBase::billboard('welcome', 160, 'top');
-                $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
-                $input->prompt();
-                CliBase::billboard('welcome', 160, '-top');
-                $this->cli->clear();
-                $this->setEnvFromUser();
+                UserReplies::setEnvFromUser();
             }
+            include_once self::DOT_ENV_INCLUDE_FILE;
 
             $container = DatabaseUtilities::getContainer();
 
@@ -211,14 +208,6 @@ class MakeCommands
             die();
         } catch (Exception $e) {
             CliBase::showThrowableAndDie($e);
-        }
-    }
-
-    private function setEnvFromUser(): void {
-        $dotEnvFile = __DIR__ . '/../../../../.env';
-        while (!file_exists($dotEnvFile)) {
-            $envFileContent = UserReplies::getDotEnv();
-            file_put_contents($dotEnvFile, $envFileContent);
         }
     }
 }

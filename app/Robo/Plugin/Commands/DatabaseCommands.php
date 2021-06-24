@@ -8,6 +8,9 @@ use League\CLImate\TerminalObject\Dynamic\Input;
 
 class DatabaseCommands
 {
+    private const DOT_ENV_FILE = __DIR__ . '/../../../../.env';
+    private const DOT_ENV_INCLUDE_FILE = __DIR__ . '/../../../../config/_env.php';
+
     private CLImate $cli;
 
     public function __construct() {
@@ -19,7 +22,10 @@ class DatabaseCommands
      */
     final public function tables(): void {
         $cli = $this->cli;
-        $this->checkEnv();
+        if (!file_exists(self::DOT_ENV_FILE)) {
+            UserReplies::setEnvFromUser();
+        }
+        include_once self::DOT_ENV_INCLUDE_FILE;
 
         // Get the tables from the database
         $tables = DatabaseUtilities::getTableList();
@@ -39,7 +45,10 @@ class DatabaseCommands
      */
     final public function details(): void {
         $cli = $this->cli;
-        $this->checkEnv();
+        if (!file_exists(self::DOT_ENV_FILE)) {
+            UserReplies::setEnvFromUser();
+        }
+        include_once self::DOT_ENV_INCLUDE_FILE;
 
         $tables = DatabaseUtilities::getTableList();
 
@@ -56,16 +65,5 @@ class DatabaseCommands
         $cli->br();
         $cli->bold()->blue()->table($displayDetails);
         $cli->br();
-    }
-
-    /**
-     * Check if .env exists and if not prompt user for .env contents
-     */
-    private function checkEnv(): void {
-        $dotEnvFile = __DIR__ . '/../../../../.env';
-        while (!file_exists($dotEnvFile)) {
-            $envFileContent = UserReplies::getDotEnv();
-            file_put_contents($dotEnvFile, $envFileContent);
-        }
     }
 }

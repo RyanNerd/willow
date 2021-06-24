@@ -33,7 +33,7 @@ class WillowCommands extends Tasks
         CliBase::billboard('welcome', 160, 'top');
         $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
         $input->prompt();
-        CliBase::billboard( 'welcome', 160, '-top');
+        CliBase::billboard('welcome', 160, '-top');
     }
 
     final public function billboardEnv(): void {

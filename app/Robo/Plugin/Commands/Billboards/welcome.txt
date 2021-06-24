@@ -1,6 +1,6 @@
               * *
-           *    *  *           Willow Make Command
-      *  *    *     *  *       ===================
+           *    *  *           Willow Configuration
+      *  *    *     *  *       ====================
      *     *    *  *    *      Willow uses a .env file for
  * *   *    *    *    *   *    Database configuation and
  *     *  *    * * .#  *   *   other settings.
