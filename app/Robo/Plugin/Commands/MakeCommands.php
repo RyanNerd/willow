@@ -32,8 +32,18 @@ class MakeCommands
      */
     final public function make(): void {
         $cli = $this->cli;
-        $container = DatabaseUtilities::getContainer();
+
         try {
+            if (!file_exists(self::DOT_ENV_PATH)) {
+                CliBase::billboard('welcome', 160, 'top');
+                $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
+                $input->prompt();
+                CliBase::billboard('welcome', 160, '-top');
+                $this->setEnvFromUser();
+            }
+
+            $container = DatabaseUtilities::getContainer();
+
             // If viridian has any entries it means that make has already been run.
             // In this case the user must run the reset command before running make again.
             $viridian = $container->get('viridian');
@@ -70,18 +80,10 @@ class MakeCommands
                 die();
             }
         } catch (Throwable $e) {
-                CliBase::showThrowableAndDie($e);
+            CliBase::showThrowableAndDie($e);
         }
 
         try {
-            if (!file_exists(self::DOT_ENV_PATH)) {
-                CliBase::billboard('welcome', 160, 'top');
-                $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
-                $input->prompt();
-                CliBase::billboard('welcome', 160, '-top');
-                $this->setEnvFromUser();
-            }
-
             // Get the list of tables the user wants in their project
             $selectedTables = UserReplies::getTableSelection(DatabaseUtilities::getTableList());
 
