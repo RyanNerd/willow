@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
+use League\CLImate\CLImate;
 use League\CLImate\TerminalObject\Dynamic\Input;
-use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
 
-class DatabaseCommands extends RoboBase
+class DatabaseCommands
 {
-    use EnvSetupTrait;
+    private CLImate $cli;
+
+    public function __construct() {
+        $this->cli = CliBase::getCli();
+    }
 
     /**
      * Display all the tables in a grid
@@ -18,7 +22,11 @@ class DatabaseCommands extends RoboBase
         $this->checkEnv();
 
         // Get the tables from the database
-        $tableList = DatabaseUtilities::getTableList(RoboBase::getEloquent()->getConnection());
+        $tables = DatabaseUtilities::getTableList();
+        $tableList = [];
+        foreach ($tables as $table) {
+            $tableList[] = ['table_name' => $table];
+        }
 
         // Display the list of tables in a grid
         $cli->br();
@@ -33,15 +41,13 @@ class DatabaseCommands extends RoboBase
         $cli = $this->cli;
         $this->checkEnv();
 
-        $eloquent = RoboBase::getEloquent();
-        $tableList = DatabaseUtilities::getTableList($eloquent->getConnection());
+        $tables = DatabaseUtilities::getTableList();
 
-        $tableChoices = array_column($tableList, 'table_name');
         /** @var Input $input */
-        $input = $cli->radio('Select a table', $tableChoices);
+        $input = $cli->radio('Select a table', $tables);
         $tableName = $input->prompt();
 
-        $details = DatabaseUtilities::getTableAttributes($eloquent, $tableName);
+        $details = DatabaseUtilities::getTableAttributes($tableName);
 
         $displayDetails = [];
         foreach ($details as $column => $type) {
@@ -53,22 +59,13 @@ class DatabaseCommands extends RoboBase
     }
 
     /**
-     * Check if .env exists and has been validated. If not prompt the user to set up the configuration now.
+     * Check if .env exists and if not prompt user for .env contents
      */
     private function checkEnv(): void {
-        if (!self::getWillowContainer()->has('ENV')) {
-            $this->cli->bold()->lightGray("Database configuration hasn't been set up yet.");
-            /** @var Input $input */
-            $input = $this->cli->lightGray()->confirm('Do you want to set up the database configuration now?');
-            if ($input->confirmed()) {
-                $this->setEnvFromUser();
-            } else {
-                $this
-                    ->cli
-                    ->bold()
-                    ->yellow('Unable to connect to a database without the database configuration set.');
-                die();
-            }
+        $dotEnvFile = __DIR__ . '/../../../../.env';
+        while (!file_exists($dotEnvFile)) {
+            $envFileContent = UserReplies::getDotEnv();
+            file_put_contents($dotEnvFile, $envFileContent);
         }
     }
 }

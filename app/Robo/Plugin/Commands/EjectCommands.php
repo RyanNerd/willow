@@ -7,7 +7,7 @@ use League\CLImate\TerminalObject\Dynamic\Input;
 use Twig\Environment as Twig;
 use Twig\Loader\FilesystemLoader;
 
-class EjectCommands extends RoboBase
+class EjectCommands
 {
     private const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
 
@@ -15,7 +15,7 @@ class EjectCommands extends RoboBase
      * Remove Sample controller, routes, & other artifacts from the project
      */
     final public function eject(): void {
-        $cli = $this->cli;
+        $cli = CliBase::getCli();
         $cli->br();
         $cli
             ->bold()

@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-class SampleCommands extends RoboBase
+use Robo\Tasks;
+
+class SampleCommands extends Tasks
 {
     /**
      * Launch the built-in PHP server and load the Sample in a web browser

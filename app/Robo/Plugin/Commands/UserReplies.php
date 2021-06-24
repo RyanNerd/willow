@@ -1,21 +1,54 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Robo\Plugin\Commands\Traits;
+namespace Willow\Robo\Plugin\Commands;
 
-use League\CLImate\CLImate;
 use League\CLImate\TerminalObject\Dynamic\Input;
 
-trait EnvSetupTrait
+final class UserReplies
 {
-    protected CLImate $cli;
+    /**
+     * Formerly tableInit()
+     * Get the tables the user wants to include in their project
+     * @param array<string> $tables
+     * @return array<string>
+     */
+    final public static function getTableSelection(array $tables): array {
+        $cli = CliBase::getCli();
+
+        // Get the tables the user wants to add to the project
+        do {
+            $cli->br();
+            do {
+                $input = $cli
+                    ->lightGreen()
+                    ->checkboxes('Select all of the tables you want to add to your project', $tables);
+                $selectedTables = $input->prompt();
+            } while (count($selectedTables) === 0);
+
+            $displayTables = [];
+            foreach ($selectedTables as $table) {
+                $displayTables[] = ['Selected Tables' => $table];
+            }
+
+            $cli->br();
+            $cli->bold()->lightBlue()->table($displayTables);
+            $cli->br();
+
+            /** @var Input $input */
+            $input = $cli->lightGray()->confirm('This look okay?');
+        } while (!$input->confirmed());
+
+        return $selectedTables;
+    }
 
     /**
-     * Initialization of the .env file
-     * @return string
+     * Formerly envInit()
+     * Get the .env file settings from the user
+     * @return string The .env settings
      */
-    private function envInit(): string {
-        $cli = $this->cli;
+    final public static function getDotEnv(): string {
+        $cli = CliBase::getCli();
         $cli->br();
         $cli->lightGreen()->border('*', 80);
         $cli->bold()->green('Willow uses a .env file to configure database access.');
@@ -24,14 +57,12 @@ trait EnvSetupTrait
         $cli->br();
         $cli->bold()->white('Enter values for the .env file');
 
-        // TODO: extension_loaded('pdo_<database type here>')
-        // See: https://stackoverflow.com/a/6113496/4323201
         do {
             $drivers = [
-                'MySQL/MariaDB' => 'mysql',
-                'Postgres' => 'pgsql',
-                'MS SQL' => 'sqlsrv',
-                'SQLite' => 'sqlite'
+                'MySQL' . extension_loaded('pdo_mysql') ? '' : ' [note: pdo_mysql driver not installed]' => 'mysql',
+                'Postgres'  . extension_loaded('pdo_pgsql') ? '' : ' [note: pdo_pgsql driver not installed]' => 'pgsql',
+                'MS SQL' . extension_loaded('pdo_sqlsrv') ? '' : ' [note: pdo_sqlsrv driver not installed]' => 'sqlsrv',
+                'SQLite' . extension_loaded('pdo_sqlite') ? '' : ' [note: pdo_sqlite driver not installed]' => 'sqlite'
             ];
 
             $driverChoices = array_keys($drivers);
@@ -129,5 +160,57 @@ env;
         } while (!$input->confirmed());
 
         return $envText;
+    }
+
+    /**
+     * Formerly routeInit()
+     * @param array $tables
+     * @return array
+     */
+    final public static function getRouteSelection(array $tables): array {
+        $cli = CliBase::getCli();
+
+        $tableRouteList = [];
+        foreach ($tables as $table) {
+            $tableRouteList[] = ['Table' => $table, 'Route' => strtolower($table)];
+        }
+
+        $cli->br();
+        $cli->white('Routes are defaulted to the lowercase table name.');
+        $cli->white('This is what the routes currently look like:');
+        $cli->br();
+        $cli->bold()->blue()->table($tableRouteList);
+        $cli->br();
+
+        $cli->out('You will be prompted to change or keep a route for each table.');
+        $input = $cli->input('Press enter to continue.');
+        $input->prompt();
+        $cli->br();
+
+        do {
+            $selectedRoutes = [];
+            foreach ($tableRouteList as $item) {
+                $table = $item['Table'];
+                $route = $item['Route'];
+
+                $input = $cli->input('Table: ' . $table . " Enter Route ($route):");
+                $input->defaultTo($route);
+                $response = $input->prompt();
+                $selectedRoutes[$table] = $response;
+            }
+
+            $displayRouteList = [];
+            foreach ($selectedRoutes as $table => $route) {
+                $displayRouteList[] = ['Table' => $table, 'Route' => strtolower($route)];
+            }
+
+            $cli->br();
+            $cli->bold()->blue()->table($displayRouteList);
+            $cli->br();
+
+            /** @var Input $input */
+            $input = $cli->lightGray()->confirm('This look okay?');
+        } while (!$input->confirmed());
+        return $selectedRoutes;
     }
 }

@@ -3,10 +3,18 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
+use League\CLImate\CLImate;
 use Willow\Robo\Script;
+use Robo\Tasks;
 
-class WillowCommands extends RoboBase
+class WillowCommands extends Tasks
 {
+    protected CLImate $cli;
+
+    public function __construct() {
+        $this->cli = CliBase::getCli();
+    }
+
     /**
      * Launch the Willow Framework User's Guide in the default web browser
      */
@@ -18,36 +26,36 @@ class WillowCommands extends RoboBase
      * Show Willow's fancy banner
      */
     final public function banner(): void {
-        Script::fancyBanner($this->cli);
+        Script::fancyBanner();
     }
 
-    final public function welcome(): void {
-        $this->billboard(__DIR__ . '/Billboards', 'welcome', 160, 'top');
+    final public function billboardWelcome(): void {
+        CliBase::billboard('welcome', 160, 'top');
         $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
         $input->prompt();
-        $this->billboard(__DIR__ . '/Billboards', 'welcome', 160, '-top');
+        CliBase::billboard( 'welcome', 160, '-top');
     }
 
-    final public function env(): void {
+    final public function billboardEnv(): void {
         $cli = $this->cli;
-        $this->billboard(__DIR__ . '/Billboards', 'make-env', 660, 'right');
+        CliBase::billboard('make-env', 660, 'right');
         $input = $cli->bold()->white()->input('Press enter to continue. Ctrl-C to quit.');
         $input->prompt();
-        $this->billboard(__DIR__ . '/Billboards', 'make-env', 660, '-right');
+        CliBase::billboard('make-env', 660, '-right');
     }
 
     final public function dank(): void {
         $cli = $this->cli;
-        $this->billboard(__DIR__ . '/Billboards', 'make-tables', 165, 'bottom');
+        CliBase::billboard('make-tables', 165, 'bottom');
         $input = $cli->bold()->white()->input('Press enter to begin. Ctrl-C to quit.');
         $input->prompt();
-        $this->billboard(__DIR__ . '/Billboards', 'make-tables', 165, '-top');
+        CliBase::billboard('make-tables', 165, '-top');
         $input = $cli->bold()->white()->input('Press enter to begin. Ctrl-C to quit.');
         $input->prompt();
-        $this->billboard(__DIR__ . '/Billboards', 'construction', 165, 'left');
+        CliBase::billboard('construction', 165, 'left');
         $input = $cli->bold()->white()->input('Press enter to begin. Ctrl-C to quit.');
         $input->prompt();
-        $this->billboard(__DIR__ . '/Billboards', 'construction', 165, '-right');
-        $this->billboard(__DIR__ . '/Billboards', 'backhoe', 165, 'left');
+        CliBase::billboard('construction', 165, '-right');
+        CliBase::billboard('backhoe', 165, 'left');
     }
 }

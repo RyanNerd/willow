@@ -18,7 +18,7 @@
         "optimize-autoloader": true
     },
     "require": {
-        "doctrine/dbal": "^3.1.0",
+        "doctrine/dbal": "^3.1.1",
         "ext-json": "*",
         "ext-pdo": "*",
         "illuminate/database": "^8.47.0",

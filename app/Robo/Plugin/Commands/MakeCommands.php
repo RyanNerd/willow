@@ -3,21 +3,15 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
+use League\CLImate\CLImate;
 use League\CLImate\TerminalObject\Dynamic\Input;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment as Twig;
 use Throwable;
-use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
-use Willow\Robo\Plugin\Commands\Traits\RouteSetupTrait;
-use Willow\Robo\Plugin\Commands\Traits\TableSetupTrait;
 use Exception;
 
-class MakeCommands extends RoboBase
+class MakeCommands
 {
-    use EnvSetupTrait;
-    use RouteSetupTrait;
-    use TableSetupTrait;
-
     protected const PROGRESS_STAGES = [
         'Model',
         'Controller',
@@ -26,15 +20,19 @@ class MakeCommands extends RoboBase
     ];
 
     private const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
+    private const DOT_ENV_PATH = __DIR__ . '/../../../../.env';
+    private CLImate $cli;
+
+    public function __construct() {
+        $this->cli = CliBase::getCli();
+    }
 
     /**
      * Builds the app using database tables
      */
     final public function make(): void {
         $cli = $this->cli;
-
-        $container = self::getWillowContainer();
-
+        $container = DatabaseUtilities::getContainer();
         try {
             // If viridian has any entries it means that make has already been run.
             // In this case the user must run the reset command before running make again.
@@ -71,45 +69,30 @@ class MakeCommands extends RoboBase
                 $input->prompt();
                 die();
             }
-
-
-            // Has .env file been read into ENV?
-            if ($container->has('ENV') && !empty($container->get('ENV')['DB_NAME'])) {
-                $cli->bold()->yellow()->border();
-                $cli->bold()->white("Database configuration already exists in .env");
-                $cli->br();
-                /** @var Input $input */
-                $input = $cli->bold()->lightGray()->confirm('Do you want to OVERWRITE it?');
-                $cli->bold()->yellow()->border();
-                if ($input->confirmed()) {
-                    $this->setEnvFromUser();
-                }
-            } else {
-                $this->setEnvFromUser();
-            }
         } catch (Throwable $e) {
-                RoboBase::showThrowableAndDie($e);
+                CliBase::showThrowableAndDie($e);
         }
 
         try {
-            // Get Eloquent ORM manager
-            $eloquent = RoboBase::getEloquent();
-
-            // Get the database connection object
-            $conn = $eloquent->getConnection();
-
-            // Get the tables from the database
-            $tables = DatabaseUtilities::getTableList($conn);
+            if (!file_exists(self::DOT_ENV_PATH)) {
+                CliBase::billboard('welcome', 160, 'top');
+                $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
+                $input->prompt();
+                CliBase::billboard('welcome', 160, '-top');
+                $this->setEnvFromUser();
+            }
 
             // Get the list of tables the user wants in their project
-            $selectedTables = $this->tableInit($tables);
+            $selectedTables = UserReplies::getTableSelection(DatabaseUtilities::getTableList());
+
+            // TODO: Get column details from user
 
             // Get the routes for each table that the user wants to use
-            $selectedRoutes = $this->routeInit($selectedTables);
+            $selectedRoutes = UserReplies::getRouteSelection($selectedTables);
 
             // Create the .viridian semaphore file
             if (file_put_contents(self::VIRIDIAN_PATH, 'TIMESTAMP=' . time()) === false) {
-                RoboBase::showThrowableAndDie(new Exception('Unable to create .viridian file.'));
+                CliBase::showThrowableAndDie(new Exception('Unable to create .viridian file.'));
             }
             $loader = new FilesystemLoader(__DIR__ . '/Templates');
             $twig = new Twig($loader);
@@ -131,14 +114,10 @@ class MakeCommands extends RoboBase
                     $progress->current($key + 1, $stage);
                     switch ($stage) {
                         case 'Model':
-                            $tableDetails = DatabaseUtilities::getTableAttributes($eloquent, $tableName);
+                            $tableDetails = DatabaseUtilities::getTableAttributes($tableName);
                             $columnList = [];
                             foreach ($tableDetails as $columnName => $type) {
-                                if ($type === 'datetime') {
-                                    $type = 'DateTime';
-                                }
-                                $columnList[] = ['column_name' => $columnName,
-                                    'type' => $type];
+                                $columnList[] = ['column_name' => $columnName, 'type' => $type];
                             }
                             $modelForge->forgeModel($tableName, $columnList);
                             break;
@@ -176,7 +155,7 @@ class MakeCommands extends RoboBase
             $cli->bold()->lightYellow()->border('*');
             $cli->br();
         } catch (Throwable $throwable) {
-            self::showThrowableAndDie($throwable);
+            CliBase::showThrowableAndDie($throwable);
         }
     }
 
@@ -187,7 +166,7 @@ class MakeCommands extends RoboBase
         $cli = $this->cli;
 
         try {
-            $container = self::getWillowContainer();
+            $container = DatabaseUtilities::getContainer();
 
             $viridian = $container->get('viridian');
 
@@ -227,7 +206,15 @@ class MakeCommands extends RoboBase
             $cli->br();
             die();
         } catch (Exception $e) {
-            RoboBase::showThrowableAndDie($e);
+            CliBase::showThrowableAndDie($e);
+        }
+    }
+
+    private function setEnvFromUser(): void {
+        $dotEnvFile = __DIR__ . '/../../../../.env';
+        while (!file_exists($dotEnvFile)) {
+            $envFileContent = UserReplies::getDotEnv();
+            file_put_contents($dotEnvFile, $envFileContent);
         }
     }
 }
