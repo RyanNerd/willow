@@ -34,11 +34,13 @@ class MakeCommands
         $cli = $this->cli;
 
         try {
+            // Does the .env file not exist?
             if (!file_exists(self::DOT_ENV_PATH)) {
                 CliBase::billboard('welcome', 160, 'top');
                 $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
                 $input->prompt();
                 CliBase::billboard('welcome', 160, '-top');
+                $this->cli->clear();
                 $this->setEnvFromUser();
             }
 
