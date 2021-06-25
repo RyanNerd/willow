@@ -21,7 +21,7 @@ class MakeCommands extends CommandsBase
     ];
 
     private const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
-    private CLImate $cli;
+    protected CLImate $cli;
 
     public function __construct() {
         $this->cli = CliBase::getCli();

@@ -124,16 +124,16 @@ final class UserReplies extends CommandsBase
             $showErrors = $input->confirmed() ? 'true' : 'false';
             $envText = <<<env
 
-<bold><yellow># Database configuration
-<bold><white>DB_DRIVER=<bold><blue>$dbDriver
-<bold><white>DB_HOST=<bold><blue>$dbHost
-<bold><white>DB_PORT=<bold><blue>$dbPort
-<bold><white>DB_NAME=<bold><blue>$dbName
-<bold><white>DB_USER=<bold><blue>$dbUser
+# Database configuration
+DB_DRIVER=$dbDriver
+DB_HOST=$dbHost
+DB_PORT=$dbPort
+DB_NAME=$dbName
+DB_USER=$dbUser
 DB_PASSWORD=$dbPassword
 
-<bold><yellow># Show error details as a HTML response
-<bold><white>SHOW_ERRORS=<bold><blue>$showErrors
+# Show error details as a HTML response
+SHOW_ERRORS=<bold><blue>$showErrors
 env;
 
             $envText = str_replace("\n\r", "\n", $envText);
@@ -145,7 +145,7 @@ env;
                 }
 
                 if (strstr($line, 'DB_PASSWORD')) {
-                    $obfuscatedEnv .= '<bold><white>DB_PASSWORD=<bold><blue>********' . PHP_EOL;
+                    $obfuscatedEnv .= 'DB_PASSWORD=********' . PHP_EOL;
                 } else {
                     $obfuscatedEnv .= $line . PHP_EOL;
                 }
