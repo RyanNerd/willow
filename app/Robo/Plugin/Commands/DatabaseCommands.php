@@ -5,6 +5,7 @@ namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\CLImate;
 use League\CLImate\TerminalObject\Dynamic\Input;
+use function DI\string;
 
 class DatabaseCommands
 {
@@ -81,5 +82,34 @@ class DatabaseCommands
         if (strlen($_ENV['DB_DRIVER'] ?? '') === 0) {
             include_once self::DOT_ENV_INCLUDE_FILE;
         }
+    }
+
+    /**
+     * Use DBAL to get index key information
+     * @param string $tableName
+     */
+    final public function keys(string $tableName) {
+        self::checkEnvLoaded();
+        $dbIndexes = DatabaseUtilities::getTableIndexes($tableName);
+        $columnIndexes = [];
+        foreach ($dbIndexes as $index) {
+            $indexName = $index->getName();
+            $columnName = implode(',', $index->getUnquotedColumns());
+
+            $flags = [];
+            $flags[] = $index->isPrimary() ? '[PK]' : '[  ]';
+            $flags[] = $index->isUnique() ? '[UQ]' : '[  ]';
+            $flags[] = $index->isSimpleIndex() ? '[IX]' : '[  ]';
+            $flags[] = $index->hasFlag('NN') ? '[NN]' : '[  ]';
+
+            $columnIndexes[] = [
+                'Column' => $columnName,
+                'Index Name' => $indexName,
+                'Flags' => implode('', $flags)
+            ];
+        }
+
+        $cli = CliBase::getCli();
+        $cli->table($columnIndexes);
     }
 }

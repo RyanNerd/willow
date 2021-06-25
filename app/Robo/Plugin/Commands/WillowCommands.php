@@ -6,6 +6,7 @@ namespace Willow\Robo\Plugin\Commands;
 use League\CLImate\CLImate;
 use Willow\Robo\Script;
 use Robo\Tasks;
+use Illuminate\Support\Str;
 
 class WillowCommands extends Tasks
 {
@@ -57,5 +58,10 @@ class WillowCommands extends Tasks
         $input->prompt();
         CliBase::billboard('construction', 165, '-right');
         CliBase::billboard('backhoe', 165, 'left');
+    }
+
+    final public function snake(string $s) {
+        $cli = $this->cli;
+        $cli->bold()->yellow(Str::snake($s));
     }
 }

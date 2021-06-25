@@ -52,6 +52,24 @@ final class UserReplies
         return $selectedTables;
     }
 
+    public static function getTableProperties(string $table) {
+        $tableDetails = DatabaseUtilities::getTableAttributes($table);
+        $displayDetails = [];
+        foreach ($tableDetails as $column => $type) {
+            $displayDetails[] = ['Column' => $column, 'Type' => $type, 'Flags' => 'PK[ ] AI[ ] NN[ ]'];
+        }
+
+        $cli = CliBase::getCli();
+        $cli->br();
+        $cli->bold()->blue()->table($displayDetails);
+        $cli->br();
+
+        /** @var Input $input */
+        $input = $cli->bold()->lightGray()->input("This is what $table currently looks like. Press enter to continue.");
+        $input->prompt();
+        return [$table => $tableDetails];
+    }
+
     /**
      * Get the .env file settings from the user
      * @return string The .env settings
@@ -123,17 +141,17 @@ final class UserReplies
             $input = $cli->bold()->green()->confirm('SHOW_ERRORS');
             $showErrors = $input->confirmed() ? 'true' : 'false';
             $envText = <<<env
-# Database configuration
-DB_DRIVER=$dbDriver
-DB_HOST=$dbHost
-DB_PORT=$dbPort
-DB_NAME=$dbName
-DB_USER=$dbUser
+
+<bold><yellow># Database configuration
+<bold><white>DB_DRIVER=<bold><blue>$dbDriver
+<bold><white>DB_HOST=<bold><blue>$dbHost
+<bold><white>DB_PORT=<bold><blue>$dbPort
+<bold><white>DB_NAME=<bold><blue>$dbName
+<bold><white>DB_USER=<bold><blue>$dbUser
 DB_PASSWORD=$dbPassword
 
-# Show error details as a HTML response
-SHOW_ERRORS=$showErrors
-
+<bold><yellow># Show error details as a HTML response
+<bold><white>SHOW_ERRORS=<bold><blue>$showErrors
 env;
 
             $envText = str_replace("\n\r", "\n", $envText);
@@ -141,11 +159,11 @@ env;
             $obfuscatedEnv = "";
             foreach ($envLines as $line) {
                 if (strlen($line) === 0) {
-                    continue;
+                    $line = ' ';
                 }
 
                 if (strstr($line, 'DB_PASSWORD')) {
-                    $obfuscatedEnv .= 'DB_PASSWORD=********' . PHP_EOL;
+                    $obfuscatedEnv .= '<bold><white>DB_PASSWORD=<bold><blue>********' . PHP_EOL;
                 } else {
                     $obfuscatedEnv .= $line . PHP_EOL;
                 }

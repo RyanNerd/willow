@@ -68,4 +68,13 @@ class DatabaseUtilities
         }
         return $tableDetails;
     }
+
+    public static function getDbalSchema() {
+        return self::getEloquent()->getConnection()->getDoctrineSchemaManager();
+    }
+
+    public static function getTableIndexes(string $tableName) {
+        return self::getDbalSchema()->listTableIndexes($tableName);
+    }
+
 }

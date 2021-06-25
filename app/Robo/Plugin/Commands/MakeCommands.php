@@ -96,7 +96,10 @@ class MakeCommands
             // Get the list of tables the user wants in their project
             $selectedTables = UserReplies::getTableSelection(DatabaseUtilities::getTableList());
 
-            // TODO: Get column details from user
+            $tableProperties = [];
+            foreach ($selectedTables as $table) {
+                UserReplies::getTableProperties($table);
+            }
 
             // Get the routes for each table that the user wants to use
             $selectedRoutes = UserReplies::getRouteSelection($selectedTables);
