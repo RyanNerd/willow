@@ -5,7 +5,7 @@ namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\TerminalObject\Dynamic\Input;
 
-final class UserReplies
+final class UserReplies extends CommandsBase
 {
     /**
      * When the .env file does not exist this function is called to prompt the user to create the .env file
@@ -50,24 +50,6 @@ final class UserReplies
         } while (!$input->confirmed());
 
         return $selectedTables;
-    }
-
-    public static function getTableProperties(string $table) {
-        $tableDetails = DatabaseUtilities::getTableAttributes($table);
-        $displayDetails = [];
-        foreach ($tableDetails as $column => $type) {
-            $displayDetails[] = ['Column' => $column, 'Type' => $type, 'Flags' => 'PK[ ] AI[ ] NN[ ]'];
-        }
-
-        $cli = CliBase::getCli();
-        $cli->br();
-        $cli->bold()->blue()->table($displayDetails);
-        $cli->br();
-
-        /** @var Input $input */
-        $input = $cli->bold()->lightGray()->input("This is what $table currently looks like. Press enter to continue.");
-        $input->prompt();
-        return [$table => $tableDetails];
     }
 
     /**

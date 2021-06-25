@@ -10,7 +10,7 @@ use Twig\Environment as Twig;
 use Throwable;
 use Exception;
 
-class MakeCommands
+class MakeCommands extends CommandsBase
 {
     protected const PROGRESS_STAGES = [
         'Model',
@@ -26,67 +26,28 @@ class MakeCommands
 
     public function __construct() {
         $this->cli = CliBase::getCli();
+
+        // Does the .env file not exist? If not then prompt user and create
+        if (!file_exists(self::DOT_ENV_PATH)) {
+            CliBase::billboard('make-env', 160, 'top');
+            $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
+            $input->prompt();
+            CliBase::billboard('welcome', 160, '-top');
+            $this->cli->clear();
+            UserReplies::setEnvFromUser();
+        }
+        include_once self::DOT_ENV_INCLUDE_FILE;
+
+        // Check for a previous project build out
+        $this->checkViridian();
     }
 
     /**
      * Builds the app using database tables
      */
     final public function makeBuild(): void {
-        $cli = $this->cli;
-
         try {
-            // Does the .env file not exist?
-            if (!file_exists(self::DOT_ENV_PATH)) {
-                $cli = CliBase::getCli();
-                CliBase::billboard('make-env', 160, 'top');
-                $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
-                $input->prompt();
-                CliBase::billboard('welcome', 160, '-top');
-                $cli->clear();
-                UserReplies::setEnvFromUser();
-            }
-            include_once self::DOT_ENV_INCLUDE_FILE;
-
-            // If viridian has any entries it means that make has already been run.
-            // In this case the user must run the reset command before running make again.
-            if (file_exists(__DIR__ . '/../../../../.viridian')) {
-                $cli->br();
-                $cli->bold()
-                    ->backgroundLightRed()
-                    ->white()
-                    ->border('*');
-                $cli
-                    ->bold()
-                    ->backgroundLightRed()
-                    ->white('                 !!!Running make is destructive!!!                              ');
-                $cli
-                    ->bold()
-                    ->backgroundLightRed()
-                    ->white(' Re-running make will destroy & replace all models, controllers, models etc.    ');
-                $cli
-                    ->bold()
-                    ->backgroundLightRed()
-                    ->white()
-                    ->border(' ');
-                $cli
-                    ->bold()
-                    ->backgroundLightRed()
-                    ->white(' You must run the reset command before you can re-run the make command.         ');
-                $cli->bold()
-                    ->backgroundLightRed()
-                    ->white()
-                    ->border('*');
-                $cli->br();
-                $input = $cli->bold()->lightGray()->input('Press enter to exit');
-                $input->prompt();
-                die();
-            }
-        } catch (Throwable $e) {
-            CliBase::showThrowableAndDie($e);
-        }
-
-        try {
-            $cli = CliBase::getCli();
+            $cli = $this->cli;
             CliBase::billboard('make-tables', 165, 'bottom');
             $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
             $input->prompt();
@@ -96,18 +57,24 @@ class MakeCommands
             // Get the list of tables the user wants in their project
             $selectedTables = UserReplies::getTableSelection(DatabaseUtilities::getTableList());
 
-            $tableProperties = [];
+
+            $cli = $this->cli;
+            CliBase::billboard('make-routes', 165, 'top');
+            $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
+            $input->prompt();
+            CliBase::billboard('make-routes', 165, '-bottom');
+            $cli->clear();
+
+            // Prompt the user for the route for each table.
             foreach ($selectedTables as $table) {
-                UserReplies::getTableProperties($table);
+                self::showColumns($table);
+
+                // Get the routes for each table that the user wants to use
+                // FIXME: Should prompt per table
+                $cli->bold()->yellow('Table: '. $table);
+                $selectedRoutes = UserReplies::getRouteSelection($selectedTables);
             }
 
-            // Get the routes for each table that the user wants to use
-            $selectedRoutes = UserReplies::getRouteSelection($selectedTables);
-
-            // Create the .viridian semaphore file
-            if (file_put_contents(self::VIRIDIAN_PATH, 'TIMESTAMP=' . time()) === false) {
-                CliBase::showThrowableAndDie(new Exception('Unable to create .viridian file.'));
-            }
             $loader = new FilesystemLoader(__DIR__ . '/Templates');
             $twig = new Twig($loader);
             $actionsForge = new ActionsForge($twig);
@@ -169,6 +136,11 @@ class MakeCommands
             $cli->bold()->lightYellow('Project build completed!');
             $cli->bold()->lightYellow()->border('*');
             $cli->br();
+
+            // Create the .viridian semaphore file
+            if (file_put_contents(self::VIRIDIAN_PATH, 'TIMESTAMP=' . time()) === false) {
+                CliBase::showThrowableAndDie(new Exception('Unable to create .viridian file.'));
+            }
         } catch (Throwable $throwable) {
             CliBase::showThrowableAndDie($throwable);
         }
@@ -221,6 +193,51 @@ class MakeCommands
             $cli->br();
             die();
         } catch (Exception $e) {
+            CliBase::showThrowableAndDie($e);
+        }
+    }
+
+    /**
+     * If a .viridian file exists then warn the user and exit
+     */
+    private function checkViridian() {
+        try {
+            // If viridian has any entries it means that make has already been run.
+            // In this case the user must run the reset command before running make again.
+            if (file_exists(__DIR__ . '/../../../../.viridian')) {
+                $cli = $this->cli;
+                $cli->br();
+                $cli->bold()
+                    ->backgroundLightRed()
+                    ->white()
+                    ->border('*');
+                $cli
+                    ->bold()
+                    ->backgroundLightRed()
+                    ->white('                 !!!Running make is destructive!!!                              ');
+                $cli
+                    ->bold()
+                    ->backgroundLightRed()
+                    ->white(' Re-running make will destroy & replace all models, controllers, models etc.    ');
+                $cli
+                    ->bold()
+                    ->backgroundLightRed()
+                    ->white()
+                    ->border(' ');
+                $cli
+                    ->bold()
+                    ->backgroundLightRed()
+                    ->white(' You must run the reset command before you can re-run the make command.         ');
+                $cli->bold()
+                    ->backgroundLightRed()
+                    ->white()
+                    ->border('*');
+                $cli->br();
+                $input = $cli->bold()->lightGray()->input('Press enter to exit');
+                $input->prompt();
+                die();
+            }
+        } catch (Throwable $e) {
             CliBase::showThrowableAndDie($e);
         }
     }

@@ -5,9 +5,8 @@ namespace Willow\Robo\Plugin\Commands;
 
 use Doctrine\DBAL\Exception;
 use League\CLImate\CLImate;
-use League\CLImate\TerminalObject\Dynamic\Input;
 
-class DatabaseCommands
+class DatabaseCommands extends CommandsBase
 {
     private const DOT_ENV_FILE = __DIR__ . '/../../../../.env';
     private const DOT_ENV_INCLUDE_FILE = __DIR__ . '/../../../../config/_env.php';
@@ -40,7 +39,7 @@ class DatabaseCommands
      * @throws Exception
      */
     final public function dbIndexes() {
-        $dbIndexes = DatabaseUtilities::getTableIndexes($this->getUserTableSelection());
+        $dbIndexes = DatabaseUtilities::getTableIndexes(self::getUserTableSelection());
         if ($dbIndexes) {
             $columnIndexes = [];
             foreach ($dbIndexes as $index) {
@@ -68,29 +67,9 @@ class DatabaseCommands
 
     /**
      * Show column details for a selected table
-     * @throws Exception
      */
     final public function dbColumns() {
-        $tabDetails = DatabaseUtilities::getTableDetails($this->getUserTableSelection());
-        $pk = $tabDetails->getPrimaryKey();
-        $pkColumns = $pk->getColumns();
-        $columns = $tabDetails->getColumns();
-        $colDetails = [];
-        foreach ($columns as $column) {
-            $colArray = $column->toArray();
-            $colDetails[] = [
-                '<bold><white>Name' => '<bold><white>' . $colArray['name'],
-                '<bold><white>Type' => '<bold><blue>' . $colArray['type']->getName(),
-                '<bold><white>Len' => '<bold><blue>' . $colArray['length'],
-                '<bold><white>PK' => '<bold><blue>' . in_array($colArray['name'], $pkColumns) ? 'X':' ',
-                '<bold><white>NN' => '<bold><blue>' . $colArray['notnull'] ? 'X':' ',
-                '<bold><white>AI' => '<bold><blue>' . $colArray['autoincrement'] ? 'X':' ',
-                '<bold><white>UN' => '<bold><blue>' . $colArray['unsigned'] ? 'X':' ',
-                '<bold><white>Dft' => '<bold><blue>' . $colArray['default'],
-                '<bold><white>Cmnt' => '<bold><blue>' . chunk_split($colArray['comment'] ?? '', 15)
-            ];
-        }
-        CliBase::getCli()->table($colDetails);
+        self::showColumns(self::getUserTableSelection());
     }
 
     /**
@@ -98,7 +77,7 @@ class DatabaseCommands
      * @throws Exception
      */
     final public function dbDetails() {
-        $tableDetails = DatabaseUtilities::getTableDetails($this->getUserTableSelection());
+        $tableDetails = DatabaseUtilities::getTableDetails(self::getUserTableSelection());
         $options = $tableDetails->getOptions();
         $fk = $tableDetails->getForeignKeys();
         $pk = $tableDetails->getPrimaryKey();
@@ -152,18 +131,5 @@ class DatabaseCommands
         if (strlen($_ENV['DB_DRIVER'] ?? '') === 0) {
             include_once self::DOT_ENV_INCLUDE_FILE;
         }
-    }
-
-    /**
-     * Ask user what table they want to use
-     * @return string
-     * @throws Exception
-     */
-    private function getUserTableSelection(): string {
-        $tables = DatabaseUtilities::getTableList();
-        $cli = $this->cli;
-        /** @var Input $input */
-        $input = $cli->radio('Select a table', $tables);
-        return $input->prompt();
     }
 }

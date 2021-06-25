@@ -1,4 +1,5 @@
 .env
+.viridian
 .phpunit.result.cache
 vendor
 /willow
