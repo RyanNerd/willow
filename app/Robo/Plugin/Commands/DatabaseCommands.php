@@ -40,15 +40,7 @@ class DatabaseCommands
      * @throws Exception
      */
     final public function dbIndexes() {
-        $tables = DatabaseUtilities::getTableList();
-
-        // Ask the user what table to get details for
-        $cli = $this->cli;
-        /** @var Input $input */
-        $input = $cli->radio('Select a table', $tables);
-        $tableName = $input->prompt();
-
-        $dbIndexes = DatabaseUtilities::getTableIndexes($tableName);
+        $dbIndexes = DatabaseUtilities::getTableIndexes($this->getUserTableSelection());
         if ($dbIndexes) {
             $columnIndexes = [];
             foreach ($dbIndexes as $index) {
@@ -70,7 +62,7 @@ class DatabaseCommands
             $cli = CliBase::getCli();
             $cli->bold()->blue()->table($columnIndexes);
         } else {
-            CliBase::getCli()->red()->backgroundLightGray('Unable to determine index keys for: ' . $tableName);
+            CliBase::getCli()->red()->backgroundLightGray('Unable to load table details');
         }
     }
 
@@ -79,31 +71,66 @@ class DatabaseCommands
      * @throws Exception
      */
     final public function dbColumns() {
-        $tables = DatabaseUtilities::getTableList();
-
-        // Ask the user what table to get details for
-        $cli = $this->cli;
-        /** @var Input $input */
-        $input = $cli->radio('Select a table', $tables);
-        $tableName = $input->prompt();
-
-        $tabDetails = DatabaseUtilities::getTableDetails($tableName);
+        $tabDetails = DatabaseUtilities::getTableDetails($this->getUserTableSelection());
+        $pk = $tabDetails->getPrimaryKey();
+        $pkColumns = $pk->getColumns();
         $columns = $tabDetails->getColumns();
         $colDetails = [];
         foreach ($columns as $column) {
             $colArray = $column->toArray();
             $colDetails[] = [
-                'Column' => $colArray['name'],
-                'Type' => $colArray['type']->getName(),
-                'Length' => $colArray['length'],
-                'NN' => $colArray['notnull'],
-                'AI' => $colArray['autoincrement'],
-                'UN' => $colArray['unsigned'],
-                'Default' => $colArray['default'],
-                'Comment' => chunk_split($colArray['comment'] ?? '', 15)
+                '<bold><white>Name' => '<bold><white>' . $colArray['name'],
+                '<bold><white>Type' => '<bold><blue>' . $colArray['type']->getName(),
+                '<bold><white>Len' => '<bold><blue>' . $colArray['length'],
+                '<bold><white>PK' => '<bold><blue>' . in_array($colArray['name'], $pkColumns) ? 'X':' ',
+                '<bold><white>NN' => '<bold><blue>' . $colArray['notnull'] ? 'X':' ',
+                '<bold><white>AI' => '<bold><blue>' . $colArray['autoincrement'] ? 'X':' ',
+                '<bold><white>UN' => '<bold><blue>' . $colArray['unsigned'] ? 'X':' ',
+                '<bold><white>Dft' => '<bold><blue>' . $colArray['default'],
+                '<bold><white>Cmnt' => '<bold><blue>' . chunk_split($colArray['comment'] ?? '', 15)
             ];
         }
         CliBase::getCli()->table($colDetails);
+    }
+
+    /**
+     * Show details for a selected table
+     * @throws Exception
+     */
+    final public function dbDetails() {
+        $tableDetails = DatabaseUtilities::getTableDetails($this->getUserTableSelection());
+        $options = $tableDetails->getOptions();
+        $fk = $tableDetails->getForeignKeys();
+        $pk = $tableDetails->getPrimaryKey();
+        $pkName = $pk->getName();
+        $pkColumns = implode(',', $pk->getColumns());
+
+        $showDetails = [
+            [
+                'Name' => 'Primary Key',
+                'Setting' => $pkName
+            ],
+            [
+                'Name' => 'PK Column(s)',
+                'Setting' => $pkColumns
+            ]
+        ];
+
+        foreach ($options as $key => $value) {
+            if (is_string($value)) {
+                $showDetails[] = ['Name' => $key, 'Setting' => $value];
+            }
+        }
+
+        foreach ($fk as $key => $value) {
+            $showDetails[] = [
+                'Name' => 'Local (' . $value->getName() . ')',
+                'Setting' => implode(',', $value->getLocalColumns())
+            ];
+            $showDetails[] = ['Name' => 'Foreign Table', 'Setting' => $value->getForeignTableName()];
+            $showDetails[] = ['Name' => 'Foreign Column(s)', 'Setting' => implode(',', $value->getForeignColumns())];
+        }
+        CliBase::getCli()->br()->table($showDetails);
     }
 
     /**
@@ -125,5 +152,18 @@ class DatabaseCommands
         if (strlen($_ENV['DB_DRIVER'] ?? '') === 0) {
             include_once self::DOT_ENV_INCLUDE_FILE;
         }
+    }
+
+    /**
+     * Ask user what table they want to use
+     * @return string
+     * @throws Exception
+     */
+    private function getUserTableSelection(): string {
+        $tables = DatabaseUtilities::getTableList();
+        $cli = $this->cli;
+        /** @var Input $input */
+        $input = $cli->radio('Select a table', $tables);
+        return $input->prompt();
     }
 }
