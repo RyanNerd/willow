@@ -31,7 +31,7 @@ class MakeCommands
     /**
      * Builds the app using database tables
      */
-    final public function make(): void {
+    final public function makeBuild(): void {
         $cli = $this->cli;
 
         try {
@@ -128,6 +128,7 @@ class MakeCommands
                     $progress->current($key + 1, $stage);
                     switch ($stage) {
                         case 'Model':
+                            // TODO: Use DatabaseUtilities::getTableDetails see dbColumns() in DatabaseCommands.php
                             $tableDetails = DatabaseUtilities::getTableAttributes($tableName);
                             $columnList = [];
                             foreach ($tableDetails as $columnName => $type) {
@@ -176,7 +177,7 @@ class MakeCommands
     /**
      * Resets the project back to factory defaults
      */
-    final public function reset(): void {
+    final public function makeReset(): void {
         $cli = $this->cli;
 
         try {

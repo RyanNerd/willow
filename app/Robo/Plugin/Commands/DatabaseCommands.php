@@ -3,28 +3,25 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
+use Doctrine\DBAL\Exception;
 use League\CLImate\CLImate;
 use League\CLImate\TerminalObject\Dynamic\Input;
-use function DI\string;
 
 class DatabaseCommands
 {
     private const DOT_ENV_FILE = __DIR__ . '/../../../../.env';
     private const DOT_ENV_INCLUDE_FILE = __DIR__ . '/../../../../config/_env.php';
-
     private CLImate $cli;
 
     public function __construct() {
         $this->cli = CliBase::getCli();
+        $this->checkEnvLoaded();
     }
 
     /**
-     * Display all the tables in a grid
+     * Show all the tables
      */
-    final public function tables(): void {
-        $this->checkEnvLoaded();
-
-        // Get the tables from the database
+    final public function dbTables(): void {
         $tables = DatabaseUtilities::getTableList();
         $tableList = [];
         foreach ($tables as $table) {
@@ -39,11 +36,10 @@ class DatabaseCommands
     }
 
     /**
-     * Display column details for a selected table
+     * Show all the indexes for a selected table
+     * @throws Exception
      */
-    final public function details(): void {
-        $this->checkEnvLoaded();
-
+    final public function dbIndexes() {
         $tables = DatabaseUtilities::getTableList();
 
         // Ask the user what table to get details for
@@ -52,15 +48,62 @@ class DatabaseCommands
         $input = $cli->radio('Select a table', $tables);
         $tableName = $input->prompt();
 
-        $details = DatabaseUtilities::getTableAttributes($tableName);
+        $dbIndexes = DatabaseUtilities::getTableIndexes($tableName);
+        if ($dbIndexes) {
+            $columnIndexes = [];
+            foreach ($dbIndexes as $index) {
+                $indexName = $index->getName();
+                $columnName = implode(", \n", $index->getUnquotedColumns());
 
-        $displayDetails = [];
-        foreach ($details as $column => $type) {
-            $displayDetails[] = ['Column' => $column, 'Type' => $type];
+                $flags = [];
+                $flags[] = $index->isPrimary() ? '[PK]' : '[  ]';
+                $flags[] = $index->isUnique() ? '[UQ]' : '[  ]';
+                $flags[] = $index->isSimpleIndex() ? '[IX]' : '[  ]';
+
+                $columnIndexes[] = [
+                'Column' => $columnName,
+                'Index Name' => $indexName,
+                'Flags' => implode('', $flags)
+                ];
+            }
+
+            $cli = CliBase::getCli();
+            $cli->bold()->blue()->table($columnIndexes);
+        } else {
+            CliBase::getCli()->red()->backgroundLightGray('Unable to determine index keys for: ' . $tableName);
         }
-        $cli->br();
-        $cli->bold()->blue()->table($displayDetails);
-        $cli->br();
+    }
+
+    /**
+     * Show column details for a selected table
+     * @throws Exception
+     */
+    final public function dbColumns() {
+        $tables = DatabaseUtilities::getTableList();
+
+        // Ask the user what table to get details for
+        $cli = $this->cli;
+        /** @var Input $input */
+        $input = $cli->radio('Select a table', $tables);
+        $tableName = $input->prompt();
+
+        $tabDetails = DatabaseUtilities::getTableDetails($tableName);
+        $columns = $tabDetails->getColumns();
+        $colDetails = [];
+        foreach ($columns as $column) {
+            $colArray = $column->toArray();
+            $colDetails[] = [
+                'Column' => $colArray['name'],
+                'Type' => $colArray['type']->getName(),
+                'Length' => $colArray['length'],
+                'NN' => $colArray['notnull'],
+                'AI' => $colArray['autoincrement'],
+                'UN' => $colArray['unsigned'],
+                'Default' => $colArray['default'],
+                'Comment' => chunk_split($colArray['comment'] ?? '', 15)
+            ];
+        }
+        CliBase::getCli()->table($colDetails);
     }
 
     /**
@@ -82,34 +125,5 @@ class DatabaseCommands
         if (strlen($_ENV['DB_DRIVER'] ?? '') === 0) {
             include_once self::DOT_ENV_INCLUDE_FILE;
         }
-    }
-
-    /**
-     * Use DBAL to get index key information
-     * @param string $tableName
-     */
-    final public function keys(string $tableName) {
-        self::checkEnvLoaded();
-        $dbIndexes = DatabaseUtilities::getTableIndexes($tableName);
-        $columnIndexes = [];
-        foreach ($dbIndexes as $index) {
-            $indexName = $index->getName();
-            $columnName = implode(',', $index->getUnquotedColumns());
-
-            $flags = [];
-            $flags[] = $index->isPrimary() ? '[PK]' : '[  ]';
-            $flags[] = $index->isUnique() ? '[UQ]' : '[  ]';
-            $flags[] = $index->isSimpleIndex() ? '[IX]' : '[  ]';
-            $flags[] = $index->hasFlag('NN') ? '[NN]' : '[  ]';
-
-            $columnIndexes[] = [
-                'Column' => $columnName,
-                'Index Name' => $indexName,
-                'Flags' => implode('', $flags)
-            ];
-        }
-
-        $cli = CliBase::getCli();
-        $cli->table($columnIndexes);
     }
 }

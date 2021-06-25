@@ -8,7 +8,7 @@ use Robo\Tasks;
 class SampleCommands extends Tasks
 {
     /**
-     * Launch the built-in PHP server and load the Sample in a web browser
+     * Launch the built-in PHP server & load the sample in the web
      */
     final public function sample(): void {
         $this->taskServer(8088)

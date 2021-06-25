@@ -77,4 +77,7 @@ class DatabaseUtilities
         return self::getDbalSchema()->listTableIndexes($tableName);
     }
 
+    public static function getTableDetails(string $tableName) {
+        return self::getDbalSchema()->listTableDetails($tableName);
+    }
 }

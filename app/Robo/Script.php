@@ -20,7 +20,7 @@ class Script
      */
     public static function postCreateProjectCmd(Event $event): void {
         // Get a CLI object
-        $cli = new CLImate();
+        $cli = CliBase::getCli();
         $cli->br();
 
         // Is the user running windows?

@@ -12,7 +12,7 @@ class EjectCommands
     private const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
 
     /**
-     * Remove Sample controller, routes, & other artifacts from the project
+     * Remove the Sample and other artifacts from the project
      */
     final public function eject(): void {
         $cli = CliBase::getCli();
