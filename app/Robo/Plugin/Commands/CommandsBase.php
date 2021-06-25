@@ -50,10 +50,10 @@ abstract class CommandsBase
         // Does the .env file not exist? If not then prompt user and create
         if (!file_exists(self::DOT_ENV_PATH)) {
             CliBase::billboard('make-env', 160, 'top');
-            $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
+            $input = CliBase::getCli()->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
             $input->prompt();
             CliBase::billboard('welcome', 160, '-top');
-            $this->cli->clear();
+            CliBase::getCli()->clear();
             UserReplies::setEnvFromUser();
         }
 
