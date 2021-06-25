@@ -8,6 +8,9 @@ use League\CLImate\TerminalObject\Dynamic\Input;
 
 abstract class CommandsBase
 {
+    private const DOT_ENV_PATH = __DIR__ . '/../../../../.env';
+    private const DOT_ENV_INCLUDE_FILE = __DIR__ . '/../../../../config/_env.php';
+
     protected static function showColumns(string $tableName) {
         $tabDetails = DatabaseUtilities::getTableDetails($tableName);
         $pk = $tabDetails->getPrimaryKey();
@@ -41,5 +44,22 @@ abstract class CommandsBase
         /** @var Input $input */
         $input = CliBase::getCli()->radio('Select a table', $tables);
         return $input->prompt();
+    }
+
+    protected function checkEnvLoaded() {
+        // Does the .env file not exist? If not then prompt user and create
+        if (!file_exists(self::DOT_ENV_PATH)) {
+            CliBase::billboard('make-env', 160, 'top');
+            $input = $this->cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
+            $input->prompt();
+            CliBase::billboard('welcome', 160, '-top');
+            $this->cli->clear();
+            UserReplies::setEnvFromUser();
+        }
+
+        // If the .env file is not loaded then load it now.
+        if (strlen($_ENV['DB_DRIVER'] ?? '') === 0) {
+            include_once self::DOT_ENV_INCLUDE_FILE;
+        }
     }
 }

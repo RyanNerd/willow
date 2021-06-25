@@ -163,17 +163,12 @@ env;
     }
 
     /**
-     * Formerly routeInit()
      * @param array $tables
      * @return array
+     * @deprecated
      */
-    final public static function getRouteSelection(array $tables): array {
+    final public static function showSelection(array $tableName): array {
         $cli = CliBase::getCli();
-
-        $tableRouteList = [];
-        foreach ($tables as $table) {
-            $tableRouteList[] = ['Table' => $table, 'Route' => strtolower($table)];
-        }
 
         $cli->br();
         $cli->white('Routes are defaulted to the lowercase table name.');

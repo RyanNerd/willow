@@ -8,19 +8,17 @@ use League\CLImate\CLImate;
 
 class DatabaseCommands extends CommandsBase
 {
-    private const DOT_ENV_FILE = __DIR__ . '/../../../../.env';
-    private const DOT_ENV_INCLUDE_FILE = __DIR__ . '/../../../../config/_env.php';
     private CLImate $cli;
 
     public function __construct() {
         $this->cli = CliBase::getCli();
-        $this->checkEnvLoaded();
     }
 
     /**
      * Show all the tables
      */
     final public function dbTables(): void {
+        $this->checkEnvLoaded();
         $tables = DatabaseUtilities::getTableList();
         $tableList = [];
         foreach ($tables as $table) {
@@ -39,6 +37,7 @@ class DatabaseCommands extends CommandsBase
      * @throws Exception
      */
     final public function dbIndexes() {
+        $this->checkEnvLoaded();
         $dbIndexes = DatabaseUtilities::getTableIndexes(self::getUserTableSelection());
         if ($dbIndexes) {
             $columnIndexes = [];
@@ -69,6 +68,7 @@ class DatabaseCommands extends CommandsBase
      * Show column details for a selected table
      */
     final public function dbColumns() {
+        $this->checkEnvLoaded();
         self::showColumns(self::getUserTableSelection());
     }
 
@@ -77,6 +77,7 @@ class DatabaseCommands extends CommandsBase
      * @throws Exception
      */
     final public function dbDetails() {
+        $this->checkEnvLoaded();
         $tableDetails = DatabaseUtilities::getTableDetails(self::getUserTableSelection());
         $options = $tableDetails->getOptions();
         $fk = $tableDetails->getForeignKeys();
@@ -110,26 +111,5 @@ class DatabaseCommands extends CommandsBase
             $showDetails[] = ['Name' => 'Foreign Column(s)', 'Setting' => implode(',', $value->getForeignColumns())];
         }
         CliBase::getCli()->br()->table($showDetails);
-    }
-
-    /**
-     * Check if the .env file exists and has been loaded, if not prompt the user and build the .env file.
-     */
-    private function checkEnvLoaded() {
-        if (!file_exists(self::DOT_ENV_FILE)) {
-            $cli = CliBase::getCli();
-            CliBase::billboard('welcome', 160, 'top');
-            $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
-            $input->prompt();
-            CliBase::billboard('welcome', 160, '-top');
-            $cli->clear();
-
-            UserReplies::setEnvFromUser();
-        }
-
-        // If the .env file is not loaded then load it now.
-        if (strlen($_ENV['DB_DRIVER'] ?? '') === 0) {
-            include_once self::DOT_ENV_INCLUDE_FILE;
-        }
     }
 }
