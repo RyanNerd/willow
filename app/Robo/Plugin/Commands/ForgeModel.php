@@ -23,19 +23,34 @@ class ForgeModel extends ForgeBase
      */
     final public function forgeModel(string $table, array $columnList): void {
         try {
-            // Render the Model code.
+            $className = ucfirst(Str::camel($table));
+
+            // Render the Model code
             $modelCode = $this->twig->render(
                 'Model.php.twig',
                 [
                     'table' => $table,
-                    'class_name' => ucfirst(Str::camel($table)),
+                    'class_name' => $className,
                     'column_list' => $columnList
                 ]
             );
-            // Save the Model code file into the Models directory.
+            // Save the Model code file into the Models directory
             $modelFile = __DIR__ . '/../../../Models/' . ucfirst(Str::camel($table)) . '.php';
             if (file_put_contents($modelFile, $modelCode) === false) {
                 $this->forgeError(new Exception('Unable to create: ' . $modelFile));
+            }
+
+            // Render the ModelRule code
+            $modelRuleCode = $this->twig->render(
+                'ModelRule.php.twig',
+                [
+                    'class_name' => $className
+                ]
+            );
+            // Save the ModelRule code file into the Models directory
+            $modelRuleFile = __DIR__ . '/../../../Models/' . ucfirst(Str::camel($table)) . 'ModelRule.php';
+            if (file_put_contents($modelRuleFile, $modelRuleCode) === false) {
+                $this->forgeError(new Exception('Unable to create: ' . $modelRuleFile));
             }
         } catch (Throwable $throwable) {
             $this->forgeError($throwable);

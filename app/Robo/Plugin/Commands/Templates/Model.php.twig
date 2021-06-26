@@ -13,7 +13,7 @@ use DateTime;
 #[ApplyModelRule(ModelDefaultRules::class)]
 #[ApplyModelRule({{ class_name }}ModelRules::class)]
 {% for column in column_list %}
-#[ApplyModelColumnAttributes('{{ column.name }}', '{{ column.type }}', {{ column.length }}, {{ column.flag_text }})]
+#[ApplyModelColumnAttributes('{{ column.name }}', '{{ column.type }}', {{ column.length }}, [{% for flag in column.flags %} '{{ flag|e }}', {% endfor %}])]
 {% endfor %}
 class {{ class_name }} extends ModelBase
 {

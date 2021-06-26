@@ -50,7 +50,7 @@ class MakeCommands extends CommandsBase
             CliBase::billboard('make-routes', 165, 'top');
             $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
             $input->prompt();
-            CliBase::billboard('make-routes', 165, '-bottom');
+            CliBase::billboard('make-routes', 200, '-left');
 
             // Prompt the user for the route for each table.
             do {
@@ -88,10 +88,10 @@ class MakeCommands extends CommandsBase
             $registerForge = new ForgeRegister($twig);
             $validatorForge = new ForgeValidator($twig);
 
-            CliBase::billboard('construction', 165, 'left');
+            CliBase::billboard('construction', 200, 'left');
             $input = $cli->bold()->white()->input('Press enter to begin. Ctrl-C to quit.');
             $input->prompt();
-            CliBase::billboard('construction', 165, '-right');
+            CliBase::billboard('construction', 200, '-right');
 
             $cli->br();
             $cli->bold()->white()->border('*');
@@ -113,22 +113,26 @@ class MakeCommands extends CommandsBase
                             foreach ($columns as $column) {
                                 $colArray = $column->toArray();
                                 $colArray['type'] = $colArray['type']->getName();
+                                $colArray['length'] ??= 'null';
+
                                 $flags = [];
                                 if (in_array($colArray['name'], $pkColumns)) {
-                                    $flags[] = 'PK';
+                                    $flags[] = "PK";
                                 }
                                 if ($colArray['autoincrement']) {
-                                    $flags[] = 'AI';
+                                    $flags[] = "AI";
                                 }
                                 if ($colArray['notnull']) {
-                                    $flags[] = 'NN';
+                                    $flags[] = "NN";
                                 }
                                 if ($colArray['unsigned']) {
-                                    $flags[] = 'UN';
+                                    $flags[] = "UN";
                                 }
                                 if ($colArray['fixed']) {
-                                    $flags[] = 'FX';
+                                    $flags[] = "FX";
                                 }
+                                $colArray['flags'] = $flags;
+                                $colDetails[] = $colArray;
                             }
                             $modelForge->forgeModel($tableName, $colDetails);
                             break;
