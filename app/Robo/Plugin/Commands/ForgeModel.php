@@ -42,13 +42,13 @@ class ForgeModel extends ForgeBase
 
             // Render the ModelRule code
             $modelRuleCode = $this->twig->render(
-                'ModelRule.php.twig',
+                'ModelRules.php.twig',
                 [
                     'class_name' => $className
                 ]
             );
             // Save the ModelRule code file into the Models directory
-            $modelRuleFile = __DIR__ . '/../../../Models/' . ucfirst(Str::camel($table)) . 'ModelRule.php';
+            $modelRuleFile = __DIR__ . '/../../../Models/' . ucfirst(Str::camel($table)) . 'ModelRules.php';
             if (file_put_contents($modelRuleFile, $modelRuleCode) === false) {
                 $this->forgeError(new Exception('Unable to create: ' . $modelRuleFile));
             }
