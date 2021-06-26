@@ -4,36 +4,23 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands;
 
 use Exception;
-use Illuminate\Support\Str;
 use Throwable;
-use Twig\Environment as Twig;
 
-class ActionsForge
+class ForgeActions extends ForgeBase
 {
-    private const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
-
-    public function __construct(private Twig $twig) {
-    }
-
     /**
      * Forge the DeleteAction code given the table name.
      * @param string $table
      */
     final public function forgeDeleteAction(string $table): void {
         try {
-            // Format the class name
-            $className = ucfirst(Str::camel($table));
+            $className = self::getClassNameFromTable($table);
 
             // Render the DeleteAction code.
-            $deleteActionCode = $this->twig->render('DeleteAction.php.twig', [
-                    'class_name' => $className
-                ]);
-            $controllerPath = self::CONTROLLERS_PATH . $className;
-            if (is_dir($controllerPath) === false) {
-                if (mkdir($controllerPath) === false) {
-                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
-                }
-            }
+            $deleteActionCode = $this->render('DeleteAction.php.twig', ['class_name' => $className]);
+
+            $controllerPath = self::makeControllerDirectory($className);
+
             // Save the deleteAction code file into the Controllers/ directory.
             if (file_put_contents(
                 $controllerPath . '/' . $className . 'DeleteAction.php',
@@ -55,22 +42,13 @@ class ActionsForge
      */
     final public function forgeGetAction(string $table): void {
         try {
-            // Format the GetAction class name
-            $className = ucfirst(Str::camel($table));
+            $className = self::getClassNameFromTable($table);
 
             // Render the GetAction code.
-            $getActionCode = $this->twig->render(
-                'GetAction.php.twig',
-                [
-                    'class_name' => $className
-                ]
-            );
-            $controllerPath = self::CONTROLLERS_PATH . $className;
-            if (is_dir($controllerPath) === false) {
-                if (mkdir($controllerPath) === false) {
-                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
-                }
-            }
+            $getActionCode = $this->render('GetAction.php.twig', ['class_name' => $className]);
+
+            $controllerPath = self::makeControllerDirectory($className);
+
             // Save the getAction code file into the Controllers/ directory.
             if (file_put_contents($controllerPath . '/' . $className . 'GetAction.php', $getActionCode) === false) {
                 CliBase::showThrowableAndDie(
@@ -88,21 +66,13 @@ class ActionsForge
      */
     final public function forgePostAction(string $table): void {
         try {
-            // Format the PostAction class name
-            $className = ucfirst($table);
+            $className = self::getClassNameFromTable($table);
+
             // Render the PostAction code
-            $postActionCode = $this->twig->render(
-                'PostAction.php.twig',
-                [
-                    'class_name' => $className
-                ]
-            );
-            $controllerPath = self::CONTROLLERS_PATH . $className;
-            if (is_dir($controllerPath) === false) {
-                if (mkdir($controllerPath) === false) {
-                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
-                }
-            }
+            $postActionCode = $this->render('PostAction.php.twig', ['class_name' => $className]);
+
+            $controllerPath = self::makeControllerDirectory($className);
+
             // Save the postAction code file into the Controllers/ directory.
             if (file_put_contents($controllerPath . '/' . $className . 'PostAction.php', $postActionCode) === false) {
                 CliBase::showThrowableAndDie(
@@ -120,18 +90,13 @@ class ActionsForge
      */
     final public function forgeSearchAction(string $table): void {
         try {
-            // Format the SearchAction class name
-            $className = ucfirst($table);
+            $className = self::getClassNameFromTable($table);
+
             // Render the SearchAction code
-            $searchActionCode = $this->twig->render('SearchAction.php.twig', [
-                    'class_name' => $className
-                ]);
-            $controllerPath = self::CONTROLLERS_PATH . $className;
-            if (is_dir($controllerPath) === false) {
-                if (mkdir($controllerPath) === false) {
-                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
-                }
-            }
+            $searchActionCode = $this->render('SearchAction.php.twig', ['class_name' => $className]);
+
+            $controllerPath = self::makeControllerDirectory($className);
+
             // Save the searchAction code file into the Controllers/ directory.
             if (file_put_contents($controllerPath . '/' . $className . 'SearchAction.php', $searchActionCode) === false
             ) {
@@ -150,18 +115,12 @@ class ActionsForge
      */
     final public function forgeRestoreAction(string $table): void {
         try {
-            // Format the RestoreAction class name
-            $className = ucfirst($table);
+            $className = self::getClassNameFromTable($table);
+
             // Render the RestoreAction code.
-            $restoreActionCode = $this->twig->render('RestoreAction.php.twig', [
-                    'class_name' => $className
-                ]);
-            $controllerPath = self::CONTROLLERS_PATH . $className;
-            if (is_dir($controllerPath) === false) {
-                if (mkdir($controllerPath) === false) {
-                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
-                }
-            }
+            $restoreActionCode = $this->render('RestoreAction.php.twig', ['class_name' => $className]);
+
+            $controllerPath = self::makeControllerDirectory($className);
 
             // Save the restoreAction code file into the Controllers/ directory.
             if (file_put_contents(

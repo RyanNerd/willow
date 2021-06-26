@@ -81,7 +81,7 @@ class MakeCommand extends CommandsBase
             // Instantiate dependencies for build-out
             $loader = new FilesystemLoader(__DIR__ . '/Templates');
             $twig = new Twig($loader);
-            $actionsForge = new ActionsForge($twig);
+            $actionsForge = new ForgeActions($twig);
             $controllerForge = new ForgeController($twig);
             $modelForge = new ForgeModel($twig);
             $registerForge = new ForgeRegister($twig);

@@ -10,7 +10,7 @@ final class UserReplies extends CommandsBase
     /**
      * When the .env file does not exist this function is called to prompt the user to create the .env file
      */
-    public static function setEnvFromUser(): void {
+    final public static function setEnvFromUser(): void {
         $dotEnvFile = __DIR__ . '/../../../../.env';
         while (!file_exists($dotEnvFile)) {
             $envFileContent = self::getDotEnv();
@@ -60,10 +60,10 @@ final class UserReplies extends CommandsBase
         $cli = CliBase::getCli();
         $cli->bold()->green('');
         do {
-            $mySQL = extension_loaded('pdo_mysql') ? 'MySQL' : 'MySQL [pdo_sql driver not installed]';
-            $postgres = extension_loaded('pdo_pgsql') ? 'Postgres' : 'Postgres [pdo_pgsql driver not installed]';
-            $msSQL = extension_loaded('pdo_sqlsrv') ? 'MS SQL' : 'MS SQL [pdo_sqlsrv driver not installed]';
-            $sqlite = extension_loaded('pdo_sqlite') ? 'SQLite' : 'SQLite [pdo_sqlite driver not installed]';
+            $mySQL = extension_loaded('pdo_mysql') ? 'MySQL' : 'MySQL <red>[pdo_sql driver not installed]';
+            $postgres = extension_loaded('pdo_pgsql') ? 'Postgres' : 'Postgres <red>[pdo_pgsql driver not installed]';
+            $msSQL = extension_loaded('pdo_sqlsrv') ? 'MS SQL' : 'MS SQL <red>[pdo_sqlsrv driver not installed]';
+            $sqlite = extension_loaded('pdo_sqlite') ? 'SQLite' : 'SQLite <red>[pdo_sqlite driver not installed]';
             $drivers = [
                 $mySQL => 'mysql',
                 $postgres => 'pgsql',

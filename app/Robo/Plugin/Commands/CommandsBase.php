@@ -8,32 +8,9 @@ use League\CLImate\TerminalObject\Dynamic\Input;
 
 abstract class CommandsBase
 {
-    protected const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
-    private const DOT_ENV_PATH = __DIR__ . '/../../../../.env';
     private const DOT_ENV_INCLUDE_FILE = __DIR__ . '/../../../../config/_env.php';
-
-    protected static function showColumns(string $tableName) {
-        $tabDetails = DatabaseUtilities::getTableDetails($tableName);
-        $pk = $tabDetails->getPrimaryKey();
-        $pkColumns = $pk ? $pk->getColumns() : [];
-        $columns = $tabDetails->getColumns();
-        $colDetails = [];
-        foreach ($columns as $column) {
-            $colArray = $column->toArray();
-            $colDetails[] = [
-                '<bold><white>Name' => '<bold><white>' . $colArray['name'],
-                '<bold><white>Type' => '<bold><blue>' . $colArray['type']->getName(),
-                '<bold><white>Len' => '<bold><blue>' . $colArray['length'],
-                '<bold><white>PK' => '<bold><blue>' . in_array($colArray['name'], $pkColumns) ? 'X':' ',
-                '<bold><white>NN' => '<bold><blue>' . $colArray['notnull'] ? 'X':' ',
-                '<bold><white>AI' => '<bold><blue>' . $colArray['autoincrement'] ? 'X':' ',
-                '<bold><white>UN' => '<bold><blue>' . $colArray['unsigned'] ? 'X':' ',
-                '<bold><white>Dft' => '<bold><blue>' . $colArray['default'],
-                '<bold><white>Cmnt' => '<bold><blue>' . chunk_split($colArray['comment'] ?? '', 15)
-            ];
-        }
-        CliBase::getCli()->table($colDetails);
-    }
+    private const DOT_ENV_PATH = __DIR__ . '/../../../../.env';
+    protected const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
 
     /**
      * Ask user what table they want to use
@@ -47,7 +24,10 @@ abstract class CommandsBase
         return $input->prompt();
     }
 
-    protected function checkEnvLoaded() {
+    /**
+     * Check if the .env file exists and if not prompt user to create it then load and validate.
+     */
+    protected function checkEnvLoaded(): void {
         // Does the .env file not exist? If not then prompt user and create
         if (!file_exists(self::DOT_ENV_PATH)) {
             CliBase::billboard('make-env', 160, 'top');

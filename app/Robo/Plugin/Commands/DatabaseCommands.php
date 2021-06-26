@@ -69,7 +69,26 @@ class DatabaseCommands extends CommandsBase
      */
     final public function dbColumns() {
         $this->checkEnvLoaded();
-        self::showColumns(self::getUserTableSelection());
+        $tabDetails = DatabaseUtilities::getTableDetails(self::getUserTableSelection());
+        $pk = $tabDetails->getPrimaryKey();
+        $pkColumns = $pk ? $pk->getColumns() : [];
+        $columns = $tabDetails->getColumns();
+        $colDetails = [];
+        foreach ($columns as $column) {
+            $colArray = $column->toArray();
+            $colDetails[] = [
+                '<bold><white>Name' => '<bold><white>' . $colArray['name'],
+                '<bold><white>Type' => '<bold><blue>' . $colArray['type']->getName(),
+                '<bold><white>Len' => '<bold><blue>' . $colArray['length'],
+                '<bold><white>PK' => '<bold><blue>' . in_array($colArray['name'], $pkColumns) ? 'X':' ',
+                '<bold><white>NN' => '<bold><blue>' . $colArray['notnull'] ? 'X':' ',
+                '<bold><white>AI' => '<bold><blue>' . $colArray['autoincrement'] ? 'X':' ',
+                '<bold><white>UN' => '<bold><blue>' . $colArray['unsigned'] ? 'X':' ',
+                '<bold><white>Dft' => '<bold><blue>' . $colArray['default'],
+                '<bold><white>Cmnt' => '<bold><blue>' . chunk_split($colArray['comment'] ?? '', 15)
+            ];
+        }
+        CliBase::getCli()->table($colDetails);
     }
 
     /**

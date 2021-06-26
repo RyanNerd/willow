@@ -12,6 +12,10 @@ class CliBase
 {
     private static CLImate|null $cli = null;
 
+    /**
+     * If the CLIMate object has not been saved then do so and return it.
+     * @return CLImate
+     */
     final public static function getCli(): CLImate {
         if (self::$cli === null) {
             self::$cli = new CLImate();
@@ -20,6 +24,7 @@ class CliBase
     }
 
     /**
+     * Display ascii art animations
      * @param string $asciiArtFile
      * @param int $speed
      * @param string $enterFrom
@@ -72,7 +77,7 @@ class CliBase
      * @param Throwable $t
      * @return array[]
      */
-    public static function parseThrowableToArray(Throwable $t): array {
+    private static function parseThrowableToArray(Throwable $t): array {
         $traceString = $t->getTraceAsString();
         $tracer = explode("\n", $traceString);
         $contents = [
