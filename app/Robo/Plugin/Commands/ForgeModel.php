@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Willow\Robo\Plugin\Commands;
 
 use Exception;
+use Illuminate\Support\Str;
 use Throwable;
 use Twig\Environment as Twig;
-use Illuminate\Support\Str;
 
 class ForgeModel
 {
