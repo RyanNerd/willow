@@ -51,37 +51,31 @@ class MakeCommands extends CommandsBase
             $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
             $input->prompt();
             CliBase::billboard('make-routes', 165, '-bottom');
-            $cli->clear();
 
             // Prompt the user for the route for each table.
             do {
+                $cli->br(2);
                 $routeList = [];
                 foreach ($selectedTables as $table) {
-                    self::showColumns($table);
-
-                    // Get the routes for each table that the user wants to use
                     $route = str_replace('_', '-', Str::snake($table));
-                    $input = $cli->input('Table: ' . $table . " Enter Route ($route):");
+                    $cli->bold()->backgroundLightGray()->yellow("Table $table");
+                    $input = $cli->input("Route ($route):");
                     $input->defaultTo($route);
                     $response = $input->prompt();
-                    $routeList[] = [$table => $response];
+                    $routeList[$table] = [strtolower($response)];
                 }
 
                 $displayRoutes = [];
                 foreach ($routeList as $table => $route) {
                     $displayRoutes[] = ['Table' => $table, 'Route' => $route];
                 }
-                $cli->table($displayRoutes);
+                $cli->br();
+                $cli->bold()->blue()->table($displayRoutes);
                 /** @var Input $input */
                 $input = $cli->lightGray()->confirm('This look okay?');
             } while (!$input->confirmed());
 
-            CliBase::billboard('make-routes', 165, 'top');
-            $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
-            $input->prompt();
-            CliBase::billboard('make-routes', 165, '-bottom');
-            $cli->clear();
-
+            // Instantiate dependencies for build-out
             $loader = new FilesystemLoader(__DIR__ . '/Templates');
             $twig = new Twig($loader);
             $actionsForge = new ActionsForge($twig);
@@ -94,7 +88,6 @@ class MakeCommands extends CommandsBase
             $input = $cli->bold()->white()->input('Press enter to begin. Ctrl-C to quit.');
             $input->prompt();
             CliBase::billboard('construction', 165, '-right');
-            $cli->clear();
 
             $cli->br();
             $cli->bold()->white()->border('*');

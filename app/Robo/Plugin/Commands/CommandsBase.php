@@ -14,7 +14,7 @@ abstract class CommandsBase
     protected static function showColumns(string $tableName) {
         $tabDetails = DatabaseUtilities::getTableDetails($tableName);
         $pk = $tabDetails->getPrimaryKey();
-        $pkColumns = $pk->getColumns();
+        $pkColumns = $pk ? $pk->getColumns() : [];
         $columns = $tabDetails->getColumns();
         $colDetails = [];
         foreach ($columns as $column) {
