@@ -7,12 +7,11 @@ use Twig\Environment as Twig;
 use Throwable;
 use Exception;
 
-class ForgeValidator extends ForgeBase
+class ForgeValidator
 {
-    protected Twig $twig;
+    private const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
 
-    public function __construct(Twig $twig) {
-        $this->twig = $twig;
+    public function __construct(private Twig $twig) {
     }
 
     /**
@@ -30,7 +29,7 @@ class ForgeValidator extends ForgeBase
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
+                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
                 }
             }
             // Save the restoreAction code file into the Controllers/ directory.
@@ -39,12 +38,12 @@ class ForgeValidator extends ForgeBase
                 $restoreActionCode
             ) === false
             ) {
-                $this->forgeError(
+                CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'RestoreValidator.php')
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 
@@ -64,7 +63,7 @@ class ForgeValidator extends ForgeBase
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
+                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
                 }
             }
             // Save the WriteValidator code file into the Controllers/ directory.
@@ -73,12 +72,12 @@ class ForgeValidator extends ForgeBase
                 $searchValidatorCode
             ) === false
             ) {
-                $this->forgeError(
+                CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'SearchValidator.php')
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 
@@ -97,7 +96,7 @@ class ForgeValidator extends ForgeBase
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
+                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
                 }
             }
             // Save the WriteValidator code file into the Controllers/ directory.
@@ -106,12 +105,12 @@ class ForgeValidator extends ForgeBase
                 $writeValidatorCode
             ) === false
             ) {
-                $this->forgeError(
+                CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'WriteValidator.php')
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 }

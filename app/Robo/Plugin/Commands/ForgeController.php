@@ -3,18 +3,16 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use Throwable;
-use Twig\Environment as Twig;
 use Exception;
 use Illuminate\Support\Str;
+use Throwable;
+use Twig\Environment as Twig;
 
 class ForgeController
 {
-    protected const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
-    protected Twig $twig;
+    private const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
 
-    public function __construct(Twig $twig) {
-        $this->twig = $twig;
+    public function __construct(private Twig $twig) {
     }
 
     /**

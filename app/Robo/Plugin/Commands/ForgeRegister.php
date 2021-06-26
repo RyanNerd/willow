@@ -8,12 +8,11 @@ use Throwable;
 
 use Twig\Environment as Twig;
 
-class ForgeRegister extends ForgeBase
+class ForgeRegister
 {
-    protected Twig $twig;
+    private const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
 
-    public function __construct(Twig $twig) {
-        $this->twig = $twig;
+    public function __construct(private Twig $twig) {
     }
 
     /**
@@ -24,7 +23,9 @@ class ForgeRegister extends ForgeBase
         $dirList = glob($controllerPath, GLOB_ONLYDIR);
         // Error getting directory list or no directories.
         if ($dirList === false || count($dirList) === 0) {
-            $this->forgeError(new Exception('No controllers found at ' . $controllerPath . PHP_EOL . 'Nothing to do.'));
+            CliBase::showThrowableAndDie(
+                new Exception('No controllers found at ' . $controllerPath . PHP_EOL . 'Nothing to do.')
+            );
         }
 
         $classList = [];
@@ -44,10 +45,12 @@ class ForgeRegister extends ForgeBase
 
             // Save the registerControllersCode overwriting Middleware/RegisterControllers.php
             if (file_put_contents($registerControllersPath, $registerControllersCode) === false) {
-                $this->forgeError(new Exception('RegisterControllers - Unable to create: ' . $registerControllersPath));
+                CliBase::showThrowableAndDie(
+                    new Exception('RegisterControllers - Unable to create: ' . $registerControllersPath)
+                );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 }

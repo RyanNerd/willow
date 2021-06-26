@@ -7,12 +7,11 @@ use Twig\Environment as Twig;
 use Throwable;
 use Exception;
 
-class ActionsForge extends ForgeBase
+class ActionsForge
 {
-    protected Twig $twig;
+    private const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
 
-    public function __construct(Twig $twig) {
-        $this->twig = $twig;
+    public function __construct(private Twig $twig) {
     }
 
     /**
@@ -30,7 +29,7 @@ class ActionsForge extends ForgeBase
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
+                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
                 }
             }
             // Save the deleteAction code file into the Controllers/ directory.
@@ -39,12 +38,12 @@ class ActionsForge extends ForgeBase
                 $deleteActionCode
             ) === false
             ) {
-                $this->forgeError(
+                CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'DeleteAction.php')
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 
@@ -66,17 +65,17 @@ class ActionsForge extends ForgeBase
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
+                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
                 }
             }
             // Save the getAction code file into the Controllers/ directory.
             if (file_put_contents($controllerPath . '/' . $className . 'GetAction.php', $getActionCode) === false) {
-                $this->forgeError(
+                CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerPath .  '/' . $className . 'GetAction.php')
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 
@@ -98,17 +97,17 @@ class ActionsForge extends ForgeBase
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
+                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
                 }
             }
             // Save the postAction code file into the Controllers/ directory.
             if (file_put_contents($controllerPath . '/' . $className . 'PostAction.php', $postActionCode) === false) {
-                $this->forgeError(
+                CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'PostAction.php')
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 
@@ -127,18 +126,18 @@ class ActionsForge extends ForgeBase
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
+                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
                 }
             }
             // Save the searchAction code file into the Controllers/ directory.
             if (file_put_contents($controllerPath . '/' . $className . 'SearchAction.php', $searchActionCode) === false
             ) {
-                $this->forgeError(
+                CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'SearchAction.php')
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 
@@ -157,7 +156,7 @@ class ActionsForge extends ForgeBase
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeError(new Exception('Unable to create directory: ' . $controllerPath));
+                    CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
                 }
             }
 
@@ -167,12 +166,12 @@ class ActionsForge extends ForgeBase
                 $restoreActionCode
             ) === false
             ) {
-                $this->forgeError(
+                CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'RestoreAction.php')
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 }

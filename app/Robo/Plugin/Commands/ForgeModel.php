@@ -8,12 +8,9 @@ use Throwable;
 use Twig\Environment as Twig;
 use Illuminate\Support\Str;
 
-class ForgeModel extends ForgeBase
+class ForgeModel
 {
-    protected Twig $twig;
-
-    public function __construct(Twig $twig) {
-        $this->twig = $twig;
+    public function __construct(private Twig $twig) {
     }
 
     /**
@@ -37,7 +34,7 @@ class ForgeModel extends ForgeBase
             // Save the Model code file into the Models directory
             $modelFile = __DIR__ . '/../../../Models/' . ucfirst(Str::camel($table)) . '.php';
             if (file_put_contents($modelFile, $modelCode) === false) {
-                $this->forgeError(new Exception('Unable to create: ' . $modelFile));
+                CliBase::showThrowableAndDie(new Exception('Unable to create: ' . $modelFile));
             }
 
             // Render the ModelRule code
@@ -50,10 +47,10 @@ class ForgeModel extends ForgeBase
             // Save the ModelRule code file into the Models directory
             $modelRuleFile = __DIR__ . '/../../../Models/' . ucfirst(Str::camel($table)) . 'ModelRules.php';
             if (file_put_contents($modelRuleFile, $modelRuleCode) === false) {
-                $this->forgeError(new Exception('Unable to create: ' . $modelRuleFile));
+                CliBase::showThrowableAndDie(new Exception('Unable to create: ' . $modelRuleFile));
             }
         } catch (Throwable $throwable) {
-            $this->forgeError($throwable);
+            CliBase::showThrowableAndDie($throwable);
         }
     }
 }
