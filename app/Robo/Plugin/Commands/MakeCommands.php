@@ -153,6 +153,7 @@ class MakeCommands extends CommandsBase
                             $validatorForge->forgeRestoreValidator($tableName);
                             $validatorForge->forgeSearchValidator($tableName);
                             $validatorForge->forgeWriteValidator($tableName);
+                            $validatorForge->forgeModelValidator($tableName);
                             break;
                         default:
                             break;
