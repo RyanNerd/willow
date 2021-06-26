@@ -30,7 +30,6 @@ class CliBase
         $cli->forceAnsiOn();
         $cli->green()->border('*');
         $cli->addArt(__DIR__ . '/Billboards');
-        // todo: get rid of this and make it more declarative
         if (substr($enterFrom, 0, 1) === '-') {
             $cli->bold()->lightGreen()->animation($asciiArtFile)->speed($speed)->exitTo(substr($enterFrom, 1));
         } else {

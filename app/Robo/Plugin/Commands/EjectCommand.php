@@ -7,7 +7,7 @@ use League\CLImate\TerminalObject\Dynamic\Input;
 use Twig\Environment as Twig;
 use Twig\Loader\FilesystemLoader;
 
-class EjectCommands
+class EjectCommand
 {
     private const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
 
@@ -51,9 +51,9 @@ class EjectCommands
             }
         }
 
-        // Remove the SampleCommands.php file if it exists
-        if (file_exists(__DIR__ . '/SampleCommands.php')) {
-            unlink(__DIR__ . '/SampleCommands.php');
+        // Remove the SampleCommand.php file if it exists
+        if (file_exists(__DIR__ . '/SampleCommand.php')) {
+            unlink(__DIR__ . '/SampleCommand.php');
         }
 
         // Get a file list of any controllers in the Controllers directory

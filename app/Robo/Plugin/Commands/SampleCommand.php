@@ -5,7 +5,7 @@ namespace Willow\Robo\Plugin\Commands;
 
 use Robo\Tasks;
 
-class SampleCommands extends Tasks
+class SampleCommand extends Tasks
 {
     /**
      * Launch the built-in PHP server & load the sample in the web

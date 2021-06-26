@@ -8,6 +8,7 @@ use League\CLImate\TerminalObject\Dynamic\Input;
 
 abstract class CommandsBase
 {
+    protected const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
     private const DOT_ENV_PATH = __DIR__ . '/../../../../.env';
     private const DOT_ENV_INCLUDE_FILE = __DIR__ . '/../../../../config/_env.php';
 

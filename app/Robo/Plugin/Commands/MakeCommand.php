@@ -11,9 +11,9 @@ use Throwable;
 use Twig\Environment as Twig;
 use Twig\Loader\FilesystemLoader;
 
-class MakeCommands extends CommandsBase
+class MakeCommand extends CommandsBase
 {
-    protected const PROGRESS_STAGES = [
+    private const PROGRESS_STAGES = [
         'Model',
         'Controller',
         'Actions',
@@ -21,24 +21,22 @@ class MakeCommands extends CommandsBase
         ''
     ];
 
-    private const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
-    protected CLImate $cli;
-
-    public function __construct() {
-        $this->cli = CliBase::getCli();
-
-        // Check for a previous project build out
-        $this->checkViridian();
-    }
+    private CLImate $cli;
 
     /**
-     * Builds the app using database tables
+     * Build the project using database tables
      */
-    final public function makeBuild(): void {
+    final public function make(): void {
         try {
-            $this->checkEnvLoaded();
-            $cli = $this->cli;
+            $this->cli = CliBase::getCli();
 
+            // Check for a previous project build out
+            $this->checkViridian();
+
+            // Check if .env has been loaded
+            $this->checkEnvLoaded();
+
+            $cli = $this->cli;
             CliBase::billboard('make-tables', 165, 'bottom');
             $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
             $input->prompt();
@@ -72,7 +70,7 @@ class MakeCommands extends CommandsBase
 
                 $displayRoutes = [];
                 foreach ($routeList as $table => $route) {
-                    $displayRoutes[] = ['Table' => $table, 'Route' => $route];
+                    $displayRoutes[] = ['Table' => $table, 'Base Route' => $route];
                 }
                 $cli->br();
                 $cli->bold()->blue()->table($displayRoutes);
@@ -183,60 +181,13 @@ class MakeCommands extends CommandsBase
     }
 
     /**
-     * Resets the project back to factory defaults
-     */
-    final public function makeReset(): void {
-        $cli = $this->cli;
-
-        try {
-            // If viridian has no entries then there's nothing to do.
-            if (file_exists(self::VIRIDIAN_PATH)) {
-                $cli->bold()->white('Project appears to be uninitialized. Nothing to do.');
-                die();
-            }
-
-            $cli->br();
-            $cli->bold()
-                ->backgroundLightRed()
-                ->white()
-                ->border('*');
-            $cli
-                ->bold()
-                ->backgroundLightRed()
-                ->white('Running reset will allow the make command to be re-run.');
-            $cli
-                ->bold()
-                ->backgroundLightRed()
-                ->white('Running make more than once is a destructive action.');
-            $cli
-                ->bold()
-                ->backgroundLightRed()
-                ->white('Any code in the controllers, models, routes, etc. will be overwritten.');
-            $cli->br();
-            /** @var Input $input */
-            $input = $cli->bold()->lightGray()->confirm('Are you sure you want to reset?');
-            if ($input->confirmed()) {
-                unlink(self::VIRIDIAN_PATH);
-            }
-            $cli->bold()
-                ->backgroundLightRed()
-                ->white()
-                ->border('*');
-            $cli->br();
-            die();
-        } catch (Exception $e) {
-            CliBase::showThrowableAndDie($e);
-        }
-    }
-
-    /**
      * If a .viridian file exists then warn the user and exit
      */
     private function checkViridian() {
         try {
             // If viridian has any entries it means that make has already been run.
             // In this case the user must run the reset command before running make again.
-            if (file_exists(__DIR__ . '/../../../../.viridian')) {
+            if (file_exists(self::VIRIDIAN_PATH)) {
                 $cli = $this->cli;
                 $cli->br();
                 $cli->bold()
