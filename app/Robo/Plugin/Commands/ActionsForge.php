@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use Twig\Environment as Twig;
-use Throwable;
 use Exception;
+use Illuminate\Support\Str;
+use Throwable;
+use Twig\Environment as Twig;
 
 class ActionsForge
 {
@@ -20,8 +21,9 @@ class ActionsForge
      */
     final public function forgeDeleteAction(string $table): void {
         try {
-            // Format the DeleteAction class name
-            $className = ucfirst($table);
+            // Format the class name
+            $className = ucfirst(Str::camel($table));
+
             // Render the DeleteAction code.
             $deleteActionCode = $this->twig->render('DeleteAction.php.twig', [
                     'class_name' => $className
@@ -54,7 +56,8 @@ class ActionsForge
     final public function forgeGetAction(string $table): void {
         try {
             // Format the GetAction class name
-            $className = ucfirst($table);
+            $className = ucfirst(Str::camel($table));
+
             // Render the GetAction code.
             $getActionCode = $this->twig->render(
                 'GetAction.php.twig',

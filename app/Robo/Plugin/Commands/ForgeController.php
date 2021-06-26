@@ -42,7 +42,7 @@ class ForgeController
                 }
             }
             // Save the Controller code file into the Controllers directory.
-            $controllerFile = $controllerPath . $className . 'Controller.php';
+            $controllerFile = $controllerPath . '/' . $className . 'Controller.php';
             if (file_put_contents($controllerFile, $controllerCode) === false) {
                 CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerFile)

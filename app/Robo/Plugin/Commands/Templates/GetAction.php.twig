@@ -1,11 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Controllers;
+namespace Willow\Controllers\{{ class_name }};
 
-use Willow\Models\ModelBase;
+use Willow\Controllers\GetActionBase;
 
-abstract class ActionBase
+abstract class {{ class_name }}GetAction extends GetActionBase
 {
-    protected ModelBase $model;
+    /**
+     * {{ class_name }}GetAction constructor.
+     * @param {{ class_name }} $model
+     */
+    public function __construct({{ class_name }} $model) {
+        $this->model = $model;
+    }
 }
