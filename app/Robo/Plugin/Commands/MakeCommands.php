@@ -17,7 +17,8 @@ class MakeCommands extends CommandsBase
         'Model',
         'Controller',
         'Actions',
-        'Validators'
+        'Validators',
+        ''
     ];
 
     private const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
@@ -50,7 +51,7 @@ class MakeCommands extends CommandsBase
             CliBase::billboard('make-routes', 165, 'top');
             $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
             $input->prompt();
-            CliBase::billboard('make-routes', 200, '-left');
+            CliBase::billboard('make-routes', 300, '-left');
 
             // Prompt the user for the route for each table.
             do {
@@ -88,10 +89,10 @@ class MakeCommands extends CommandsBase
             $registerForge = new ForgeRegister($twig);
             $validatorForge = new ForgeValidator($twig);
 
-            CliBase::billboard('construction', 200, 'left');
+            CliBase::billboard('construction', 300, 'left');
             $input = $cli->bold()->white()->input('Press enter to begin. Ctrl-C to quit.');
             $input->prompt();
-            CliBase::billboard('construction', 200, '-right');
+            CliBase::billboard('construction', 400, '-right');
 
             $cli->br();
             $cli->bold()->white()->border('*');
@@ -114,7 +115,6 @@ class MakeCommands extends CommandsBase
                                 $colArray = $column->toArray();
                                 $colArray['type'] = $colArray['type']->getName();
                                 $colArray['length'] ??= 'null';
-
                                 $flags = [];
                                 if (in_array($colArray['name'], $pkColumns)) {
                                     $flags[] = "PK";
@@ -153,6 +153,8 @@ class MakeCommands extends CommandsBase
                             $validatorForge->forgeRestoreValidator($tableName);
                             $validatorForge->forgeSearchValidator($tableName);
                             $validatorForge->forgeWriteValidator($tableName);
+                            break;
+                        default:
                             break;
                     }
                 }

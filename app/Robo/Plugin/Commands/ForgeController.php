@@ -8,8 +8,9 @@ use Twig\Environment as Twig;
 use Exception;
 use Illuminate\Support\Str;
 
-class ForgeController extends ForgeBase
+class ForgeController
 {
+    protected const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
     protected Twig $twig;
 
     public function __construct(Twig $twig) {
@@ -24,7 +25,7 @@ class ForgeController extends ForgeBase
     final public function forgeController(string $tableName, string $route): void {
         try {
             // Format the table name as a class
-            $className = Str::camel($tableName);
+            $className = ucfirst(Str::camel($tableName));
             // Render the Controller code.
             $controllerCode = $this->twig->render(
                 'Controller.php.twig',
@@ -37,20 +38,20 @@ class ForgeController extends ForgeBase
             $controllerPath = self::CONTROLLERS_PATH . $className;
             if (is_dir($controllerPath) === false) {
                 if (mkdir($controllerPath) === false) {
-                    $this->forgeError(
+                    CliBase::showThrowableAndDie(
                         new Exception('Unable to create directory: ' . $controllerPath)
                     );
                 }
             }
             // Save the Controller code file into the Controllers directory.
-            $controllerFile = $controllerPath . '/' . $className . 'Controller.php';
+            $controllerFile = $controllerPath . $className . 'Controller.php';
             if (file_put_contents($controllerFile, $controllerCode) === false) {
-                $this->forgeError(
+                CliBase::showThrowableAndDie(
                     new Exception('Unable to create: ' . $controllerFile)
                 );
             }
         } catch (Throwable $e) {
-            $this->forgeError($e);
+            CliBase::showThrowableAndDie($e);
         }
     }
 }
