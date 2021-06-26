@@ -35,7 +35,7 @@ try {
     $container = $builder->build();
 
     // If Eloquent is defined then instantiate it.
-    if (!$container->has('Eloquent')) {
+    if ($container->has('Eloquent')) {
         $container->get('Eloquent');
     }
 } catch (Throwable $throwable) {

@@ -7,13 +7,13 @@ use DateTime;
 
 /**
 {% for column in column_list %}
- * @property {{ column.type }} ${{ column.column_name }}
+ * @property {{ column.type }} ${{ column.name }}
 {% endfor %}
  */
 #[ApplyModelRule(ModelDefaultRules::class)]
 #[ApplyModelRule({{ class_name }}ModelRules::class)]
 {% for column in column_list %}
-#[ApplyModelColumnAttributes('{{ column.column_name }}', '{{ column.type }}')]
+#[ApplyModelColumnAttributes('{{ column.name }}', '{{ column.type }}', {{ column.length }}, {{ column.flag_text }})]
 {% endfor %}
 class {{ class_name }} extends ModelBase
 {

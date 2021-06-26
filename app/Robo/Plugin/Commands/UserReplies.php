@@ -133,7 +133,7 @@ DB_USER=$dbUser
 DB_PASSWORD=$dbPassword
 
 # Show error details as a HTML response
-SHOW_ERRORS=<bold><blue>$showErrors
+SHOW_ERRORS=$showErrors
 env;
 
             $envText = str_replace("\n\r", "\n", $envText);

@@ -58,11 +58,15 @@ class MakeCommands extends CommandsBase
                 $routeList = [];
                 foreach ($selectedTables as $table) {
                     $route = str_replace('_', '-', Str::snake($table));
-                    $cli->bold()->backgroundLightGray()->yellow("Table $table");
-                    $input = $cli->input("Route ($route):");
+                    $cli->br();
+                    $cli->bold()->green()->border('*');
+                    $cli->bold("<green>Table:  <white>$table");
+                    $cli->bold()->green()->border('*');
+                    $cli->br();
+                    $input = $cli->input("<bold><green>Route <bold><white>($route):");
                     $input->defaultTo($route);
                     $response = $input->prompt();
-                    $routeList[$table] = [strtolower($response)];
+                    $routeList[$table] = strtolower($response);
                 }
 
                 $displayRoutes = [];
@@ -101,7 +105,32 @@ class MakeCommands extends CommandsBase
                     $progress->current($key + 1, $stage);
                     switch ($stage) {
                         case 'Model':
-                            $modelForge->forgeModel($tableName, $route);
+                            $tableDetails = DatabaseUtilities::getTableDetails($tableName);
+                            $pk = $tableDetails->getPrimaryKey();
+                            $pkColumns = $pk ? $pk->getColumns() : [];
+                            $columns = $tableDetails->getColumns();
+                            $colDetails = [];
+                            foreach ($columns as $column) {
+                                $colArray = $column->toArray();
+                                $colArray['type'] = $colArray['type']->getName();
+                                $flags = [];
+                                if (in_array($colArray['name'], $pkColumns)) {
+                                    $flags[] = 'PK';
+                                }
+                                if ($colArray['autoincrement']) {
+                                    $flags[] = 'AI';
+                                }
+                                if ($colArray['notnull']) {
+                                    $flags[] = 'NN';
+                                }
+                                if ($colArray['unsigned']) {
+                                    $flags[] = 'UN';
+                                }
+                                if ($colArray['fixed']) {
+                                    $flags[] = 'FX';
+                                }
+                            }
+                            $modelForge->forgeModel($tableName, $colDetails);
                             break;
 
                         case 'Controller':
