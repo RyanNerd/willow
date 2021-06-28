@@ -10,6 +10,48 @@ use Willow\Middleware\ResponseBody;
 
 class SearchValidatorBase extends ActionBase
 {
+    private const ALLOWED_METHODS = [
+        'select',
+        'where',
+        'orWhere',
+        'whereBetween',
+        'orWhereBetween',
+        'whereNotBetween',
+        'orWhereNotBetween',
+        'whereIn',
+        'whereNotIn',
+        'orWhereIn',
+        'orWhereNotIn',
+        'whereNull',
+        'whereNotNull',
+        'orWhereNull',
+        'orWhereNotNull',
+        'whereDate',
+        'whereMonth',
+        'whereDay',
+        'whereYear',
+        'whereTime',
+        'whereColumn',
+        'orWhereColumn',
+        'orderByDesc',
+        'orderBy',
+        'limit',
+        'latest',
+        'first',
+        'skip',
+        'take',
+        'offset',
+        'inRandomOrder',
+        'groupBy',
+        'having',
+        'distinct',
+        'join',
+        'leftJoin',
+        'rightJoin',
+        'crossJoin',
+        'sharedLock'
+    ];
+
     /**
      * @param Request $request
      * @param RequestHandler $handler
@@ -24,13 +66,34 @@ class SearchValidatorBase extends ActionBase
 
         // where may be required
         if (!$model->allowAll) {
-            if (!in_array('where', $parsedKeys)) {
+            if (!in_array([
+                    'where',
+                    'orWhere',
+                    'whereBetween',
+                    'orWhereBetween',
+                    'whereNotBetween',
+                    'orWhereNotBetween',
+                    'whereIn',
+                    'whereNotIn',
+                    'orWhereIn',
+                    'orWhereNotIn',
+                    'whereNull',
+                    'whereNotNull',
+                    'orWhereNull',
+                    'orWhereNotNull',
+                    'whereDate',
+                    'whereMonth',
+                    'whereDay',
+                    'whereYear',
+                    'whereTime',
+                    'whereColumn'
+                ], $parsedKeys)) {
                 $responseBody->registerParam('required', 'where', 'array<object>');
             }
         }
 
         foreach ($parsedKeys as $key) {
-            if (!method_exists($model, $key)) {
+            if (!in_array($key, self::ALLOWED_METHODS)) {
                 $responseBody->registerParam('invalid', $key, null);
             }
         }

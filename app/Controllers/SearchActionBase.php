@@ -17,6 +17,7 @@ class SearchActionBase extends ActionBase
      * @param Request $request
      * @param Response $response
      * @return ResponseInterface
+     * @link https://laravel.com/docs/8.x/queries
      */
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
