@@ -8,29 +8,22 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 
-/**
- * Class SearchActionBase
- */
-class RestoreActionBase extends ActionBase
+abstract class RestoreActionBase extends ActionBase
 {
     /**
      * @param Request $request
      * @param Response $response
+     * @param array $args
      * @return ResponseInterface
      */
-    public function __invoke(Request $request, Response $response): ResponseInterface {
+    public function __invoke(Request $request, Response $response, array $args): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 
-        // Get the record via the id from the parsed request body
-        $parsedBody = $responseBody->getParsedRequest();
         $record = $this
             ->model
             ->withTrashed()
-            ->find($parsedBody['restore_id']);
-
-        // Default values
-        $message = '';
+            ->find($args['id']);
 
         // Did we find a record to restore? Try to restore record, otherwise return status 404.
         if ($record !== null) {
@@ -41,7 +34,6 @@ class RestoreActionBase extends ActionBase
             } else {
                 $data = null;
                 $status = ResponseBody::HTTP_INTERNAL_SERVER_ERROR;
-                $message = 'Unable to restore.';
             }
         } else {
             $status = ResponseBody::HTTP_NOT_FOUND;
@@ -50,8 +42,7 @@ class RestoreActionBase extends ActionBase
 
         $responseBody = $responseBody
             ->setData($data)
-            ->setStatus($status)
-            ->setMessage($message);
+            ->setStatus($status);
         return $responseBody();
     }
 }

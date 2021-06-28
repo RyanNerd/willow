@@ -7,6 +7,7 @@ use JetBrains\PhpStorm\ArrayShape;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use ReflectionClass;
+use ReflectionException;
 use Slim\Psr7\Request;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
@@ -34,7 +35,7 @@ abstract class ModelValidatorBase
      * @param Request $request
      * @param RequestHandler $handler
      * @return ResponseInterface
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         $modelRuleAttributes = self::getModelReflectionClass($this->modelClass)->getAttributes(ApplyModelRule::class);
@@ -58,7 +59,7 @@ abstract class ModelValidatorBase
      * If the static variable $modelReflectionClass is null then set it, otherwise return self::$modelReflectionClass
      * @param string $modelClass
      * @return ReflectionClass
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function getModelReflectionClass(string $modelClass): ReflectionClass {
         if (self::$modelReflectionClass === null) {
@@ -69,6 +70,9 @@ abstract class ModelValidatorBase
 
     /**
      * If self::$modelColumnAttributes is null the set it, otherwise return self::$modelColumnAttributes
+     * @param string $modelClass
+     * @return array
+     * @throws ReflectionException
      */
     #[ArrayShape(
         [

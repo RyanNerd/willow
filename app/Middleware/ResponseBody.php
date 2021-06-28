@@ -37,11 +37,6 @@ class ResponseBody extends ResponseCodes
     protected array $missing = [];
 
     /**
-     * Primary key of User when authenticated
-     */
-    protected ?int $userId = null;
-
-    /**
      * ResponseBody constructor.
      * @param array $parsedRequest
      */
@@ -74,7 +69,7 @@ class ResponseBody extends ResponseCodes
      * @param array $parsedRequest
      * @return void
      */
-    final private function setParsedRequest(array $parsedRequest): void {
+    private function setParsedRequest(array $parsedRequest): void {
         self::$parsedRequest = $parsedRequest;
     }
 

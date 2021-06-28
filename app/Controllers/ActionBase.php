@@ -7,8 +7,5 @@ use Willow\Models\ModelBase;
 
 abstract class ActionBase
 {
-    /**
-     * @var ModelBase
-     */
     protected ModelBase $model;
 }

@@ -9,33 +9,6 @@ use Throwable;
 class ForgeValidator extends ForgeBase
 {
     /**
-     * Forge the RestoreValidator code given the table name.
-     * @param string $table
-     */
-    final public function forgeRestoreValidator(string $table): void {
-        try {
-            $className = self::getClassNameFromTable($table);
-
-            // Render the RestoreValidator code.
-            $restoreValidatorCode = $this->render('RestoreValidator.php.twig', ['class_name' => $className]);
-            $controllerPath = $this->makeControllerDirectory($className);
-
-            // Save the restoreValidator code file into the Controllers/ directory.
-            if (file_put_contents(
-                $controllerPath . '/' . $className . 'RestoreValidator.php',
-                $restoreValidatorCode
-            ) === false
-            ) {
-                CliBase::showThrowableAndDie(
-                    new Exception('Unable to create: ' . $controllerPath . '/' . $className . 'RestoreValidator.php')
-                );
-            }
-        } catch (Throwable $e) {
-            CliBase::showThrowableAndDie($e);
-        }
-    }
-
-    /**
      * Forge the SearchValidator code given the entity table name.
      * @param string $table
      */
