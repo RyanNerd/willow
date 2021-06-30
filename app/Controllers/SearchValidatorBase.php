@@ -10,46 +10,47 @@ use Willow\Middleware\ResponseBody;
 
 class SearchValidatorBase extends ActionBase
 {
-    private const ALLOWED_METHODS = [
-        'select',
-        'where',
-        'orWhere',
-        'whereBetween',
-        'orWhereBetween',
-        'whereNotBetween',
-        'orWhereNotBetween',
-        'whereIn',
-        'whereNotIn',
-        'orWhereIn',
-        'orWhereNotIn',
-        'whereNull',
-        'whereNotNull',
-        'orWhereNull',
-        'orWhereNotNull',
-        'whereDate',
-        'whereMonth',
-        'whereDay',
-        'whereYear',
-        'whereTime',
-        'whereColumn',
-        'orWhereColumn',
-        'orderByDesc',
-        'orderBy',
-        'limit',
-        'latest',
+    private const ALLOWED_PARAMETER_KEYS = [
+        'id',
+        'crossJoin',
+        'distinct',
         'first',
-        'skip',
-        'take',
-        'offset',
-        'inRandomOrder',
         'groupBy',
         'having',
-        'distinct',
+        'inRandomOrder',
         'join',
+        'latest',
         'leftJoin',
+        'limit',
+        'offset',
+        'orWhere',
+        'orWhereBetween',
+        'orWhereColumn',
+        'orWhereIn',
+        'orWhereNotBetween',
+        'orWhereNotIn',
+        'orWhereNotNull',
+        'orWhereNull',
+        'orderBy',
+        'orderByDesc',
         'rightJoin',
-        'crossJoin',
-        'sharedLock'
+        'select',
+        'sharedLock',
+        'skip',
+        'take',
+        'where',
+        'whereBetween',
+        'whereColumn',
+        'whereDate',
+        'whereDay',
+        'whereIn',
+        'whereMonth',
+        'whereNotBetween',
+        'whereNotIn',
+        'whereNotNull',
+        'whereNull',
+        'whereTime',
+        'whereYear'
     ];
 
     /**
@@ -61,39 +62,10 @@ class SearchValidatorBase extends ActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedBody = $responseBody->getParsedRequest();
-        $model = $this->model;
         $parsedKeys = array_keys($parsedBody);
 
-        // where may be required
-        if (!$model->allowAll) {
-            if (!in_array([
-                    'where',
-                    'orWhere',
-                    'whereBetween',
-                    'orWhereBetween',
-                    'whereNotBetween',
-                    'orWhereNotBetween',
-                    'whereIn',
-                    'whereNotIn',
-                    'orWhereIn',
-                    'orWhereNotIn',
-                    'whereNull',
-                    'whereNotNull',
-                    'orWhereNull',
-                    'orWhereNotNull',
-                    'whereDate',
-                    'whereMonth',
-                    'whereDay',
-                    'whereYear',
-                    'whereTime',
-                    'whereColumn'
-                ], $parsedKeys)) {
-                $responseBody->registerParam('required', 'where', 'array<object>');
-            }
-        }
-
         foreach ($parsedKeys as $key) {
-            if (!in_array($key, self::ALLOWED_METHODS)) {
+            if (!in_array($key, self::ALLOWED_PARAMETER_KEYS)) {
                 $responseBody->registerParam('invalid', $key, null);
             }
         }

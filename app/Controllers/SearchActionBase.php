@@ -8,9 +8,6 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 
-/**
- * Class SearchActionBase
- */
 class SearchActionBase extends ActionBase
 {
     /**
@@ -27,6 +24,8 @@ class SearchActionBase extends ActionBase
         // Get the request to build the query
         $parsedBody = $responseBody->getParsedRequest();
         foreach ($parsedBody as $key => $value) {
+            // Handle situations when there are no parameters, or keys that should be skipped,
+            // execute model method `$model->$key([$params])` as default action.
             switch ($key) {
                 case 'withTrashed':
                     $model = $model->withTrashed();
@@ -34,17 +33,23 @@ class SearchActionBase extends ActionBase
                 case 'onlyTrashed':
                     $model = $model->onlyTrashed();
                     break;
+                case 'id':      // Ignore id
+                    break;      // continue
                 default:
-                    if (method_exists($model, $key)) {
-                        if (is_array($value)) {
-                            $model = $model->$key(...$value);
-                        } else {
-                            $model = $model->$key($value);
+                    if (is_array($value)) {
+                        foreach ($value as $params) {
+                            if (is_array($params)) {
+                                $model = $model->$key(...$params);
+                            } else {
+                                $model = $model->$key($params);
+                            }
                         }
                     } else {
+                        // Invalid parameters
                         $responseBody = $responseBody
                             ->setData(null)
-                            ->setStatus(ResponseBody::HTTP_BAD_REQUEST);
+                            ->setStatus(ResponseBody::HTTP_BAD_REQUEST)
+                            ->setMessage('invalid parameters for: ' . $key);
                         return $responseBody();
                     }
             }

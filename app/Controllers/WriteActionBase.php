@@ -51,7 +51,7 @@ abstract class WriteActionBase extends ActionBase
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
-                ->setMessage('Unable to save changes to ' . $model->getTableName());
+                ->setMessage('Unable to save changes to ' . $model->getTable());
         }
 
         return $responseBody();

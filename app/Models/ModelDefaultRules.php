@@ -10,7 +10,7 @@ class ModelDefaultRules
     /**
      * Allowed request parameters that are not column names
      */
-    private const WHITE_LIST = ['id', 'api_key'];
+    private const ALLOWED_PARAMETER_KEYS = ['id'];
 
     /**
      * @param ResponseBody $responseBody
@@ -95,7 +95,7 @@ class ModelDefaultRules
                                 'invalid',
                                 $columnName,
                                 $fieldAttributes['Type'],
-                                "$columnName cannot be null, $value given"
+                                "$columnName cannot be null, but a null value given"
                             );
                     }
                 }
@@ -121,8 +121,8 @@ class ModelDefaultRules
         if (count($outLiars) > 0) {
             // For each request parameter (key)
             foreach ($outLiars as $oLiar => $v) {
-                // Is the key in the WHITE_LIST? If not register that the requested parameter/key is invalid.
-                if (!in_array($oLiar, self::WHITE_LIST)) {
+                // Is the key ALLOWED? If not register that the requested parameter/key is invalid.
+                if (!in_array($oLiar, self::ALLOWED_PARAMETER_KEYS)) {
                     $responseBody->registerParam('invalid', $oLiar, null, "Unrecognized parameter: $oLiar");
                 }
             }
@@ -131,7 +131,7 @@ class ModelDefaultRules
     }
 
     /**
-     * For any column attribute value for length check that the request parmeter value is under the length
+     * For any column attribute value for length check that the request parameter value is under the length
      * @param ResponseBody $responseBody
      * @param array $modelColumnAttributes
      * @return ResponseBody
@@ -166,7 +166,7 @@ class ModelDefaultRules
                         }
 
                         // If the column type is int then compare the actual request value to the max length
-                        if ($columnType === 'int') {
+                        if ($columnType === 'integer') {
                             // Does the request value exceed the max length?
                             if ($value > $len) {
                                 $responseBody
