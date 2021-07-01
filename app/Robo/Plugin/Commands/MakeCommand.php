@@ -44,7 +44,7 @@ class MakeCommand extends CommandsBase
             $cli->clear();
 
             // Get the list of tables the user wants in their project
-            $selectedTables = UserReplies::getTableSelection(DatabaseUtilities::getTableList());
+            $selectedTables = CommandsBase::getMultipleTableSelection(DatabaseUtilities::getTableList());
 
             CliBase::billboard('make-routes', 165, 'top');
             $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');

@@ -38,7 +38,7 @@ class DatabaseCommands extends CommandsBase
      */
     final public function dbIndexes() {
         $this->checkEnvLoaded();
-        $dbIndexes = DatabaseUtilities::getTableIndexes(self::getUserTableSelection());
+        $dbIndexes = DatabaseUtilities::getTableIndexes(self::getSingleTableSelection());
         if ($dbIndexes) {
             $columnIndexes = [];
             foreach ($dbIndexes as $index) {
@@ -69,7 +69,7 @@ class DatabaseCommands extends CommandsBase
      */
     final public function dbColumns() {
         $this->checkEnvLoaded();
-        $tabDetails = DatabaseUtilities::getTableDetails(self::getUserTableSelection());
+        $tabDetails = DatabaseUtilities::getTableDetails(self::getSingleTableSelection());
         $pk = $tabDetails->getPrimaryKey();
         $pkColumns = $pk ? $pk->getColumns() : [];
         $columns = $tabDetails->getColumns();
@@ -96,13 +96,19 @@ class DatabaseCommands extends CommandsBase
      * @throws Exception
      */
     final public function dbDetails() {
+
         $this->checkEnvLoaded();
-        $tableDetails = DatabaseUtilities::getTableDetails(self::getUserTableSelection());
+        $tableDetails = DatabaseUtilities::getTableDetails(self::getSingleTableSelection());
         $options = $tableDetails->getOptions();
         $fk = $tableDetails->getForeignKeys();
         $pk = $tableDetails->getPrimaryKey();
-        $pkName = $pk->getName();
-        $pkColumns = implode(',', $pk->getColumns());
+        if ($pk) {
+            $pkName = $pk->getName();
+            $pkColumns = implode(',', $pk->getColumns());
+        } else {
+            $pkName = 'No PK';
+            $pkColumns = 'null';
+        }
 
         $showDetails = [
             [
@@ -116,7 +122,7 @@ class DatabaseCommands extends CommandsBase
         ];
 
         foreach ($options as $key => $value) {
-            if (is_string($value)) {
+            if (is_string($value) || is_int($value)) {
                 $showDetails[] = ['Name' => $key, 'Setting' => $value];
             }
         }
@@ -126,6 +132,8 @@ class DatabaseCommands extends CommandsBase
                 'Name' => 'Local (' . $value->getName() . ')',
                 'Setting' => implode(',', $value->getLocalColumns())
             ];
+
+            $showDetails[] = ['Name' => 'Local Table for: ' . $key, 'Setting' => $value->getLocalTableName()];
             $showDetails[] = ['Name' => 'Foreign Table', 'Setting' => $value->getForeignTableName()];
             $showDetails[] = ['Name' => 'Foreign Column(s)', 'Setting' => implode(',', $value->getForeignColumns())];
         }
