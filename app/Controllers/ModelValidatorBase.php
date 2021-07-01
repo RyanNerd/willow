@@ -20,14 +20,8 @@ abstract class ModelValidatorBase
     #[ApplyOverride('Override this property with the class name of the model to validate.')]
     protected string $modelClass;
 
-    /**
-     * @var array|null
-     */
     private static ?array $modelColumnAttributes = null;
 
-    /**
-     * @var ReflectionClass|null
-     */
     private static ?ReflectionClass $modelReflectionClass =  null;
 
     /**

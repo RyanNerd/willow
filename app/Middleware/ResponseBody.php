@@ -169,11 +169,15 @@ class ResponseBody extends ResponseCodes
      * @param string $message
      * @return ResponseBody
      */
-    final public function setMessage(string $message): self {
-        assert($message !== '');
-
-        $messages = $this->messages;
-        $messages[] = $message;
+    final public function setMessage(string|array $message): self {
+        if (is_string($message)) {
+            assert($message !== '');
+            $message = [$message];
+        }
+        $messages = ($this->messages);
+        foreach ($message as $msg) {
+            $messages[] = $msg;
+        }
         $clone = clone $this;
         $clone->messages = $messages;
         return $clone;

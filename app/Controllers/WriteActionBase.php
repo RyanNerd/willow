@@ -18,6 +18,7 @@ abstract class WriteActionBase extends ActionBase
 
         $primaryKeyName = $model->getPrimaryKey();
 
+        // Get all the attributes for all the columns for the model.
         $columnAttributes = ModelValidatorBase::getColumnAttributes($this->model::class);
         $columnNames = array_keys($columnAttributes);
 
@@ -28,32 +29,31 @@ abstract class WriteActionBase extends ActionBase
                 continue;
             }
 
-            // Ignore timestamps
+            // Ignore timestamps if Eloquent is handling this on the back-end.
             if ($model->timestamps) {
                 if ($key === $model::CREATED_AT || $key === $model::UPDATED_AT) {
                     continue;
                 }
             }
 
-            // Only update fields listed in the model::FIELDS array
+            // Only update fields listed in the columnNames array
             if (in_array($key, $columnNames, true)) {
                 $model->$key = $value;
             }
         }
 
-        // Update the model on the database.
+        // Save the model to the database and return the resulting model as the response
         if ($model->save()) {
             $responseBody = $responseBody
                 ->setData($model->attributesToArray())
                 ->setStatus(ResponseBody::HTTP_OK);
         } else {
-            // Unable to save for some reason so we return error status.
+            // Unable to save for some reason so we return error status
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
                 ->setMessage('Unable to save changes to ' . $model->getTable());
         }
-
         return $responseBody();
     }
 }
