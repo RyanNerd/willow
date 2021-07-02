@@ -69,7 +69,7 @@ class DatabaseUtilities
      * @return Index[]
      * @throws DoctrineException
      */
-    public static function getTableIndexes(string $tableName): Index {
+    public static function getTableIndexes(string $tableName): array {
         return self::getDbalSchema()->listTableIndexes($tableName);
     }
 

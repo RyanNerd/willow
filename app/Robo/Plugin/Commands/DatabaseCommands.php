@@ -22,7 +22,7 @@ class DatabaseCommands extends CommandsBase
         $tables = DatabaseUtilities::getTableList();
         $tableList = [];
         foreach ($tables as $table) {
-            $tableList[] = ['table_name' => $table];
+            $tableList[] = ['<bold><white>Table Name' => $table];
         }
 
         // Display the list of tables in a grid
@@ -51,16 +51,16 @@ class DatabaseCommands extends CommandsBase
                 $flags[] = $index->isSimpleIndex() ? '[IX]' : '[  ]';
 
                 $columnIndexes[] = [
-                'Column' => $columnName,
-                'Index Name' => $indexName,
-                'Flags' => implode('', $flags)
+                '<white>Column' => $columnName,
+                '<white>Index Name' => $indexName,
+                '<white>Flags' => implode('', $flags)
                 ];
             }
 
             $cli = CliBase::getCli();
             $cli->bold()->blue()->table($columnIndexes);
         } else {
-            CliBase::getCli()->red()->backgroundLightGray('Unable to load table details');
+            CliBase::getCli()->red()->backgroundLightGray('Unable to load table indexes');
         }
     }
 
@@ -137,6 +137,6 @@ class DatabaseCommands extends CommandsBase
             $showDetails[] = ['Name' => 'Foreign Table', 'Setting' => $value->getForeignTableName()];
             $showDetails[] = ['Name' => 'Foreign Column(s)', 'Setting' => implode(',', $value->getForeignColumns())];
         }
-        CliBase::getCli()->br()->table($showDetails);
+        CliBase::getCli()->br()->bold()->blue()->table($showDetails);
     }
 }
