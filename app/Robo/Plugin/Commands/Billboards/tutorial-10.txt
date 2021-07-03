@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Actions</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *     A route ultimately invokes an action. This is
+ * *   *    *    *    *   *   literal in that the __invoke() function is called
+ *     *  *    * * .#  *   *  when an action executes. Take a look at the sample
+ *   *     * #.  .# *   *     GET action code located at:
+  *     "#.  #: #" * *    *   <bold><blue>app/Controllers/Sample/SampleGetAction.php</bold></blue>
+ *   * * "#. ##"       *
+   *       "###               When a Willow app recieves a request an object
+             "##              called ResponseBody is created. The ResponseBody
+              ##.             contains the parsed request and handles the
+              .##:            response status, content and messages.
+              :###
+              ;###            The ResponseBody is passed to __invoke() as a
+            ,####.            request attribute.

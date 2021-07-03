@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Controllers continued</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *     Here is an example of controller registration:
+ * *   *    *    *    *   *   <bold><blue>class ClientController {</bold></blue>
+ *     *  *    * * .#  *   *   <bold><blue>public function register($grp) {</bold></blue>
+ *   *     * #.  .# *   *      <bold><blue>$grp->get('client/{id}', ClientGetAction::class);</bold></blue>
+  *     "#.  #: #" * *    *    <bold><blue>$grp->post('client', ClientPostAction::class);</bold></blue>
+ *   * * "#. ##"       *       <bold><blue>$grp->delete('client/{id}', ClientDelAct::class);</bold></blue>
+   *       "###                <bold><blue>$grp->post('client/search', SearchAction::class);</bold></blue>
+             "##               <bold><blue>}</bold></blue>
+              ##.             <bold><blue>}</bold></blue>
+              .##:
+              :###            For example the GET verb for the route "client/12"
+              ;###            would invoke the ClientGetAction which in turn
+            ,####.            would search the Client table record for PK = 12

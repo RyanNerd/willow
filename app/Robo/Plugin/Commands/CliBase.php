@@ -8,7 +8,11 @@ use League\CLImate\CLImate;
 use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Throwable;
 
-class CliBase
+/**
+ * @method Climate lookok()
+ * @method Climate tbl()
+ */
+class CliBase extends Climate
 {
     private static CLImate|null $cli = null;
 
@@ -20,6 +24,12 @@ class CliBase
         if (self::$cli === null) {
             self::$cli = new CLImate();
         }
+
+        // Add some custom commands
+        self::$cli->style->addCommand('lookok', ['bold', 'light_gray']);
+        self::$cli->style->addCommand('tbl', ['bold', 'light_blue']);
+        self::$cli->style->addCommand('error', ['bold', 'yellow']);
+
         return self::$cli;
     }
 
@@ -47,23 +57,34 @@ class CliBase
      * Display an optional error message and prompt the user if they want to see the details of the error then die.
      * @param Throwable $throwable
      * @param array|null $message
+     * @link https://github.com/krakjoe/pthreads/issues/806
+     * @link https://github.com/thephpleague/climate/issues/172
+     * @link https://github.com/thephpleague/climate/pull/175
      */
     #[NoReturn]
-    public static function showThrowableAndDie(Throwable $throwable, ?array $message = null): void { // phpcs:ignore
-        $cli = new CLImate();
+    final public static function showThrowableAndDie(Throwable $throwable, ?array $message = null): void { // phpcs:ignore
+        // Fix the problem of when STDERR or STDOUT are not defined
+        if (!defined('STDERR')) {
+            define('STDERR', fopen('php://stderr', 'wb'));
+        }
+        if (!defined('STDOUT')) {
+            define('STDOUT', fopen('php://stdout', 'wb'));
+        }
+
+        $cli = self::getCli();
         $cli->br();
-        $cli->bold()->yellow()->border('*');
+        $cli->error()->border('*');
         if ($message !== null) {
             foreach ($message as $text) {
                 $cli->bold()->yellow($text);
             }
         } else {
-            $cli->bold()->yellow('An error has occurred.');
+            $cli->error('An error has occurred.');
         }
         $cli->br();
         /** @var Confirm $input */
-        $input = $cli->bold()->lightGray()->confirm('Do you want to see the error details?');
-        $cli->bold()->yellow()->border('*');
+        $input = $cli->lookok()->confirm('Do you want to see the error details?');
+        $cli->error()->border('*');
         if ($input->confirmed()) {
             $cli->br();
             $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);

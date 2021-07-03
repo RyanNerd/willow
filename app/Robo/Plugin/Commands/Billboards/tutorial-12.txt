@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Actions Continued</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *     For POST requests the action is typically to
+ * *   *    *    *    *   *   parse the JSON body of the POST
+ *     *  *    * * .#  *   *  When the GET route "client/id" is requested the
+ *   *     * #.  .# *   *     __invoke() method in the ClientGetAction class is
+  *     "#.  #: #" * *    *   executed.
+ *   * * "#. ##"       *
+   *       "###               __invoke() receives three arguments:
+             "##              <bold><blue>Request $request, Response $response, array $args</bold></blue>
+              ##.             $request is a Slim Request object, $response is
+              .##:            also a Slim object, and $args are the request
+              :###            arguments {id} in this example. So if the route
+              ;###            is "client/435" $args would be the array ["435"]
+            ,####.

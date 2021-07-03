@@ -11,7 +11,7 @@ use Throwable;
 use Twig\Environment as Twig;
 use Twig\Loader\FilesystemLoader;
 
-class MakeCommand extends CommandsBase
+class MakeCommand extends CommandBase
 {
     private const PROGRESS_STAGES = [
         'Model',
@@ -44,7 +44,7 @@ class MakeCommand extends CommandsBase
             $cli->clear();
 
             // Get the list of tables the user wants in their project
-            $selectedTables = CommandsBase::getMultipleTableSelection(DatabaseUtilities::getTableList());
+            $selectedTables = CommandBase::getMultipleTableSelection(DatabaseUtilities::getTableList());
 
             CliBase::billboard('make-routes', 165, 'top');
             $input = $cli->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
@@ -73,10 +73,10 @@ class MakeCommand extends CommandsBase
                     $displayRoutes[] = ['Table' => $table, 'Base Route' => $route];
                 }
                 $cli->br();
-                $cli->bold()->blue()->table($displayRoutes);
+                $cli->tableFormat()->table($displayRoutes);
                 /** @var Input $input */
-                $input = $cli->lightGray()->confirm('This look okay?');
-            } while (!$input->confirmed());
+                $input = $cli->lookok()->confirm('This look okay?');
+            } while (!$input->defaultTo('y')->confirmed());
 
             // Instantiate dependencies for build-out
             $loader = new FilesystemLoader(__DIR__ . '/Templates');

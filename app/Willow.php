@@ -33,7 +33,7 @@ class Willow
         $app->addBodyParsingMiddleware();
 
         $app->addErrorMiddleware(
-            $_ENV['SHOW_ERRORS'] ?? '' === 'true',
+            ($_ENV['SHOW_ERRORS'] ?? '') === 'true',
             true,
             true
         );

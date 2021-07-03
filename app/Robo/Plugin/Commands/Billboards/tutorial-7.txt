@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Controllers</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *
+ * *   *    *    *    *   *   Controllers are the glue for each route to actions
+ *     *  *    * * .#  *   *  to take when that route is invoked.
+ *   *     * #.  .# *   *     Each action is a CRUD action (Create, Read, Update
+  *     "#.  #: #" * *    *   and Delete). For web APIs these translate loosely
+ *   * * "#. ##"       *      to HTTP verbs: POST, GET, PUT/POST, and DELETE
+   *       "###               (Willow uses the POST verb for update and create)
+             "##
+              ##.             ######## <bold><yellow>CONTROLLER</yellow></bold> ##########
+              .##:            route    +-------+        (^)
+              :###            -------> | Table |----->   =
+              ;###                     +-------+       Action
+            ,####.

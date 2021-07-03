@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *
+ * *   *    *    *    *   *   You use the Willow `make` command to build out
+ *     *  *    * * .#  *   *  your project. Willow consists of six main
+ *   *     * #.  .# *   *     components:
+  *     "#.  #: #" * *    *
+ *   * * "#. ##"       *      <white>1)</white> Configuration via the .env file
+   *       "###               <white>2)</white> Routes for each table from your database
+             "##              <white>3)</white> Controllers that tie routes to CRUD actions
+              ##.             <white>4)</white> Actions that Create, Read, Update, & Delete
+              .##:            <white>5)</white> Models ORM representation of tables
+              :###            <white>6)</white> Validation and rule enforcement
+              ;###
+            ,####.

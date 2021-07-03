@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Configuration continued</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *
+ * *   *    *    *    *   *   This is what a .env file looks like:
+ *     *  *    * * .#  *   *
+ *   *     * #.  .# *   *     <bold><blue># Database configuration</blue></bold>
+  *     "#.  #: #" * *    *   <bold><blue>DB_DRIVER=mysql</blue></bold>
+ *   * * "#. ##"       *      <bold><blue>DB_HOST=127.0.0.1</blue></bold>
+   *       "###               <bold><blue>DB_PORT=3306</blue></bold>
+             "##              <bold><blue>DB_NAME=MyDatabase</blue></bold>
+              ##.             <bold><blue>DB_USER=willow</blue></bold>
+              .##:            <bold><blue>DB_PASSWORD=sup3r_$3cr3+_p@$$w0rd</blue></bold>
+              :###
+              ;###
+            ,####.

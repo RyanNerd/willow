@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 
-// phpcs:ignoreFile -- We are breaking some conventions intentionally for performance and usability purposes.
-
 use DI\ContainerBuilder;
 use Willow\Robo\Plugin\Commands\CliBase;
 use Willow\Willow;
@@ -39,13 +37,6 @@ try {
         $container->get('Eloquent');
     }
 } catch (Throwable $throwable) {
-    // See: https://github.com/krakjoe/pthreads/issues/806
-    if (!defined('STDERR')) {
-        define('STDERR', fopen('php://stderr', 'wb'));
-    }
-    if (!defined('STDOUT')) {
-        define('STDOUT', fopen('php://stdout', 'wb'));
-    }
     CliBase::showThrowableAndDie($throwable);
 }
 

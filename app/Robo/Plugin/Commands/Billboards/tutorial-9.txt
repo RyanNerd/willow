@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Controllers continued</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *     You can see this route => controller => action
+ * *   *    *    *    *   *   by running the Willow command: sample
+ *     *  *    * * .#  *   *
+ *   *     * #.  .# *   *     The sample controller is located at:
+  *     "#.  #: #" * *    *   <bold><blue>app/Controllers/SampleController.php</bold></blue>
+ *   * * "#. ##"       *
+   *       "###               The sample get action is located at:
+             "##              <bold><blue>app/Controllers/Sample/SampleGetAction.php</bold></blue>
+              ##.
+              .##:            The sample route controller action is very simple.
+              :###            It doesn't connect to a database and exists only
+              ;###            for demonstrative purposes.
+            ,####.

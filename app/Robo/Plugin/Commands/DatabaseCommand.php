@@ -6,7 +6,7 @@ namespace Willow\Robo\Plugin\Commands;
 use Doctrine\DBAL\Exception;
 use League\CLImate\CLImate;
 
-class DatabaseCommands extends CommandsBase
+class DatabaseCommand extends CommandBase
 {
     private CLImate $cli;
 
@@ -28,7 +28,7 @@ class DatabaseCommands extends CommandsBase
         // Display the list of tables in a grid
         $cli = $this->cli;
         $cli->br();
-        $cli->bold()->blue()->table($tableList);
+        $cli->tbl()->table($tableList);
         $cli->br();
     }
 
@@ -58,7 +58,7 @@ class DatabaseCommands extends CommandsBase
             }
 
             $cli = CliBase::getCli();
-            $cli->bold()->blue()->table($columnIndexes);
+            $cli->tbl()->table($columnIndexes);
         } else {
             CliBase::getCli()->red()->backgroundLightGray('Unable to load table indexes');
         }
@@ -77,15 +77,24 @@ class DatabaseCommands extends CommandsBase
         foreach ($columns as $column) {
             $colArray = $column->toArray();
             $colDetails[] = [
-                '<bold><white>Name' => '<bold><white>' . $colArray['name'],
-                '<bold><white>Type' => '<bold><blue>' . $colArray['type']->getName(),
-                '<bold><white>Len' => '<bold><blue>' . $colArray['length'],
-                '<bold><white>PK' => '<bold><blue>' . in_array($colArray['name'], $pkColumns) ? 'X':' ',
-                '<bold><white>NN' => '<bold><blue>' . $colArray['notnull'] ? 'X':' ',
-                '<bold><white>AI' => '<bold><blue>' . $colArray['autoincrement'] ? 'X':' ',
-                '<bold><white>UN' => '<bold><blue>' . $colArray['unsigned'] ? 'X':' ',
-                '<bold><white>Dft' => '<bold><blue>' . $colArray['default'],
-                '<bold><white>Cmnt' => '<bold><blue>' . chunk_split($colArray['comment'] ?? '', 15)
+                '<bold><white>Name</white></bold>' =>
+                    '<bold><white>' . $colArray['name'] . '</bold></white>',
+                '<bold><white>Type</white></bold>' =>
+                    '<bold><blue>' . $colArray['type']->getName() . '</bold></blue>',
+                '<bold><white>Len</white></bold>' =>
+                    '<bold><blue>' . $colArray['length'] . '</bold></blue>',
+                '<bold><white>PK</white></bold>' =>
+                    '<bold><blue>' . in_array($colArray['name'], $pkColumns) ? 'X</bold></blue>' : ' </bold></blue>',
+                '<bold><white>NN</white></bold>' =>
+                    '<bold><blue>' . $colArray['notnull'] ? 'X</bold></blue>' : ' </bold></blue>',
+                '<bold><white>AI</white></bold>' =>
+                    '<bold><blue>' . $colArray['autoincrement'] ? 'X</bold></blue>' : ' </bold></blue>',
+                '<bold><white>UN</white></bold>' =>
+                    '<bold><blue>' . $colArray['unsigned'] ? 'X</bold></blue>' :' </bold></blue>',
+                '<bold><white>Dft</white></bold>' =>
+                    '<bold><blue>' . $colArray['default']. '</bold></blue>',
+                '<bold><white>Cmnt</white></bold>' =>
+                    '<bold><blue>' . chunk_split($colArray['comment'] ?? '', 15) . '</bold></blue>'
             ];
         }
         CliBase::getCli()->table($colDetails);
@@ -137,6 +146,6 @@ class DatabaseCommands extends CommandsBase
             $showDetails[] = ['Name' => 'Foreign Table', 'Setting' => $value->getForeignTableName()];
             $showDetails[] = ['Name' => 'Foreign Column(s)', 'Setting' => implode(',', $value->getForeignColumns())];
         }
-        CliBase::getCli()->br()->bold()->blue()->table($showDetails);
+        CliBase::getCli()->tbl()->table($showDetails);
     }
 }

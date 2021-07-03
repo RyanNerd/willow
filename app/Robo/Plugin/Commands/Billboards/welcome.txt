@@ -1,16 +1,16 @@
               * *
-           *    *  *           Willow Configuration
-      *  *    *     *  *       ====================
-     *     *    *  *    *      Willow uses a .env file for
- * *   *    *    *    *   *    Database configuration and
- *     *  *    * * .#  *   *   other settings.
- *   *     * #.  .# *   *
+           *    *  *           Willow
+      *  *    *     *  *       ================================================
+     *     *    *  *    *      Willow is an <bold><white>opinionated</white></bold> one-way framework
+ * *   *    *    *    *   *    Willow is a marriage between the Slim framework
+ *     *  *    * * .#  *   *   and Laravel's Eloquent ORM. You should be
+ *   *     * #.  .# *   *      familiar with both of these before using Willow.
   *     "#.  #: #" * *    *
- *   * * "#. ##"       *
+ *   * * "#. ##"       *       Willow is best suited to this situation:
    *       "###
-             "##
-              ##.
-              .##:
-              :###
-              ;###
+             "##               - You are just starting your project and want to
+              ##.                hit the ground running.
+              .##:             - Your database is already or mostly established
+              :###             - You want to quickly spin up a RESTful API that
+              ;###               seamlessly interfaces with your database
             ,####.

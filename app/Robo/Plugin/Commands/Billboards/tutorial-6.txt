@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Routes</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *
+ * *   *    *    *    *   *   When using Willow to build out your project you
+ *     *  *    * * .#  *   *  will be prompted to select which tables in your
+ *   *     * #.  .# *   *     database should have routes and then you set the
+  *     "#.  #: #" * *    *   base route for each table. For example let's say
+ *   * * "#. ##"       *      you have two tables in your database (Clients and
+   *       "###               InvoiceHistory) by default the base route for
+             "##              Clients would be <underline>clients</underline> and for
+              ##.             InvoiceHistory <underline>invoice-history</underline>
+              .##:
+              :###            route    +-------+        (^)
+              ;###            -------> | Table |----->   =
+            ,####.                     +-------+       Action

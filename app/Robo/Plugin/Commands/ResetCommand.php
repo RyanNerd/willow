@@ -5,7 +5,7 @@ namespace Willow\Robo\Plugin\Commands;
 
 use League\CLImate\TerminalObject\Dynamic\Input;
 
-class ResetCommand extends CommandsBase
+class ResetCommand extends CommandBase
 {
     /**
      * Resets the project allowing for a rebuild

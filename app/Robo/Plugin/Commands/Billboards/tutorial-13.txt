@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Actions Continued</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *     To parse the JSON body of a request the
+ * *   *    *    *    *   *   ResponseBody object is used. This is passed
+ *     *  *    * * .#  *   *  in as a request attribute. The code to get
+ *   *     * #.  .# *   *     the ResponseBody object looks like this:
+  *     "#.  #: #" * *    *   <blue><bold>$responseBody=$req->getAttribute('response_body')</blue></bold>
+ *   * * "#. ##"       *
+   *       "###               And to get the parsed body as an array:
+             "##              <bold><blue>$parsed = $responseBody->getParsedRequest()</bold></blue>
+              ##.
+              .##:
+              :###
+              ;###
+            ,####.

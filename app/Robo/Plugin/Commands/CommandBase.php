@@ -5,8 +5,9 @@ namespace Willow\Robo\Plugin\Commands;
 
 use Doctrine\DBAL\Exception;
 use League\CLImate\TerminalObject\Dynamic\Input;
+use Robo\Tasks;
 
-abstract class CommandsBase
+abstract class CommandBase extends Tasks
 {
     private const DOT_ENV_INCLUDE_FILE = __DIR__ . '/../../../../config/_env.php';
     private const DOT_ENV_PATH = __DIR__ . '/../../../../.env';
@@ -36,12 +37,12 @@ abstract class CommandsBase
             }
 
             $cli->br();
-            $cli->bold()->lightBlue()->table($displayTables);
+            $cli->bold()->tbl()->table($displayTables);
             $cli->br();
 
             /** @var Input $input */
-            $input = $cli->lightGray()->confirm('This look okay?');
-        } while (!$input->confirmed());
+            $input = $cli->lookok()->confirm('This look okay?');
+        } while (!$input->defaultTo('y')->confirmed());
 
         return $selectedTables;
     }
@@ -64,24 +65,26 @@ abstract class CommandsBase
      */
     private static function getDotEnv(): string {
         $cli = CliBase::getCli();
-        $cli->bold()->green('');
         do {
-            $mySQL = extension_loaded('pdo_mysql') ? 'MySQL' : 'MySQL <red>[pdo_sql driver not installed]';
-            $postgres = extension_loaded('pdo_pgsql') ? 'Postgres' : 'Postgres <red>[pdo_pgsql driver not installed]';
-            $msSQL = extension_loaded('pdo_sqlsrv') ? 'MS SQL' : 'MS SQL <red>[pdo_sqlsrv driver not installed]';
-            $sqlite = extension_loaded('pdo_sqlite') ? 'SQLite' : 'SQLite <red>[pdo_sqlite driver not installed]';
+            $mySQL = extension_loaded('pdo_mysql') ?
+                'MySQL' : 'MySQL <bold><red>[pdo_sql driver not installed]';
+            $postgres = extension_loaded('pdo_pgsql') ?
+                'Postgres' : 'Postgres <bold><red>[pdo_pgsql driver not installed]';
+            $msSQL = extension_loaded('pdo_sqlsrv') ?
+                'MS SQL' : 'MS SQL <bold><red>[pdo_sqlsrv driver not installed]';
+            $sqlite = extension_loaded('pdo_sqlite') ?
+                'SQLite' : 'SQLite <bold><red>[pdo_sqlite driver not installed]';
+
             $drivers = [
-                $mySQL => 'mysql',
-                $postgres => 'pgsql',
-                $msSQL => 'sqlsrv',
-                $sqlite => 'sqlite'
+                'mysql' => $mySQL,
+                'pgsql' => $postgres,
+                'sqlsrv' => $msSQL,
+                'sqlite' => $sqlite
             ];
 
-            $driverChoices = array_keys($drivers);
             /** @var Input $input */
-            $input = $cli->radio('Select database driver', $driverChoices);
-            $driverSelection = $input->prompt();
-            $dbDriver = $drivers[$driverSelection];
+            $input = $cli->bold()->green()->radio('Select database driver', $drivers);
+            $dbDriver = $input->prompt();
         } while (strlen($dbDriver) === 0);
 
         do {
@@ -127,7 +130,7 @@ abstract class CommandsBase
 
             /** @var Input $input */
             $input = $cli->bold()->green()->confirm('SHOW_ERRORS');
-            $showErrors = $input->confirmed() ? 'true' : 'false';
+            $showErrors = $input->defaultTo('y')->confirmed() ? 'true' : 'false';
             $envText = <<<env
 
 # Database configuration
@@ -164,13 +167,11 @@ env;
             $cli->br();
             /** @var Input $input */
             $input = $cli->bold()->lightGray()->confirm('This look okay?');
-        } while (!$input->confirmed());
+        } while (!$input->defaultTo('y')->confirmed());
         return $envText;
     }
 
-
-
-/**
+    /**
      * Check if the .env file exists and if not prompt user to create it then load and validate.
      */
     protected function checkEnvLoaded(): void {
@@ -179,9 +180,9 @@ env;
             CliBase::billboard('make-env', 160, 'top');
             $input = CliBase::getCli()->bold()->white()->input('Press enter to start. Ctrl-C to quit.');
             $input->prompt();
-            CliBase::billboard('welcome', 160, '-top');
+            CliBase::billboard('make-env', 160, '-top');
             CliBase::getCli()->clear();
-            CommandsBase::setEnvFromUser();
+            CommandBase::setEnvFromUser();
         }
 
         // If the .env file is not loaded then load it now.
@@ -193,11 +194,26 @@ env;
     /**
      * When the .env file does not exist this function is called to prompt the user to create the .env file
      */
-    final public static function setEnvFromUser(): void {
+    final public static function setEnvFromUser(): void
+    {
         $dotEnvFile = __DIR__ . '/../../../../.env';
         while (!file_exists($dotEnvFile)) {
             $envFileContent = self::getDotEnv();
             file_put_contents($dotEnvFile, $envFileContent);
         }
+    }
+
+    /**
+     * Run the sample
+     * This is here because the eject command removes the SampleCommand.php
+     */
+    protected function runSample() {
+        $this->taskServer(8088)
+            ->host('127.0.0.1')
+            ->dir(__DIR__ . '/../../../../public')
+            ->background()
+            ->run();
+        $this->taskOpenBrowser('http://localhost:8088/v1/sample/Hello-World')->run();
+        sleep(15);
     }
 }
