@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Models</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *     When an action is invoked the associated model is
+ * *   *    *    *    *   *   automatically loaded as <blue><bold>`$this->model`</blue></bold>
+ *     *  *    * * .#  *   *
+ *   *     * #.  .# *   *     Consider any PostAction which extends
+  *     "#.  #: #" * *    *   WriteActionBase. In WriteActionBase code exists
+ *   * * "#. ##"       *      to update or insert a record from the post body.
+   *       "###               By default the expected body is a representation
+             "##              of all fields and values for the model.
+              ##.
+              .##:            Every request and response (except for errors)
+              :###            is in JSON format.
+              ;###
+            ,####.

@@ -147,5 +147,17 @@ class WillowCommands extends CommandBase
         $input->prompt();
         CliBase::billboard('tutorial-13', 265, '-top');
         $cli->clear();
+
+        CliBase::billboard('tutorial-14', 365, 'left');
+        $input = $cli->bold()->white()->input('Press enter to continue. Ctrl-C to quit.');
+        $input->prompt();
+        CliBase::billboard('tutorial-14', 265, '-top');
+        $cli->clear();
+
+        CliBase::billboard('tutorial-15', 365, 'left');
+        $input = $cli->bold()->white()->input('Press enter to continue. Ctrl-C to quit.');
+        $input->prompt();
+        CliBase::billboard('tutorial-15', 265, '-top');
+        $cli->clear();
     }
 }
