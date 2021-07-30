@@ -24,8 +24,7 @@ try {
                 ->writeProxiesToFile(true, __DIR__ . '/tmp/cache');
         } else {
             // Non-production environment so no DI compilation or caching
-            $builder
-                ->addDefinitions(__DIR__ . '/../config/db.php');
+            $builder->addDefinitions(__DIR__ . '/../config/db.php');
         }
     }
 
