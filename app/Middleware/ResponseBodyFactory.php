@@ -19,7 +19,8 @@ class ResponseBodyFactory
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         // Add 'response_body' attribute to the $request
         // The 'response_body' is a ResponseBody object
-        // with parseBody, queryParams, and id argument as a deserialized array
+        // with parseBody, queryParams, and all arguments as a deserialized array
+        $arguments = RouteContext::fromRequest($request)->getRoute()->getArguments();
         return $handler
             ->handle(
                 $request
@@ -27,7 +28,7 @@ class ResponseBodyFactory
                     'response_body',
                     self::create(
                         array_merge(
-                            ['id' => RouteContext::fromRequest($request)->getRoute()->getArgument('id')],
+                            $arguments,
                             $request->getQueryParams() ?? [],
                             $request->getParsedBody() ?? []
                         )
