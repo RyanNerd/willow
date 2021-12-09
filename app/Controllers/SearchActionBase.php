@@ -23,15 +23,23 @@ class SearchActionBase extends ActionBase
 
         // Get the request to build the query
         $parsedBody = $responseBody->getParsedRequest();
+
+        // Special handling for withTrashed or onlyTrashed
+        if (array_key_exists('withTrashed', $parsedBody)) {
+            $model = $this->model::withTrashed(true);
+        } elseif (array_key_exists('onlyTrashed', $parsedBody)) {
+            $model = $this->model::onlyTrashed();
+        } else {
+            $model = $this->model;
+        }
+        $model = $model->clone();
+
         foreach ($parsedBody as $key => $value) {
             // Handle situations when there are no parameters, or keys that should be skipped,
             // execute model method `$model->$key([$params])` as default action.
             switch ($key) {
                 case 'withTrashed':
-                    $model = $model->withTrashed();
-                    break;
                 case 'onlyTrashed':
-                    $model = $model->onlyTrashed();
                     break;
                 case 'id':      // Ignore id
                     break;      // continue
