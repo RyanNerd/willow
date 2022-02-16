@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Configuration</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *
+ * *   *    *    *    *   *   When you run the `make` command for the first time
+ *     *  *    * * .#  *   *  Willow checks for the existence of a .env file
+ *   *     * #.  .# *   *     If not present you will be prompted to build it.
+  *     "#.  #: #" * *    *   Willow uses vlucas/phpdotenv to load and validate
+ *   * * "#. ##"       *      the .env file. See this link for more information:
+   *       "###               https://github.com/vlucas/phpdotenv
+             "##
+              ##.             Using an .env file is a method to securely store
+              .##:            database configuration and credentials.
+              :###
+              ;###
+            ,####.

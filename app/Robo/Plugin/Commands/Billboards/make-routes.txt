@@ -1,0 +1,16 @@
+              * *              Routes
+           *    *  *           ======
+      *  *    *     *  *       You will now be asked for the base routes
+     *     *    *  *    *      for each table. The default route is the
+ * *   *    *    *    *   *    table name in lower dash-case-format.
+ *     *  *    * * .#  *   *   e.g. `EmployeePayroll` table default route
+ *   *     * #.  .# *   *      would be `employee-payroll`
+  *     "#.  #: #" * *    *
+ *   * * "#. ##"       *         route   +-------+        (^)
+   *       "###                 -------> | Table |----->   =
+             "##                         +-------+       Action
+              ##.
+              .##:
+              :###
+              ;###
+            ,####.

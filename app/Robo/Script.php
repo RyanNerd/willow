@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Willow\Robo;
 
-use League\CLImate\CLImate;
 use Composer\Script\Event;
 use Composer\Util\Platform;
+use Exception;
+use League\CLImate\CLImate;
+use Willow\Robo\Plugin\Commands\CliBase;
 
 /**
  * Composer script
@@ -18,7 +20,7 @@ class Script
      */
     public static function postCreateProjectCmd(Event $event): void {
         // Get a CLI object
-        $cli = new CLImate();
+        $cli = CliBase::getCli();
         $cli->br();
 
         // Is the user running windows?
@@ -48,7 +50,7 @@ class Script
         }
 
         // Display Willow's fancy message
-        self::fancyBanner($cli);
+        self::fancyBanner();
 
         $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
         $binDir = $event->getComposer()->getConfig()->get('bin-dir');
@@ -58,8 +60,8 @@ class Script
         // Create the willow symlink file
         try {
             $symlinkCreated = symlink($binDir . '/robo', 'willow');
-        } catch (\Exception $exception) {
-            $symlinkCreated = false;
+        } catch (Exception $exception) {
+            $symlinkCreated = strlen($exception->getMessage()) === 0;
         }
 
         // Did the symlink NOT get created?
@@ -96,9 +98,9 @@ class Script
 
     /**
      * Show Willow fancy Banner
-     * @param CLImate $cli
      */
-    public static function fancyBanner(CLImate $cli): void {
+    public static function fancyBanner(): void {
+        $cli = CliBase::getCli();
         // Display Willow's fancy message
         $cli->forceAnsiOn();
         $cli->green()->border('*', 55);

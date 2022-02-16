@@ -12,7 +12,6 @@ class SampleGetAction
 {
     /**
      * Handle GET request
-     *
      * @param Request $request
      * @param Response $response
      * @param array $args

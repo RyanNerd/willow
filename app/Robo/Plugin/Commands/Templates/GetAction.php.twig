@@ -4,17 +4,14 @@ declare(strict_types=1);
 namespace Willow\Controllers\{{ class_name }};
 
 use Willow\Controllers\GetActionBase;
-use Willow\Models\{{ class_name }};
 
-class {{ class_name }}GetAction extends GetActionBase
+abstract class {{ class_name }}GetAction extends GetActionBase
 {
     /**
-     * Get the model via Dependency Injection and save it as a property.
-     *
+     * {{ class_name }}GetAction constructor.
      * @param {{ class_name }} $model
      */
-    public function __construct({{ class_name }} $model)
-    {
-        $this->setModel($model);
+    public function __construct({{ class_name }} $model) {
+        $this->model = $model;
     }
 }

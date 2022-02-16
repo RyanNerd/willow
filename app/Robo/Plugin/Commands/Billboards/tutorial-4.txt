@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial - <bold><background_white><red>Configuration continued</red></background_white></bold>
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *
+ * *   *    *    *    *   *   Willow supports four databases:
+ *     *  *    * * .#  *   *  - MySQL/MariaDB
+ *   *     * #.  .# *   *     - Postgres
+  *     "#.  #: #" * *    *   - MS SQL
+ *   * * "#. ##"       *      - SQLite
+   *       "###
+             "##              Willow does have some built in database commands:
+              ##.             - db:tables  - Lists all tables
+              .##:            - db:details - Shows details for a selected table
+              :###            - db:columns - Shows columns for a selected table
+              ;###            - db:indexes - Shows indexes for a selected table
+            ,####.

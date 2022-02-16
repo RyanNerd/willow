@@ -1,0 +1,19 @@
+<?php
+declare(strict_types=1);
+
+namespace Willow\Models;
+
+use Willow\Middleware\ResponseBody;
+
+class {{ class_name }}ModelRules
+{
+    /**
+     * @param ResponseBody $responseBody
+     * @param array
+     * @return ResponseBody
+     */
+    public function __invoke(ResponseBody $responseBody, array $modelColumnAttributes): ResponseBody {
+        // TODO: Model specific validations should be performed here
+        return $responseBody;
+    }
+}

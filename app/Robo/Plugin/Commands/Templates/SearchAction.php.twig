@@ -10,11 +10,10 @@ use Willow\Models\{{ class_name }};
 class {{ class_name }}SearchAction extends SearchActionBase
 {
     /**
-     * SearchAction constructor.
+     * {{ class_name }}SearchAction constructor.
      * @param {{ class_name }} $model
      */
-    public function __construct({{ class_name }} $model)
-    {
-        $this->setModel($model);
+    public function __construct({{ class_name }} $model) {
+        $this->model = $model;
     }
 }

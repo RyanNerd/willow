@@ -1,48 +1,42 @@
 <?php
 declare(strict_types=1);
 
-// phpcs:ignoreFile -- redefining STDERR only happens if it's not defined in the first place
-use Willow\Willow;
 use DI\ContainerBuilder;
-use League\CLImate\CLImate;
+use Willow\Robo\Plugin\Commands\CliBase;
+use Willow\Willow;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 try {
     // Establish DI
-    // Note: Add these definitions if you are in a production environment
-    //       ->enableCompilation(__DIR__ . '/tmp/cache')
-    //       ->writeProxiesToFile(true, __DIR__ . '/tmp/cache')
     $builder = new ContainerBuilder();
+
+    // If the .env file exists then load and verify it.
     if (file_exists(__DIR__ . '/../.env')) {
-        $builder
-            ->addDefinitions(['DEMO' => false])
-            ->addDefinitions(__DIR__ . '/../config/_env.php')
-            ->addDefinitions(__DIR__ . '/../config/db.php');
-    } else {
-        $builder->addDefinitions(['DEMO' => true]);
+        include_once __DIR__ . '/../config/_env.php';
+
+        // Are we in production?
+        if ($_ENV['PRODUCTION'] ?? '' === 'true') {
+            // Since this is production we enable DI compilation and caching of DI proxies
+            $builder
+                ->addDefinitions(__DIR__ . '/../config/db.php')
+                ->enableCompilation(__DIR__ . '/tmp/cache')
+                ->writeProxiesToFile(true, __DIR__ . '/tmp/cache');
+        } else {
+            // Non-production environment so no DI compilation or caching
+            $builder->addDefinitions(__DIR__ . '/../config/db.php');
+        }
     }
 
+    // Build the DI container
     $container = $builder->build();
 
-    if (!$container->get('DEMO')) {
-        // Instantiate Eloquent ORM
+    // If Eloquent is defined then instantiate it.
+    if ($container->has('Eloquent')) {
         $container->get('Eloquent');
     }
 } catch (Throwable $throwable) {
-    // See: https://github.com/krakjoe/pthreads/issues/806
-    if (!defined('STDERR')) {
-        define('STDERR', fopen('php://stderr', 'wb'));
-    }
-
-    $cli = new CLImate();
-    $cli->to('error')->br(2);
-    $cli->to('error')->red('Message')->white($throwable->getMessage());
-    $cli->to('error')->red('File: ')->white($throwable->getFile());
-    $cli->to('error')->red('Line: ')->white((string)$throwable->getLine());
-    $cli->to('error')->red('Trace: ')->white($throwable->getTraceAsString());
-    $cli->to('error')->br(2);
-    exit();
+    CliBase::showThrowableAndDie($throwable);
 }
 
 // Launch the app

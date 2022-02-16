@@ -7,15 +7,15 @@ use League\CLImate\TerminalObject\Dynamic\Input;
 use Twig\Environment as Twig;
 use Twig\Loader\FilesystemLoader;
 
-class EjectCommands extends RoboBase
+class EjectCommand
 {
     private const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
 
     /**
-     * Remove Sample controller, routes, & other artifacts from the project
+     * Remove the Sample and other artifacts from the project
      */
     final public function eject(): void {
-        $cli = $this->cli;
+        $cli = CliBase::getCli();
         $cli->br();
         $cli
             ->bold()
@@ -51,9 +51,9 @@ class EjectCommands extends RoboBase
             }
         }
 
-        // Remove the SampleCommands.php file if it exists
-        if (file_exists(__DIR__ . '/SampleCommands.php')) {
-            unlink(__DIR__ . '/SampleCommands.php');
+        // Remove the SampleCommand.php file if it exists
+        if (file_exists(__DIR__ . '/SampleCommand.php')) {
+            unlink(__DIR__ . '/SampleCommand.php');
         }
 
         // Get a file list of any controllers in the Controllers directory
@@ -65,7 +65,7 @@ class EjectCommands extends RoboBase
             // Rebuild RegisterControllers.php
             $loader = new FilesystemLoader(__DIR__ . '/Templates');
             $twig = new Twig($loader);
-            $registerControllers = new RegisterForge($twig);
+            $registerControllers = new ForgeRegister($twig);
             $registerControllers->forgeRegisterControllers();
         }
     }

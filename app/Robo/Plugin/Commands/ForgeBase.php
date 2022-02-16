@@ -3,17 +3,32 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use Throwable;
+use Exception;
+use Illuminate\Support\Str;
+use Twig\Environment as Twig;
 
-abstract class ForgeBase
+class ForgeBase
 {
     protected const CONTROLLERS_PATH = __DIR__ . '/../../../Controllers/';
 
-    /**
-     * Called when an exception is encountered.
-     * @param Throwable $throwable
-     */
-    protected function forgeError(Throwable $throwable) {
-        RoboBase::showThrowableAndDie($throwable);
+    public function __construct(private Twig $twig) {
+    }
+
+    protected static function getClassNameFromTable(string $table) {
+        return ucfirst(Str::camel($table));
+    }
+
+    protected static function makeControllerDirectory(string $className): string {
+        $controllerPath = self::CONTROLLERS_PATH . $className;
+        if (is_dir($controllerPath) === false) {
+            if (mkdir($controllerPath) === false) {
+                CliBase::showThrowableAndDie(new Exception('Unable to create directory: ' . $controllerPath));
+            }
+        }
+        return $controllerPath;
+    }
+
+    protected function render(string $twigName, array $parameters): string {
+        return $this->twig->render($twigName, $parameters);
     }
 }

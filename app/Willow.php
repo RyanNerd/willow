@@ -32,11 +32,8 @@ class Willow
         $app->addRoutingMiddleware();
         $app->addBodyParsingMiddleware();
 
-        $displayErrors
-            = $container->get('DEMO') ||
-              ($container->has('ENV') && $container->get('ENV')['DISPLAY_ERROR_DETAILS'] === 'true');
         $app->addErrorMiddleware(
-            $displayErrors,
+            ($_ENV['SHOW_ERRORS'] ?? '') === 'true',
             true,
             true
         );

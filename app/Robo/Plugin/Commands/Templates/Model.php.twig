@@ -3,14 +3,19 @@ declare(strict_types=1);
 
 namespace Willow\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use DateTime;
 
 /**
- * @mixin Builder
+{% for column in column_list %}
+ * @property {{ column.type }} ${{ column.name }}
+{% endfor %}
  */
+#[ApplyModelRule(ModelDefaultRules::class)]
+#[ApplyModelRule({{ class_name }}ModelRules::class)]
+{% for column in column_list %}
+#[ApplyModelColumnAttributes('{{ column.name }}', '{{ column.type }}', {{ column.length }}, [{% for flag in column.flags %} '{{ flag|e }}', {% endfor %}])]
+{% endfor %}
 class {{ class_name }} extends ModelBase
 {
-    public const FIELDS = [];
-
     protected $table = '{{ table }}';
 }

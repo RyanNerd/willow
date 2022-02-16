@@ -1,0 +1,16 @@
+              * *
+           *    *  *           .env File Setup
+      *  *    *     *  *       ===============
+     *     *    *  *    *      You should have admin access
+ * *   *    *    *    *   *    to your database, and the
+ *     *  *    * * .#  *   *   tables you want to include
+ *   *     * #.  .# *   *      should already exist.
+  *     "#.  #: #" * *    *
+ *   * * "#. ##"       *       A couple of other settings
+   *       "###                are kept in the .env file
+             "##               such as if you want error reporting.
+              ##.
+              .##:             Go here for more information:
+              :###             https://github.com/vlucas/phpdotenv
+              ;###
+            ,####.

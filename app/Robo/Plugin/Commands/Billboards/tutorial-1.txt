@@ -1,0 +1,16 @@
+              * *
+           *    *  *          Willow Tutorial
+      *  *    *     *  *      ==================================================
+     *     *    *  *    *
+ * *   *    *    *    *   *   This tutorial assumes that you are familiar with
+ *     *  *    * * .#  *   *  the Slim Framework and Eloquent ORM. If you aren't
+ *   *     * #.  .# *   *     exit and run `start`.
+  *     "#.  #: #" * *    *
+ *   * * "#. ##"       *      Willow is a one-way framework that will quickly
+   *       "###               build your project as a RESTful API that smoothly
+             "##              connects to your database.
+              ##.
+              .##:
+              :###
+              ;###
+            ,####.

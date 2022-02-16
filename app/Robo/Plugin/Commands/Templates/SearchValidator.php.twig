@@ -12,8 +12,7 @@ class {{ class_name }}SearchValidator extends SearchValidatorBase
      * {{ class_name }}SearchValidator constructor.
      * @param {{ class_name }} $model
      */
-    public function __construct({{ class_name }} $model)
-    {
-        $this->setModel($model);
+    public function __construct({{ class_name }} $model) {
+        $this->model = $model;
     }
 }

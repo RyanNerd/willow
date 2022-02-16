@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
 class DeleteActionBase extends ActionBase
 {
@@ -23,12 +22,10 @@ class DeleteActionBase extends ActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 
-        /** @var ModelBase $model */
         $model = $this->model;
-
         $model = $model->find($args['id']);
 
-        if ($model->destroy($args['id']) === 1) {
+        if ($model !== null && $model->destroy($args['id']) === 1) {
             $status = ResponseBody::HTTP_OK;
         } else {
             $status = ResponseBody::HTTP_NOT_FOUND;

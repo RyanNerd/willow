@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
 abstract class WriteActionBase extends ActionBase
 {
@@ -19,69 +18,42 @@ abstract class WriteActionBase extends ActionBase
 
         $primaryKeyName = $model->getPrimaryKey();
 
-        // Does the request body have an Id / PrimaryKeyName?
-        if (array_key_exists($primaryKeyName, $body) && $body[$primaryKeyName] !== null) {
-            // Look up the model record.
-            $model = $model->find($body[$primaryKeyName]);
-
-            // If we couldn't find the record then respond with 404 (not found) status.
-            if ($model === null) {
-                $responseBody = $responseBody
-                    ->setData(null)
-                    ->setStatus(ResponseBody::HTTP_NOT_FOUND);
-                return $responseBody();
-            }
-        }
+        // Get all the attributes for all the columns for the model.
+        $columnAttributes = ModelValidatorBase::getColumnAttributes($this->model::class);
+        $columnNames = array_keys($columnAttributes);
 
         // Replace each key value from the parsed request into the model and save.
-        $columns = array_keys($model::FIELDS);
         foreach ($body as $key => $value) {
             // Ignore Primary Key
             if ($key === $primaryKeyName) {
                 continue;
             }
 
-            // Ignore timestamps
+            // Ignore timestamps if Eloquent is handling this on the back-end.
             if ($model->timestamps) {
                 if ($key === $model::CREATED_AT || $key === $model::UPDATED_AT) {
                     continue;
                 }
             }
 
-            // Only update fields listed in the model::FIELDS array
-            if (in_array($key, $columns, true)) {
+            // Only update fields listed in the columnNames array
+            if (in_array($key, $columnNames, true)) {
                 $model->$key = $value;
             }
         }
 
-        // Call the beforeSave event hook
-        $this->beforeSave($model);
-
-        // Update the model on the database.
+        // Save the model to the database and return the resulting model as the response
         if ($model->save()) {
-            // Remove any protected fields from the response
-            $modelArray = $model->toArray();
-            $this->sanitize($modelArray, $model::FIELDS);
-
             $responseBody = $responseBody
-                ->setData($modelArray)
+                ->setData($model->attributesToArray())
                 ->setStatus(ResponseBody::HTTP_OK);
         } else {
-            // Unable to save for some reason so we return error status.
+            // Unable to save for some reason so we return error status
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
-                ->setMessage('Unable to save changes to ' . $model->getTableName());
+                ->setMessage('Unable to save changes to ' . $model->getTable());
         }
-
         return $responseBody();
-    }
-
-    /**
-     * Override this function if you need to make changes to the model prior to saving.
-     *
-     * @param ModelBase $model
-     */
-    final protected function beforeSave(ModelBase $model): void {
     }
 }

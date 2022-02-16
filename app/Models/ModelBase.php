@@ -3,16 +3,17 @@ declare(strict_types=1);
 
 namespace Willow\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 
 /**
- * Class ModelBase
+ * @mixin Collection
+ * @mixin Builder
  */
 abstract class ModelBase extends Model
 {
-    public const FIELDS = [];
-
     use SoftDeletes;
 
     /**
@@ -21,13 +22,5 @@ abstract class ModelBase extends Model
      */
     final public function getPrimaryKey(): string {
         return $this->primaryKey;
-    }
-
-    /**
-     * Return the name of the table for the model
-     * @return string
-     */
-    final public function getTableName(): string {
-        return $this->table;
     }
 }

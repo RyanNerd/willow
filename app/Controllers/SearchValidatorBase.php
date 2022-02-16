@@ -10,25 +10,49 @@ use Willow\Middleware\ResponseBody;
 
 class SearchValidatorBase extends ActionBase
 {
-    protected const VALID_COMPARISON_STRINGS = [
-        '=',
-        '>',
-        '<',
-        '>=',
-        '<=',
-        '<>',
-        'LIKE',
-        'like'
-    ];
-
-    protected const VALID_CLAUSES = [
+    private const ALLOWED_PARAMETER_KEYS = [
         'id',
-        'api_key',
-        'where',
-        'order_by',
+        'crossJoin',
+        'distinct',
+        'first',
+        'groupBy',
+        'having',
+        'inRandomOrder',
+        'join',
+        'latest',
+        'leftJoin',
         'limit',
-        'with_trashed',
-        'only_trashed'
+        'offset',
+        'onlyTrashed',
+        'orWhere',
+        'orWhereBetween',
+        'orWhereColumn',
+        'orWhereIn',
+        'orWhereNotBetween',
+        'orWhereNotIn',
+        'orWhereNotNull',
+        'orWhereNull',
+        'orderBy',
+        'orderByDesc',
+        'rightJoin',
+        'select',
+        'sharedLock',
+        'skip',
+        'take',
+        'withTrashed',
+        'where',
+        'whereBetween',
+        'whereColumn',
+        'whereDate',
+        'whereDay',
+        'whereIn',
+        'whereMonth',
+        'whereNotBetween',
+        'whereNotIn',
+        'whereNotNull',
+        'whereNull',
+        'whereTime',
+        'whereYear'
     ];
 
     /**
@@ -40,54 +64,11 @@ class SearchValidatorBase extends ActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedBody = $responseBody->getParsedRequest();
-        $model = $this->model;
+        $parsedKeys = array_keys($parsedBody);
 
-        $parsedKeys= array_keys($parsedBody);
-
-        // where may be required
-        if (!$model->allowAll) {
-            if (!in_array('where', $parsedKeys)) {
-                $responseBody->registerParam('required', 'where', 'array<object>');
-            }
-        }
-
-        $invalidClauses = array_diff($parsedKeys, self::VALID_CLAUSES);
-        foreach ($invalidClauses as $invalidClause) {
-            $responseBody->registerParam('invalid', $invalidClause, null);
-        }
-
-        $where = $parsedBody['where'] ?? [];
-        foreach ($where as $item) {
-            $column = $item['column'] ?? '';
-
-            // Check the white listed columns for the model.
-            // If the column is not in the white list then register it as invalid.
-            if (!array_key_exists($column, $model::FIELDS)) {
-                $responseBody->registerParam('invalid', $column, 'column');
-            } else {
-                if (!array_key_exists('column', $item)) {
-                    $responseBody->registerParam('required', 'where->column', 'string');
-                }
-
-                if (!array_key_exists('value', $item)) {
-                    $responseBody->registerParam('required', 'where->value', 'string');
-                }
-
-                // Is a comparison item given?
-                if (array_key_exists('comparison', $item)) {
-                    // Make sure the comparison string is valid
-                    if (!in_array($item['comparison'], self::VALID_COMPARISON_STRINGS)) {
-                        $responseBody->registerParam('invalid', 'where->comparison', 'string');
-                    }
-                }
-            }
-        }
-
-        // Is limit requested?
-        if (array_key_exists('limit', $parsedBody)) {
-            // The limit value MUST be an integer.
-            if (!is_int($parsedBody['limit'])) {
-                $responseBody->registerParam('invalid', 'limit', 'integer');
+        foreach ($parsedKeys as $key) {
+            if (!in_array($key, self::ALLOWED_PARAMETER_KEYS)) {
+                $responseBody->registerParam('invalid', $key, null);
             }
         }
 
