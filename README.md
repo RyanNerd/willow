@@ -22,7 +22,7 @@ Willow works best as a framework in this situation:
 * You are just starting your project and need to _hit the ground running_
 
 ### 📃 Requirements
-* PHP 7.4+ (Willow 3.0+)
+* PHP 8.0+ (Willow 4.0+)
 * Databases:
     - MySQL 5.6+
     - SQLite3
