@@ -2,10 +2,12 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
->[![willow](https://raw.githubusercontent.com/RyanNerd/willow/master/willow.png)](https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3) Willow is a type a girl who is beautiful and amazing and is kinda a special person and loved by everyone around her
->most willows can be your best of friends she's up for anything and she's loves anything fun you throw at her...
+>[![willow](https://raw.githubusercontent.com/RyanNerd/willow/master/willow.png)](https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3)
+> “The willow submits to the wind and prospers until one day it is many willows - a wall against the wind. This is the willow’s purpose.”
+>
+>~ [Frank Herbert, Dune](https://www.goodreads.com/quotes/371746-the-willow-submits-to-the-wind-and-prospers-until-one)
 
-~ [Urban Dictionary](https://www.urbandictionary.com/define.php?term=Willow)
+
 
 For developers, Willow is an _opinionated_ PHP framework used to quickly create CRUD based RESTful APIs.
 
@@ -106,7 +108,7 @@ Special thanks to:
 <p>
 Willow icon made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a>
 from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+is licensed by <a href="https://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
 </p>
 </small>
 </div>
